@@ -10,7 +10,7 @@
 
  ```  
  DEIXAR DOIS OU MAIS ESPAÇOS EM MARKDOWN SIGNIFICA PARAGRAFO
- [x] -> concluido 
+ [x] -> concluido (por um - antes do  exemplo - [ ] -> ..)
  [ ] -> por concluir
  #   -> representa um titulo, ## um sub titulo .... n# n subtitulo Deixar um espaço apos o #
  [.....](aaaa.aaa) -> É o template para a hiperligaçao aaaa.aaa
