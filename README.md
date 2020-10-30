@@ -1,8 +1,9 @@
 # LEGIONofLENDAS-Um-Jogo-de-Avatars
 
 ## Tarefas
-[x] -> To-Do
-[ ] -> Outros
+
+- [x] -> To-Do
+- [ ] -> Outros
 
 
 ## Explicações de markdown by arctumn
