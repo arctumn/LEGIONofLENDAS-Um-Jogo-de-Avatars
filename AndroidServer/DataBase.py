@@ -14,17 +14,19 @@ def create_connection(db_file):
             conn.close()
 
 
-# create_connection("AndroidDB.db")
+#create_connection("AndroidDB.db")
+conn = sqlite3.connect("AndroidDB.db")
 
-
-# conn.execute('''CREATE TABLE user
+#conn.execute('''CREATE TABLE user
 #     (id INT PRIMARY KEY     NOT NULL,
 #     nome            TEXT    NOT NULL,
+#     password        TEXT    NOT NULL,
 #     level           INT     NOT NULL,
 #     xp              INT     NOT NULL);
 # ''')
-# conn.execute("INSERT INTO user (id,nome,level,xp) \
-#              VALUES (1, 'Atumn', 999, 5234201)")
+#conn.execute("INSERT INTO user (id,nome,password,level,xp) \
+#              VALUES (1, 'ADMIN','ADMIN', 999, 5234201)")
+#conn.close()
 
 conn = sqlite3.connect("AndroidDB.db")
 def create_member(operation_context):
@@ -32,11 +34,17 @@ def create_member(operation_context):
     if test[0] != "INSERT":
         return False
     try:
+        cid = 0
         print("INSERTING")
+        cursor = conn.execute("SELECT id FROM user ORDER BY id DESC LIMIT 1;")
+        if cursor.fetchall() == []:
+            conn.execute("INSERT INTO user (id,nome,password,level,xp) VALUES (0, 'ADMIN','ADMIN', 999, 5234201)")
+            conn.execute("INSERT INTO user (id,nome,password,level,xp) VALUES (1, 'ADMIN2','ADMIN2', 999, 5234201)")
         cursor = conn.execute("SELECT id FROM user ORDER BY id DESC LIMIT 1;")
         for row in cursor:
             if row[0]:
-                print(row[0])
+                print("Value of id: " + str(row[0]+1))
+                cid = row[0]+1
                 val = "("+str(int(row[0]) + 1)
                 new_str = test[0] + " " + test[1] + " " + test[2] + " " + test[3] + " " + test[4] +" "
                 new_arg = (test[len(test)-1])
@@ -45,8 +53,8 @@ def create_member(operation_context):
                 print("Query: " + new_str + new_arg)    
                 conn.execute(new_str + new_arg)
                 conn.commit()
-
-        return True
+        
+        return True,str(cid)
     except Error:
         return False
 
@@ -59,8 +67,8 @@ def check(session_id):
             print("User: " + row[1])
 
             return True
-        print(f"Session id {session_id} does not exist!")
-        return False
+    print(f"Session id {session_id} does not exist!")
+    return False
 
 
 def run_query(session_id, operation_context):
@@ -88,9 +96,9 @@ def run_query(session_id, operation_context):
             conn.execute(operation_context)
             conn.commit()
 
-            return False, f"Deleted user {session_id}"
+            return False, f"Deleted Successfull"
         except Error:
-            return f"{session_id} does not exists", False
+            return f"Failed to delete", False
 
     elif checking[0] == "INSERT":
         if not create_member(operation_context):
