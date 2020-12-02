@@ -90,32 +90,4 @@ public class Client {
         }
 
     }
-    private void runSocketExample() {
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try  {
-                    final Client cliente = new Client();
-                    final String string = "";
-                        //Remova o comentario do caso que queira testar
-                        //cliente.operacaoNaBD("4","SELECT * FROM user");
-                        //cliente.operacaoNaBD("4","SELECT id FROM user ORDER BY id DESC LIMIT 1;");
-                        //cliente.inserirNaBD("user","id,nome,level,xp", "'Atumn3',55,3231412");
-                        //Log.i("SERVERLOL",string);
-                    //CASO TESTE ALTERAR ALGO NA UI COM BASE NO SERVER
-                    //runOnUiThread(new Runnable() {
-                    //    public void run() {
-                           //ELEMENTO A ALTERAR NA UI EXEMPLO
-                           // textview1.setText(string);
-                        //}
-                    //});
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        thread.start();
-    }
 }
