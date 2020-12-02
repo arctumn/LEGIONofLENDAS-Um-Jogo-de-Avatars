@@ -28,11 +28,23 @@ def create_connection(db_file):
 
 conn = sqlite3.connect("AndroidDB.db")
 def create_member(operation_context):
-
+    test = str(operation_context).split(' ')
+    if test[0] != "INSERT":
+        return False
     try:
-
-        conn.execute(operation_context)
-        conn.commit()
+        print("INSERTING")
+        cursor = conn.execute("SELECT id FROM user ORDER BY id DESC LIMIT 1;")
+        for row in cursor:
+            if row[0]:
+                print(row[0])
+                val = "("+str(int(row[0]) + 1)
+                new_str = test[0] + " " + test[1] + " " + test[2] + " " + test[3] + " " + test[4] +" "
+                new_arg = (test[len(test)-1])
+                new_arg = val + new_arg[7:]
+                print(new_arg)
+                print("Query: " + new_str + new_arg)    
+                conn.execute(new_str + new_arg)
+                conn.commit()
 
         return True
     except Error:

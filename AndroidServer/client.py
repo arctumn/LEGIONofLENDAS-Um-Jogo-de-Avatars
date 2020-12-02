@@ -12,7 +12,7 @@ client_socket.setblocking(True)
 
 #message = "0\nDb\nINSERT INTO user (id,nome,level,xp) VALUES (3, 'Atumn2', 999, 9999999)"
 #message = "1\nDB\nSELECT * FROM user WHERE id = 1"
-message  = "1\nDB\nSELECT name FROM sqlite_master WHERE type='table';"
+message  = "1\nDB\nSELECT * FROM user;"
 if message:
     message = message.encode("utf-8")
     client_socket.send(message)

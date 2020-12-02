@@ -25,7 +25,9 @@ def parse_input(user_address, client_socket, pre_parsed_message):
         return False
     if session_id == 0:
         if Db.create_member(operation_context):
-            client_socket.send(f"OK user added: {session_id}".encode("utf-8"))
+            client_socket.send(f"OK New Row added".encode("utf-8"))
+        else:
+            client_socket.send(f"Error Adding New Row".encode("utf-8"))    
 
     elif not Db.check(session_id):
         client_socket.send("INVALID SESSION ID".encode("utf-8"))
@@ -68,6 +70,7 @@ while True:
         print(msg)
         if not parse_input(address, client, msg):
             print("Finished with client: " + str(address))
+        client.close()
     except Exception as e:
         print(e)
         client.send("ERROR ACCEPTING\n".encode("utf-8"))
