@@ -7,9 +7,14 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.math.BigInteger;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 
 public class Client {
@@ -36,14 +41,28 @@ public class Client {
         }
     }
 
-    public String fight(String userId, String oponente){
-            if (oponente.equals("Player")) return sendMESSAGE(format(userId,"GAME","Player"));
+    public String fightNonRandom(String userId, String oponenteID){
+        return sendMESSAGE(format(userId,"GAME",oponenteID));
+    }
+    public String fightRandom(String userId, String oponente){
+        if (oponente.equals("Player")) return sendMESSAGE(format(userId,"GAME","Player"));
         return sendMESSAGE(format(userId,"GAME","Bot"));
     }
 
-    public String inserirNaBD(String tabela,String camposComID, String elementosSemOId){
-         String newquery = "INSERT INTO "+tabela + " ("+camposComID+ ") VALUES ("+"NEWELE,"+elementosSemOId+")";
-        return sendMESSAGE(format("0","DB",newquery));
+    public String inserirUserNaDB(String nome, String password, String nivel,String xp){
+        password = getMd5Hash(password);
+        String query = "INSERT INTO user (id,nome,password,level,xp) VALUES (NEWELE,"+"'"+nome+"','"+password+"',"+nivel+","+xp+")";
+        return sendMESSAGE(format("0","DB",query));
+    }
+
+    public String inserirStatusUserDB(String id, String forca, String magia, String defesa, String vida){
+        String exists = sendMESSAGE((format(id,"DB","SELECT statsid FROM status WHERE userid = "+id+"")));
+        if(exists.isEmpty()){
+            String query = "INSERT INTO status (statsid,forca,magia,defesa,vida,userid) VALUES (NEWELE,"+forca+","+magia+","+defesa+","+vida+")";
+            return sendMESSAGE(format("0","DB",query));
+        }
+        String query = "UPDATE status SET forca = "+forca+", magia = "+magia+", defesa = "+defesa+", vida = "+vida+" WHERE id = "+exists+";";
+        return sendMESSAGE(format("0","DB",query));
     }
 
     public String operacaoNaBD(String utilizadorExistenteUserID,String operacaoAFazer){
@@ -82,12 +101,27 @@ public class Client {
             return resultado.toString();
 
         } catch (UnknownHostException e){
-                //retorna caso nao encontre host
+            //retorna caso nao encontre host
             return "NO HOST FOUND";
         } catch ( IOException e){
-                //retorna caso tenha problemas de leitura
+            //retorna caso tenha problemas de leitura
             return e.toString();
         }
 
+    }
+
+    public static String getMd5Hash(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger number = new BigInteger(1, messageDigest);
+            StringBuilder md5 = new StringBuilder(number.toString(16));
+            while (md5.length() < 32)
+                md5.insert(0, "0");
+            return md5.toString();
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("MD5", Objects.requireNonNull(e.getLocalizedMessage()));
+            return null;
+        }
     }
 }

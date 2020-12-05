@@ -2,7 +2,7 @@ import socket
 import DataBase as Db
 import GameLogic as Game
 import GameShop as Shop
-IP = "192.168.43.135"
+IP = "192.168.2.94"
 PORT = 3003
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
