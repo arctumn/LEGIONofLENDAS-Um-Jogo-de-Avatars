@@ -51,7 +51,7 @@ def parse_input(user_address, client_socket, pre_parsed_message):
                 client_socket.send(str(output).encode("utf-8"))
                 print("OK + GAME")
         elif operation == "SHOP":
-            error, output = Shop.parse(operation_context)
+            error, output = Shop.parse(session_id,operation_context)
             if error:
                 client_socket.send(str(error).encode("utf-8"))
                 print("ERROR + SHOP: " + error)
