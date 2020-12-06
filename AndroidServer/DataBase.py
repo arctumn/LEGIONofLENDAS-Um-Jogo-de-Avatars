@@ -22,10 +22,14 @@ conn = sqlite3.connect("AndroidDB.db")
 #     nome            TEXT    NOT NULL,
 #     password        TEXT    NOT NULL,
 #     level           INT     NOT NULL,
-#     xp              INT     NOT NULL);
+#     xp              INT     NOT NULL,
+#     image           INT     NOT NULL);
 # ''')
-#conn.execute("INSERT INTO user (id,nome,password,level,xp) \
-#              VALUES (1, 'ADMIN','ADMIN', 999, 5234201)")
+#conn.execute("INSERT INTO user (id,nome,password,level,xp,image) \
+#              VALUES (0, '----','----', 0, 0, 0)")
+#conn.execute("INSERT INTO user (id,nome,password,level,xp,image) \
+#              VALUES (1, 'ADMIN','ADMIN', 999, 5234201, 0)")
+#conn.commit()
 #conn.close()
 
 conn = sqlite3.connect("AndroidDB.db")
@@ -38,8 +42,10 @@ def create_member(operation_context):
         print("INSERTING")
         cursor = conn.execute("SELECT id FROM user ORDER BY id DESC LIMIT 1;")
         if cursor.fetchall() == []:
-            conn.execute("INSERT INTO user (id,nome,password,level,xp) VALUES (0, 'ADMIN','ADMIN', 999, 5234201)")
-            conn.execute("INSERT INTO user (id,nome,password,level,xp) VALUES (1, 'ADMIN2','ADMIN2', 999, 5234201)")
+            conn.execute("INSERT INTO user (id,nome,password,level,xp) VALUES (0, 'ADMIN','ADMIN', 999, 5234201, 0)")
+            conn.commit()
+            conn.execute("INSERT INTO user (id,nome,password,level,xp) VALUES (1, 'ADMIN2','ADMIN2', 999, 5234201, 0)")
+            conn.commit()
         cursor = conn.execute("SELECT id FROM user ORDER BY id DESC LIMIT 1;")
         for row in cursor:
             if row[0]:
@@ -73,46 +79,52 @@ def check(session_id):
 
 def run_query(session_id, operation_context):
     checking = str(operation_context).split(' ')
+    try:
+        if session_id == -1:
+            cursor = conn.execute(operation_context)
+            return False, "executed"
 
-    if checking[0] == "SELECT":
-        cursor = conn.execute(operation_context)
-        string = ""
-        for row in cursor:
-            for ele in row:
-                string += str(ele) + " "
-            string += "\n"
-        return False, string
+        if checking[0] == "SELECT":
+            cursor = conn.execute(operation_context)
+            string = ""
+            for row in cursor:
+                for ele in row:
+                    string += str(ele) + " "
+                string += "\n"
+            return False, string
 
-    elif checking[0] == "UPDATE":
-
-        conn.execute(operation_context)
-        conn.commit()
-
-        return run_query(session_id, f"SELECT * FROM user WHERE id={session_id}")
-
-    elif checking[0] == "DELETE":
-        try:
+        elif checking[0] == "UPDATE":
 
             conn.execute(operation_context)
             conn.commit()
 
-            return False, f"Deleted Successfull"
-        except Error:
-            return f"Failed to delete", False
+            return run_query(session_id, f"SELECT * FROM user WHERE id={session_id}")
 
-    elif checking[0] == "INSERT":
-        if not create_member(operation_context):
-            return f"User {session_id} already exists", False
-        return False, "Success"
+        elif checking[0] == "DELETE":
+            try:
 
-    elif checking[0] == "CREATE":
-        try:
+                conn.execute(operation_context)
+                conn.commit()
 
-            conn.execute(operation_context)
-            conn.commit()
+                return False, f"Deleted Successfull"
+            except Error:
+                return f"Failed to delete", False
 
-            return False, "Table created"
-        except Error:
-            return "Table already exists", False
-    else:
-        return "NO DB OPERATION FOUND"
+        elif checking[0] == "INSERT":
+            if not create_member(operation_context):
+                return f"User {session_id} already exists", False
+            return False, "Success"
+
+        elif checking[0] == "CREATE":
+            try:
+
+                conn.execute(operation_context)
+                conn.commit()
+
+                return False, "Table created"
+            except Error:
+                return "Table already exists", False
+        else:
+            return "NO DB OPERATION FOUND"
+    except Exception as e:
+        return str(e), False

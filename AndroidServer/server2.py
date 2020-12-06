@@ -29,8 +29,7 @@ def parse_input(user_address, client_socket, pre_parsed_message):
             client_socket.send(f"OK New member added with id: {newid}".encode("utf-8"))
         else:
             client_socket.send(f"Error Adding New Row".encode("utf-8"))    
-
-    elif not Db.check(session_id):
+    elif session_id != -1 and not Db.check(session_id):
         client_socket.send("INVALID SESSION ID".encode("utf-8"))
     else:
         if operation == "DB":

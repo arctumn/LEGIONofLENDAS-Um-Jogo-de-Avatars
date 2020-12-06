@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.math.BigInteger;
+import java.net.PasswordAuthentication;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
@@ -18,14 +19,16 @@ import java.util.Objects;
 
 
 public class Client {
-
+    //ip e port
     private static final String IP = "82.155.86.142";
     private static final int PORT  =  3003;
 
+
+    //função de controlo utilitaria
     private String format(String param1, String param2, String param3){
         return param1 + "\n" + param2 + "\n" + param3;
     }
-
+    //trata de permitir compras e vendas
     public String clientLOJA(String userId, String operacaoAFazer, ArrayList<String> items){
         StringBuilder elementos = new StringBuilder();
         if(items == null) elementos.append("");
@@ -40,35 +43,75 @@ public class Client {
                 return sendMESSAGE(format(userId ,"SHOP", "Nada"));
         }
     }
+    // mostra todos os itens da loja
+    public String showLOJA(){
+        return sendMESSAGE(format("-1","DB","SELECT itemName,price,forca,magia,defesa,vida,level FROM SHOP;"));
+    }
 
+    //lutas não aleatorias
     public String fightNonRandom(String userId, String oponenteID){
         return sendMESSAGE(format(userId,"GAME",oponenteID));
     }
+    //lutas aleatorias
     public String fightRandom(String userId, String oponente){
         if (oponente.equals("Player")) return sendMESSAGE(format(userId,"GAME","Player"));
         return sendMESSAGE(format(userId,"GAME","Bot"));
     }
-
-    public String inserirUserNaDB(String nome, String password, String nivel,String xp){
+    //cria um utilizador na BD
+    public String inserirUserNaDB(String nome, String password, String nivel,String xp, String image){
         password = getMd5Hash(password);
-        String query = "INSERT INTO user (id,nome,password,level,xp) VALUES (NEWELE,"+"'"+nome+"','"+password+"',"+nivel+","+xp+")";
+        String query = "INSERT INTO user (id,nome,password,level,xp,image) VALUES (NEWELE,"+"'"+nome+"','"+password+"',"+nivel+","+xp+","+image+");";
         return sendMESSAGE(format("0","DB",query));
     }
 
-    public String inserirStatusUserDB(String id, String forca, String magia, String defesa, String vida){
-        String exists = sendMESSAGE((format(id,"DB","SELECT statsid FROM status WHERE userid = "+id+"")));
-        if(exists.isEmpty()){
-            String query = "INSERT INTO status (statsid,forca,magia,defesa,vida,userid) VALUES (NEWELE,"+forca+","+magia+","+defesa+","+vida+")";
+    //retorna o id o nome e a imagem do boneco, cada vez que faz login
+    public String login (String username, String password){
+        password = getMd5Hash(password);
+        return sendMESSAGE(format("1","DB","SELECT id,nome,image FROM user WHERE nome = '"+username+"' AND password = '"+password+"';"));
+    }
+    //Serve para armazenar e atualizar a informação do player no lado do cliente
+    public String inserirStatusUserDB(String id, String forca, String magia, String defesa, String vida, String vitorias, String derrotas){
+        String exists = showStatus(id);
+        if(exists.equals("NENHUM ELEMENTO")){
+            String query = "INSERT INTO status (statsid,forca,magia,defesa,vida,vitorias,derrotas,userid) VALUES "
+                    + "("
+                    + "NEWELE,"
+                    + forca    + ","
+                    + magia    + ","
+                    + defesa   + ","
+                    + vida     + ","
+                    + vitorias + ","
+                    + derrotas + ","
+                    + id
+                    +");";
             return sendMESSAGE(format("0","DB",query));
         }
-        String query = "UPDATE status SET forca = "+forca+", magia = "+magia+", defesa = "+defesa+", vida = "+vida+" WHERE id = "+exists+";";
+        String query = "UPDATE status SET "
+                + "forca = "+forca
+                + ", magia = "+magia
+                + ", defesa = "+defesa
+                + ", vida = "+vida
+                + ", vitorias = "+vitorias
+                +", derrotas = "+derrotas
+                +" WHERE id = "+exists+";";
         return sendMESSAGE(format("0","DB",query));
     }
-
+    public String rankingByXpTopN(int quantidadeElementos){
+        return sendMESSAGE(format("-1","DB","SELECT nome,level,xp FROM user ORDER BY xp DESC LIMIT "+quantidadeElementos+";"));
+    }
+    public String showStatus(String id){
+        return sendMESSAGE((format(id,"DB","SELECT statsid FROM status WHERE userid = "+id+";")));
+    }
+    //Retorna uma string com o inventario da pessoa, necessario vir parsed
+    public String inventario(String id){
+        String query = "SELECT nome, forca, magia, defesa, vida FROM inventario WHERE userid = "+id+";";
+        return sendMESSAGE(format(id,"DB",query));
+    }
+    //query test
     public String operacaoNaBD(String utilizadorExistenteUserID,String operacaoAFazer){
         return sendMESSAGE(format(utilizadorExistenteUserID,"DB", operacaoAFazer));
     }
-
+    //envia para o server e retorna uma mesagem
     private String sendMESSAGE(String parsedMESSAGE){
         Log.i("SERVERLOL","try CONNECT");
         try {
@@ -90,14 +133,17 @@ public class Client {
                 resultado.append(tester).append("\n");
             }
             in.close();
+            String aux = resultado.toString();
+            aux = "["+resultado.toString()+"]";
             //fecha o socket
-            if(resultado.length() == 0) Log.i("SERVERLOL","ERROR RECEIVING");
-            Log.i("SERVERLOL", resultado.toString());
+            //if(resultado.length() == 0) Log.i("SERVERLOL","ERROR RECEIVING");
+            Log.i("SERVERLOL", aux);
 
             out.close();
 
             socket.close();
             //retorna
+            if (aux.equals("[]")) return "NENHUM ELEMENTO";
             return resultado.toString();
 
         } catch (UnknownHostException e){

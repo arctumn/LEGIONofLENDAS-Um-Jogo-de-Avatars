@@ -42,10 +42,15 @@ public class MainActivity extends AppCompatActivity {
                      //final String string = cliente.operacaoNaBD("1", "SELECT * FROM user");
                      //ArrayList<String> a = new ArrayList<String>(); a.add("Feijao");
                      final String string2 =
-                             //cliente.operacaoNaBD("4","DROP TABLE IF EXISTS user");
-                             //cliente.operacaoNaBD("4","SELECT * FROM user ORDER BY id DESC LIMIT 1;");
-                             cliente.inserirUserNaDB("AdminTest","password","999","123214213");
-                    //Log.i("SERVERLOL",string);
+                             //cliente.operacaoNaBD("-1","DROP TABLE IF EXISTS TESTUSERTABL");
+                             //cliente.operacaoNaBD("1","SELECT * FROM user ORDER BY id DESC LIMIT 1;");
+                             //cliente.inserirUserNaDB("AdminTest","password","999","123214213","124121");
+                             //cliente.login("AdminTest","password");
+                             //cliente.operacaoNaBD("-1", "CREATE TABLE TESTUSERTABL (ID INT PRIMARY KEY NOT NULL, NOME TEXT NOT NULL);");
+                             cliente.operacaoNaBD("1","SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';");
+                     //Log.i("SERVERLOL",string);
+
+
                     runOnUiThread(new Runnable() {
                         public void run() {
                             txtmostrar.setText(string2);
