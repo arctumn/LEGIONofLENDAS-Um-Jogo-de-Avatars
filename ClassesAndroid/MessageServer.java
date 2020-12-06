@@ -56,7 +56,7 @@ public class MessageServer extends Service {
             case "inventario":
                 return client.inventario(sessionID);
             case "status":
-                return client.inserirStatusUserDB(sessionID,argumentos.get(0),argumentos.get(1),argumentos.get(2),argumentos.get(3),argumentos.get(4),argumentos.get(5));
+                return client.inserirStatusUserDB(sessionID,argumentos.get(0),argumentos.get(1),argumentos.get(2),argumentos.get(3),argumentos.get(4),argumentos.get(5),argumentos.get(6));
             case "rankingxp":
                 return client.rankingByXpTopN(Integer.parseInt(argumentos.get(0)));
             default:

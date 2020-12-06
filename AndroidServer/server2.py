@@ -24,7 +24,7 @@ def parse_input(user_address, client_socket, pre_parsed_message):
         client_socket.close()
         return False
     if session_id == 0:
-        Value, newid = Db.create_member(operation_context)
+        Value, newid = Db.create_member_user(operation_context)
         if Value :
             client_socket.send(f"OK New member added with id: {newid}".encode("utf-8"))
         else:

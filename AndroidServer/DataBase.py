@@ -25,15 +25,13 @@ conn = sqlite3.connect("AndroidDB.db")
 #     xp              INT     NOT NULL,
 #     image           INT     NOT NULL);
 # ''')
-#conn.execute("INSERT INTO user (id,nome,password,level,xp,image) \
-#              VALUES (0, '----','----', 0, 0, 0)")
-#conn.execute("INSERT INTO user (id,nome,password,level,xp,image) \
-#              VALUES (1, 'ADMIN','ADMIN', 999, 5234201, 0)")
+#conn.execute("INSERT INTO user (id,nome,password,level,xp,image) VALUES (0, '----','----', 0, 0, 0)")
+#conn.execute("INSERT INTO user (id,nome,password,level,xp,image)  VALUES (1, 'ADMIN','ADMIN', 999, 5234201, 0)")
 #conn.commit()
 #conn.close()
 
 conn = sqlite3.connect("AndroidDB.db")
-def create_member(operation_context):
+def create_member_user(operation_context):
     test = str(operation_context).split(' ')
     if test[0] != "INSERT":
         return False
@@ -82,6 +80,7 @@ def run_query(session_id, operation_context):
     try:
         if session_id == -1:
             cursor = conn.execute(operation_context)
+            conn.commit()
             return False, "executed"
 
         if checking[0] == "SELECT":
@@ -111,7 +110,7 @@ def run_query(session_id, operation_context):
                 return f"Failed to delete", False
 
         elif checking[0] == "INSERT":
-            if not create_member(operation_context):
+            if not create_member_user(operation_context):
                 return f"User {session_id} already exists", False
             return False, "Success"
 

@@ -8,13 +8,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.math.BigInteger;
-import java.net.PasswordAuthentication;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -70,41 +68,44 @@ public class Client {
         return sendMESSAGE(format("1","DB","SELECT id,nome,image FROM user WHERE nome = '"+username+"' AND password = '"+password+"';"));
     }
     //Serve para armazenar e atualizar a informação do player no lado do cliente
-    public String inserirStatusUserDB(String id, String forca, String magia, String defesa, String vida, String vitorias, String derrotas){
+    public String inserirStatusUserDB(String id, String forca, String magia, String defesa, String defesaMagica, String vida, String vitorias, String derrotas){
         String exists = showStatus(id);
         if(exists.equals("NENHUM ELEMENTO")){
             String query = "INSERT INTO status (statsid,forca,magia,defesa,vida,vitorias,derrotas,userid) VALUES "
                     + "("
                     + "NEWELE,"
-                    + forca    + ","
-                    + magia    + ","
-                    + defesa   + ","
-                    + vida     + ","
-                    + vitorias + ","
-                    + derrotas + ","
+                    + forca        + ","
+                    + magia        + ","
+                    + defesa       + ","
+                    + defesaMagica + ","
+                    + vida         + ","
+                    + vitorias     + ","
+                    + derrotas     + ","
                     + id
                     +");";
             return sendMESSAGE(format("0","DB",query));
         }
         String query = "UPDATE status SET "
-                + "forca = "+forca
-                + ", magia = "+magia
-                + ", defesa = "+defesa
-                + ", vida = "+vida
-                + ", vitorias = "+vitorias
-                +", derrotas = "+derrotas
-                +" WHERE id = "+exists+";";
+                + "forca = "            + forca
+                + ", magia = "          + magia
+                + ", defesa = "         + defesa
+                + ", defesaMagica = "   + defesaMagica
+                + ", vida = "           + vida
+                + ", vitorias = "       + vitorias
+                + ", derrotas = "       + derrotas
+                + " WHERE id = "        + exists
+                + ";";
         return sendMESSAGE(format("0","DB",query));
     }
     public String rankingByXpTopN(int quantidadeElementos){
-        return sendMESSAGE(format("-1","DB","SELECT nome,level,xp FROM user ORDER BY xp DESC LIMIT "+quantidadeElementos+";"));
+        return sendMESSAGE(format("1","DB","SELECT nome,level,xp FROM user WHERE id <> 0 ORDER BY xp DESC LIMIT "+quantidadeElementos+";"));
     }
     public String showStatus(String id){
         return sendMESSAGE((format(id,"DB","SELECT statsid FROM status WHERE userid = "+id+";")));
     }
     //Retorna uma string com o inventario da pessoa, necessario vir parsed
     public String inventario(String id){
-        String query = "SELECT nome, forca, magia, defesa, vida FROM inventario WHERE userid = "+id+";";
+        String query = "SELECT nome, forca, magia, defesa, defesaMagica, vida FROM inventario WHERE userid = "+id+";";
         return sendMESSAGE(format(id,"DB",query));
     }
     //query test
