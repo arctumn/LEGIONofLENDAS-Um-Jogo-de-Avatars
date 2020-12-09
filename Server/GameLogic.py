@@ -1,10 +1,98 @@
-def find_enemy(operation_context):
-    return False, "Found Enemy"
+import DataBase as db
+import functools as fun
+import random as rand
+def get_itens(id):
+    err,userID_itens = db.run_query(id,f"SELECT * FROM inventario WHERE userid = {id};")
+    userID_itens = userID_itens.split("\n")    
+    return err, userID_itens
+def get_stats(id):
+    err,userID_itens = db.run_query(id,f"SELECT * FROM status WHERE userid = {id};")
+    userID_itens = userID_itens.split("\n")    
+    return err, userID_itens
+
+def randomuser(id1,userSTAT):
+    query = f"SELECT ID FROM status WHERE \
+    forca > {int(userSTAT[0])-10} AND forca < {int(userSTAT[0])+10} \
+    magia > {int(userSTAT[1])-10} AND magia < {int(userSTAT[1])+10} \
+    defesa > {int(userSTAT[2])-10} AND defesa < {int(userSTAT[2])+10} \
+    defesaMagica > {int(userSTAT[3])-10} AND defesaMagica < {int(userSTAT[3])+10} \
+    vida > {int(userSTAT[4])-10} AND vida < {int(userSTAT[4])+10};"
+
+    _,elements = db.run_query(id1,query)
+    if elements == "":
+        return "TRYBOT",False
+    listofchoosen = elements.split("\n")
+    return False,listofchoosen[rand.randint(0,len(listofchoosen)-1)]
+
+
+# Precisas englobar isso tudo dentro de uma função bc isso é chamado para diferentes players
+# trata de encorporar isso dentro do find_enemy depois é so somares ou usares o user2/itens/stats e user1/itens/stats
+
+
+
+def find_enemy(id1,operation_context):
+    # operation context = PLAYER (um player aleatorio)
+    # operation context = BOT (pegas nas infos do primeiro e fazes um rand entre -10 e + 10 de todos os status do player)
+    # operation context = ID (Player através do QR code)
+    
+        #itens u1
+    err,user1_itens = get_itens(id1)
+    if err:
+        print(err)
+        return err, False
+        #status u1
+    err,user1_status = get_stats(id1)
+    if err:
+        print(err)
+        return err, False
+
+    user1STAT = ((user1_status[0]).split(" "))[1:]
+
+    if operation_context == "Player":
+        err,uid = randomuser(id1,user1STAT)
+        if err:
+            print(err)
+            return err, False
+            #itens u2
+        err,user2_itens = get_itens(uid)
+        if err:
+            print(err)
+            return err, False
+            #status u2
+        err, user2_stats = get_stats(uid)
+        if err:
+            print(err)
+            return err, False
+    
+    elif operation_context == "BOT" :
+        #faz a matematica para os status do bot
+        def calcStatus(x,y):
+            y = " " + str(rand.randint(int(y)-10,int(y)+10))
+            return x+y
+
+        # isto é os itens do user2 because BOT u1itens = u2itens
+        user2_itens = user1_itens
+        # isto é os id do user2 + status do user 2 separados por espaço
+        # example input lista = ["5", "10", "15", "20", "25", "30"] output = "5 0 6 16 22 28"
+        user2_stats = fun.reduce(calcStatus,user1STAT[1:],user1STAT[0])
+
+    else:
+            #itens u2
+        err,user2_itens = get_itens(operation_context)
+        if err:
+            print(err)
+            return err, False
+            #status u2
+        err,user2_stats = get_stats(operation_context)
+        if err:
+            print(err)
+            return err, False
+    pass    
 
 
 class Combatente:  # Warriors
-    def __init__(self, str, mag, defn, defm, hp, idu):
-        self.str = str
+    def __init__(self, stren, mag, defn, defm, hp, idu):
+        self.stren = stren
         self.mag = mag
         self.defn = defn
         self.defm = defm
@@ -13,8 +101,8 @@ class Combatente:  # Warriors
 
 
 class ItemPorUser:  # Items
-    def __init__(self, str, mag, defn, defm, hp, idu):
-        self.str = str
+    def __init__(self, stren, mag, defn, defm, hp, idu):
+        self.stren = stren
         self.mag = mag
         self.defn = defn
         self.defm = defm
@@ -25,6 +113,8 @@ class ItemPorUser:  # Items
 # Item order: id + força + magia + def + defm + hp + userid
 # User: id + str + mag + def + defm + hp
 
+
+#
 items = ""  # Linha com items do 1o e 2o utilizador
 users = ""  # Linha com stats do 1o e 2o utilizador
 
@@ -41,10 +131,10 @@ def controloResults(u, dn, dm):
 def calculoDano(u, it):
     print("A calcular dano")
     # Criar loop para calcular com várias armas:
-    dano[0] = u.str  # Dano fisico
+    dano[0] = u.stren  # Dano fisico
     dano[1] = u.mag  # Dano mágico
     for x in it:  # Percorre as armas
-        dano[0] = dano[0] + u.str * x.str
+        dano[0] = dano[0] + u.stren * x.stren
         dano[1] = dano[1] + u.mag * x.mag
     return dano  # Possibilidade de adicionar % aleatórios de dano bónus/retirado?, exemplo (pseudo-código):
     # (dano[0] * random(0.95, 1.05), dano[1] * random(0.95, 1.05)
@@ -140,3 +230,5 @@ def inicioCombate():
     # Enviar resultado para o utilizador
     # Actualizar a base de dados com vitórias/etc
     # Actualizar a base de dados com xp para os users consoante o resultado
+
+
