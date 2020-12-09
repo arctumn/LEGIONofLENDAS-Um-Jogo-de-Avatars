@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">LEGIONofLENDAS</string>
+    <string name="ChooseImage">Escolha um Personagem</string>
+    <string name="btn_selec_img">Selecionar</string>
+    <string name="level_integer">0</string>
+    <string name="level">Nivel</string>
+    <string name="experience">Exp</string>
+    <string name="Fight">Lutar</string>
+    <string name="upgrade_status">Melhorar Habilidades</string>
+    <string name="current_xp">Pontos:</string>
+    <string name="current_xp_integer">10000</string>
+</resources>
