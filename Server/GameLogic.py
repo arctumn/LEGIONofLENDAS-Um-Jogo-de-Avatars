@@ -40,34 +40,34 @@ def find_enemy(id1, operation_context, enemyID):
     # operation context = PLAYER (um player aleatorio)
     # operation context = BOT (pegas nas infos do primeiro e fazes um rand entre -10 e + 10 de todos os status do player)
     # operation context = ID (Player através do QR code)
-
     # itens u1
-    # err, user1_itens = get_itens(id1)[:-1]
-
-    # Versao de teste:
-    user1_itens = TesteItems1.split("\n")[:-1]
-    for a in user1_itens:
-        print(a)
-
-    err = False
+    err, user1_itens = get_itens(id1)
+    """ Versao de teste:
+    # user1_itens = TesteItems1.split("\n")[:-1]
+    # for a in user1_itens:
+    # print(a)
+    # err = False
+    """
     if err:
         print(err)
         return err, False
+    user1_itens = user1_itens[:-1]
         # status u1
-    # err, user1_status = get_stats(id1)[:-1]
+    err, user1_status = get_stats(id1)
 
     # Versao de teste:
-    user1_status = TesteUser1.split("\n")[:-1]
+    # user1_status = TesteUser1.split("\n")[:-1]
 
     if err:
         print(err)
         return err, False
+    user1_status = user1_status[:-1]
     user1STAT = ((user1_status[0]).split(" "))[1:]
 
-    s = ""
-    for a in user1STAT:
-        s = s + str(a) + " "
-    print("u1 carregado com os seguintes stats: " + s)
+    # s = ""
+    # for a in user1STAT:
+    #    s = s + str(a) + " "
+    # print("u1 carregado com os seguintes stats: " + s)
 
     if operation_context == "Player":
         err, uid = randomuser(id1, user1STAT)
@@ -82,54 +82,58 @@ def find_enemy(id1, operation_context, enemyID):
             print(err)
             return err, False
             # status u2
+        user2_itens = user2_itens[:-1]
         err, user2_stats = get_stats(uid)
         if err:
             print(err)
             return err, False
-
+        user2_stats = user2_stats[:-1]
         user2STAT = ((user2_stats[0]).split(" "))[1:]
-        s = ""
-        for a in user2STAT:
-            s = s + str(a) + " "
-        print("u2 carregado com os seguintes stats: " + s)
+        #s = ""
+        #for a in user2STAT:
+        #    s = s + str(a) + " "
+        # print("u2 carregado com os seguintes stats: " + s)
         inicioCombate(user1STAT, user2STAT, user1_itens, user2_itens, id1, uid)
-
 
     elif operation_context == "BOT":
         # faz a matematica para os status do bot
         def calcStatus(x, y):
             y = " " + str(rand.randint(int(y) - 10, int(y) + 10))
             return x + y
-
         # isto é os itens do user2 because BOT u1itens = u2itens
         user2_itens = user1_itens
         # isto é os id do user2 + status do user 2 separados por espaço
         # example input lista = ["5", "10", "15", "20", "25", "30"] output = "5 0 6 16 22 28"
         user2_stats = fun.reduce(calcStatus, user1STAT[1:], user1STAT[0])
+        inicioCombate(user1STAT, user2_stats, user1_itens, user2_itens, id1, id1)
 
     elif operation_context == "ID":
         # itens u2
-        # Versao teste:
+        """ Versao teste:
         err = False
         user2_itens = TesteItems2.split("\n")[:-1]
         user2_stats = TesteUser2.split("\n")[:-1]
+        for a in user2_itens:
+            print(a)
         print(" ID1 E 2: " + str(id1) + " " + str(enemyID))
+        """
 
-        # err, user2_itens = get_itens(enemyID)
+        err, user2_itens = get_itens(enemyID)
         if err:
             print(err)
             return err, False
             # status u2
-        # err, user2_stats = get_stats(enemyID)
+        user2_itens = user2_itens[:-1]
+        err, user2_stats = get_stats(enemyID)
         if err:
             print(err)
             return err, False
-
+        user2_stats = user2_stats[:-1]
         user2STAT = ((user2_stats[0]).split(" "))[1:]
-        s = ""
-        for a in user2STAT:
-            s = s + str(a) + " "
-        print("u2 carregado com os seguintes stats: " + s)
+        # s = ""
+        # for a in user2STAT:
+        #    s = s + str(a) + " "
+        # print("u2 carregado com os seguintes stats: " + s)
         inicioCombate(user1STAT, user2STAT, user1_itens, user2_itens, id1, enemyID)
 
     else:
@@ -206,7 +210,9 @@ def finalDamage(damage, defesaValue):
 
     fd = -1
 
-    if 0 <= balance <= 0.2:
+    if balance == 0:
+        fd = damage
+    elif 0 < balance <= 0.2:
         fd = damage - (defesaValue - (defesaValue * 0.9))
     elif 0.2 < balance <= 0.5:
         fd = damage - (defesaValue - (defesaValue * 0.7))
@@ -220,6 +226,11 @@ def finalDamage(damage, defesaValue):
 
 
 def damageDone(magicDamage, magicDefense, physicDamage, physicDefense):
+    print("CALCDANO, recebi: magicDamage -> " + str(magicDamage) +
+          ", magicDefense -> " + str(magicDefense) +
+          ", physicDamage -> " + str(physicDamage) +
+          ", physicDefense -> " + str(physicDefense))
+
     magicDamage = finalDamage(magicDamage, magicDefense)
     physicDamage = finalDamage(physicDamage, physicDefense)
     return magicDamage * 0.5 + physicDamage * 0.5
@@ -237,12 +248,10 @@ def Combate(u1, u2, it1, it2, pa, n):  # Pa -> Primeiro a Atacar
         print("acabar combate, u1 venceu")
         return 1
 
-    print("A iniciar o combate")
     # d1 = calculoDano(u1, it1)
     # d2 = calculoDano(u2, it2)
 
     if pa == -1:  # Primeira execução, escolhe um para começar aleatóriamente
-        print("A escolher primeiro a atacar... ")
         pa = rand.randint(1, 2)
         print("Escolhido o utilizador u" + str(pa))
 
@@ -256,7 +265,7 @@ def Combate(u1, u2, it1, it2, pa, n):  # Pa -> Primeiro a Atacar
             defesa[0] = defesa[0] + x.defn
             defesa[0] = defesa[1] + x.defm
         print("Defesa do adversário = " + str(defesa[0]) + ", defesa mágica = " + str(defesa[1]))
-        fd = damageDone(d[1], defesa[1], d[0], d[1])
+        fd = damageDone(d[1], defesa[1], d[0], defesa[0])
 
         print("Dano = " + str(fd))
         if fd < 0:
@@ -329,26 +338,21 @@ def inicioCombate(u1, u2, i1, i2, id1, id2):
 
 """
 Testes:
-"""
-
 
 def GerarUser():
     a = 0
     s = ""
-    while a < 5:
+    while a < 4:
         s = s + " " + str(rand.randint(0, 10))
-        a = a +1
+        a = a + 1
+    s = s + " " + str(rand.randint(50, 200))
     return s + "\n"
-
 
 # TesteUser1 = "0 5 6 7 8 9\n"
 # TesteUser2 = "1 9 8 7 6 5\n"
 TesteUser1 = "0" + GerarUser()
 TesteUser2 = "1" + GerarUser()
-
 TesteItems1 = "1 2 0 3 0 2 0\n2 0 3 0 5 1 0\n"
 TesteItems2 = "3 5 0 3 1 2 1\n4 0 2 0 1 5 1\n"
 find_enemy(0, "ID", 1)
-
-# Status -> output = fun.reduce(lambda x,y: x+f" {rand.randint(int(y)-10,int(y)+10)}",Teste1[1:],str(Teste1[0]))
-# itens  -> output = fun.reduce(lambda x,y: x+f" {rand.randint(int(y)-10,int(y)+10)}",Teste1[1:-1],str(Teste1[0])) + " " + str(Teste1[-1])
+"""
