@@ -1,36 +1,17 @@
 package com.lol.LEGIONofLENDAS;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
-
 import java.util.ArrayList;
+/**
+ * CLASS MESSAGESERVER
+ * por vias de problemas a atualizar a UI (maybe passar uma view como argumento?)
+ * a class servoce serve apenas para inicar o serviço
+ * a thread é criada do lado do cliente
+ * do lado de cada janela é required implementar onStart e onStop do bind e um service connection
+ * como uma variavel para classe e um boolean de vinculo
+ */
 
-public class MessageServer extends Service {
+public class MessageServer {
 
-    /**
-     * SERVICE CLASS MESSAGESERVER
-     * por vias de problemas a atualizar a UI (maybe passar uma view como argumento?)
-     * a class servoce serve apenas para inicar o serviço
-     * a thread é criada do lado do cliente
-     * do lado de cada janela é required implementar onStart e onStop do bind e um service connection
-     * como uma variavel para classe e um boolean de vinculo
-     */
-    private final BinderLocal oBinder = new BinderLocal();
-
-    public class BinderLocal extends Binder{
-        MessageServer getService(){
-            return  MessageServer.this;
-        }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        return oBinder;
-    }
-    // um wrapper para as funções do server
 
     /**
      *
@@ -39,7 +20,7 @@ public class MessageServer extends Service {
      * @param argumentos Conteudo que precisa ser enviado check como esta referida na classe client
      * @return Retorna o output do server
      */
-    public String callService(String sessionID,String pedidoAFazer,ArrayList<String> argumentos){
+    public static String callService(String sessionID,String pedidoAFazer,ArrayList<String> argumentos){
 
         StringBuilder posparsed = new StringBuilder();
         //Wrapper de funções, á possibilidade da necessidade de recriar  o if a baixo

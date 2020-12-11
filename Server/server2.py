@@ -6,7 +6,7 @@ IP = "192.168.2.94"
 PORT = 3003
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind(("0.0.0.0", PORT))
+s.bind((IP, PORT))
 s.listen(5)
 
 
@@ -23,7 +23,7 @@ def parse_input(user_address, client_socket, pre_parsed_message):
         client_socket.send(f"O {user_address} enviou uma mensagem invalida!\n".encode("utf-8"))
         client_socket.close()
         return False
-        
+
     if session_id == 0:
         Value, newid = Db.create_member_user(operation_context)
         if Value :
@@ -43,16 +43,16 @@ def parse_input(user_address, client_socket, pre_parsed_message):
             else:
                 print("OK + DB")
                 client_socket.send(output.encode("utf-8"))
-        #operações no jogo
+        # operações no jogo
         elif operation == "GAME":
-            error, output = Game.find_enemy(operation_context)
+            error, output = Game.find_enemy(session_id,operation_context)
             if error:
                 client_socket.send(str(error).encode("utf-8"))
                 print("ERROR + GAME: " + error)
             else:
                 client_socket.send(str(output).encode("utf-8"))
                 print("OK + GAME")
-        #operações na shop
+        # operações na shop
         elif operation == "SHOP":
             error, output = Shop.parse(session_id,operation_context)
             if error:
