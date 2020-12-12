@@ -3,6 +3,8 @@ import random as rand
 
 import DataBase as db
 
+from Server.DataBase import conn
+
 
 def get_itens(id):  # Vai buscar os items
     err, userID_itens = db.run_query(id,
@@ -52,7 +54,7 @@ def find_enemy(id1, operation_context, enemyID):
         print(err)
         return err, False
     user1_itens = user1_itens[:-1]
-        # status u1
+    # status u1
     err, user1_status = get_stats(id1)
 
     # Versao de teste:
@@ -62,7 +64,7 @@ def find_enemy(id1, operation_context, enemyID):
         print(err)
         return err, False
     user1_status = user1_status[:-1]
-    user1STAT = ((user1_status[0]).split(" "))[1:]
+    user1STAT = ((user1_status[0]).split(" "))[1:6]
 
     # s = ""
     # for a in user1STAT:
@@ -88,24 +90,25 @@ def find_enemy(id1, operation_context, enemyID):
             print(err)
             return err, False
         user2_stats = user2_stats[:-1]
-        user2STAT = ((user2_stats[0]).split(" "))[1:]
-        #s = ""
-        #for a in user2STAT:
+        user2STAT = ((user2_stats[0]).split(" "))[1:6]
+        # s = ""
+        # for a in user2STAT:
         #    s = s + str(a) + " "
         # print("u2 carregado com os seguintes stats: " + s)
-        inicioCombate(user1STAT, user2STAT, user1_itens, user2_itens, id1, uid)
+        inicioCombate(user1STAT, user2STAT, user1_itens, user2_itens, id1, uid, 0)
 
     elif operation_context == "BOT":
         # faz a matematica para os status do bot
         def calcStatus(x, y):
             y = " " + str(rand.randint(int(y) - 10, int(y) + 10))
             return x + y
+
         # isto é os itens do user2 because BOT u1itens = u2itens
         user2_itens = user1_itens
         # isto é os id do user2 + status do user 2 separados por espaço
         # example input lista = ["5", "10", "15", "20", "25", "30"] output = "5 0 6 16 22 28"
         user2_stats = fun.reduce(calcStatus, user1STAT[1:], user1STAT[0])
-        inicioCombate(user1STAT, user2_stats, user1_itens, user2_itens, id1, id1)
+        inicioCombate(user1STAT, user2_stats, user1_itens, user2_itens, id1, id1, 1)
 
     elif operation_context == "ID":
         # itens u2
@@ -129,12 +132,12 @@ def find_enemy(id1, operation_context, enemyID):
             print(err)
             return err, False
         user2_stats = user2_stats[:-1]
-        user2STAT = ((user2_stats[0]).split(" "))[1:]
+        user2STAT = ((user2_stats[0]).split(" "))[1:6]
         # s = ""
         # for a in user2STAT:
         #    s = s + str(a) + " "
         # print("u2 carregado com os seguintes stats: " + s)
-        inicioCombate(user1STAT, user2STAT, user1_itens, user2_itens, id1, enemyID)
+        inicioCombate(user1STAT, user2STAT, user1_itens, user2_itens, id1, enemyID, 2)
 
     else:
         # itens u2
@@ -173,12 +176,17 @@ class ItemPorUser:  # Items
 # Item order: id + força + magia + def + defm + hp + userid
 # User: id + str + mag + def + defm + hp
 
-def controloResults(u, d, n):
+def controloResults(u1, u2, d, n, s):
+    if n == 0:  # ronda 0: id1 + id2 + hp1 + n + hp2
+        s = str(u1.idu) + " " + str(u2.idu) + " " + str(u1.hp) + " " + str(n) + " " + str(u2.hp) + "\n"
+        return s
+    else:
+        s = s + str(u1.idu) + " " + str(u1.hp) + " " + str(d) + " " + str(n) + "\n"
     # Enviar para o utilizador os resultados da ronda de combate:
-    # u.hp = vida actual do user atacado
+    # u1 = user atacado
     # d = dano total
     # n = nº de ronda
-    return 0
+    return s
 
 
 # Calcula o dano de um utilizador
@@ -200,11 +208,11 @@ def finalDamage(damage, defesaValue):
     if damage == 0:
         damage = rand.randint(0, 10)
     elif 0 < damage <= 10:
-        damage = damage + rand.randint(int(damage * -0.2), int(damage * 0.2))
+        damage = damage + rand.randint(int(damage * -0.5), int(damage * 0.5))
     elif 10 < damage <= 50:
-        damage = damage + rand.randint(int(damage * -0.1), int(damage * 0.1))
+        damage = damage + rand.randint(int(damage * -0.3), int(damage * 0.3))
     elif 50 < damage:
-        damage = damage + rand.randint(int(damage * -0.05), int(damage * 0.05))
+        damage = damage + rand.randint(int(damage * -0.2), int(damage * 0.2))
     balance = defesaValue / damage
     print("damage = " + str(damage) + " balance: " + str(balance))
 
@@ -236,17 +244,19 @@ def damageDone(magicDamage, magicDefense, physicDamage, physicDefense):
     return magicDamage * 0.5 + physicDamage * 0.5
 
 
-def Combate(u1, u2, it1, it2, pa, n):  # Pa -> Primeiro a Atacar
+def Combate(u1, u2, it1, it2, pa, n, s):  # Pa -> Primeiro a Atacar
+
+    if n == 0:
+        s = controloResults(u1, u2, 0, n, s)
+        n = 1
+
     print(" A iniciar ronda: " + str(n))
-    if (u1.hp <= 0) and (u2.hp <= 0):
-        print("Acabar combate, empate")
-        return 0
     if u1.hp <= 0:
         print("acabar combate, u2 venceu")
-        return 2
-    if u2.hp <= 0:
+        return 2, s
+    elif u2.hp <= 0:
         print("acabar combate, u1 venceu")
-        return 1
+        return 1, s
 
     # d1 = calculoDano(u1, it1)
     # d2 = calculoDano(u2, it2)
@@ -277,7 +287,7 @@ def Combate(u1, u2, it1, it2, pa, n):  # Pa -> Primeiro a Atacar
             u2.hp = u2.hp - fd
             print("Vida depois do ataque (u2): " + str(u2.hp))
         pa = 2
-        controloResults(u2, fd, n)
+        s = controloResults(u2, u1, fd, n, s)
         # Obs na minha opinião poderíamos mudar a defesa
         # para ser feita com base em %.
 
@@ -303,16 +313,59 @@ def Combate(u1, u2, it1, it2, pa, n):  # Pa -> Primeiro a Atacar
             u1.hp = u1.hp - fd
             print("Vida depois do ataque (u1): " + str(u1.hp))
         pa = 1
-        controloResults(u1, fd, n)
+        s = controloResults(u1, u2, fd, n, s)
 
-    Combate(u1, u2, it1, it2, pa, n + 1)
+    Combate(u1, u2, it1, it2, pa, n + 1, s)
+
+
+def Recompensar(id, x):
+    err, xp = db.run_query(id, f"SELECT xp FROM user WHERE id = {id};")
+    if err:
+        return False
+    xp = xp.split("\n")
+    err, _ = db.run_query(id, f"UPDATE user SET xp = {x + xp[0]} WHERE id = {id};")
+    return err
+    # Adicionar x pontos ao user id
+
+
+def adicionarVitoria(id):
+    err, vic = db.run_query(id, f"SELECT vitorias FROM status WHERE id = {id};")
+    if err:
+        return False
+    vic = vic.split("\n")
+    err, _ = db.run_query(id, f"UPDATE status SET vitorias = {1 + vic[0]} WHERE id = {id};")
+    return err
+
+
+def adicionarDerrota(id):
+    err, der = db.run_query(id, f"SELECT derrotas FROM status WHERE id = {id};")
+    if err:
+        return False
+    der = der.split("\n")
+    err, _ = db.run_query(id, f"UPDATE status SET derrotas = {1 + der[0]} WHERE id = {id};")
+    return err
+
+
+def Notificar(id, s):
+    cid = 0
+    cursor = conn.execute("SELECT id FROM batalhaLOG ORDER BY id DESC LIMIT 1;")
+    for row in cursor:
+        if row[0]:
+            print("Value of id: " + str(row[0] + 1))
+            cid = row[0] + 1
+
+    err, _ = db.run_query(id, f"INSERT INTO batalhaLOG (id, texto, iduser, visto) VALUES {cid},{s},{id},{0}")
+    # 0-> não lido
+
+    # Adicionar s à pilha notificações do user id
 
 
 # Função Principal do decorrer do combate
-def inicioCombate(u1, u2, i1, i2, id1, id2):
+def inicioCombate(u1, u2, i1, i2, id1, id2, tipo):
     # Fazer query da string users e da string items
 
     print("Inicio do Combate entre user1 -> " + str(id1) + " e user2 -> " + str(id2))
+    s = ""
     # Cria os objectos combatentes
     user1 = Combatente(int(u1[0]), int(u1[1]), int(u1[2]), int(u1[3]), int(u1[4]), int(id1))
     user2 = Combatente(int(u2[0]), int(u2[1]), int(u2[2]), int(u2[3]), int(u2[4]), int(id2))
@@ -326,8 +379,50 @@ def inicioCombate(u1, u2, i1, i2, id1, id2):
     for x in i2:
         b = x.split(" ")
         item2.append(ItemPorUser(int(b[1]), int(b[2]), int(b[3]), int(b[4]), int(b[5]), int(b[6])))
-    resultado = Combate(user1, user2, item1, item2, -1, 0)
+    resultado, s = Combate(user1, user2, item1, item2, -1, 0, s)
     print(" Resultado = " + str(resultado))
+
+    # Enviar s para os users user1.idu e user2.idu
+    if tipo == 1:  # BOT
+        Notificar(u1.idu, s)
+        if resultado == 1:
+            if Recompensar(u1.idu, 4):
+                return False
+        elif resultado == 2:
+            if Recompensar(u1.idu, 2):
+                return False
+
+    elif tipo == 2:  # ID
+        Notificar(u1.idu, s)
+        Notificar(u2.idu, s)
+        if resultado == 1:
+            if Recompensar(u1.idu, 3):
+                return False
+            if Recompensar(u2.idu, 1):
+                return False
+        elif resultado == 2:
+            if Recompensar(u2.idu, 3):
+                return False
+            if Recompensar(u1.idu, 1):
+                return False
+
+    elif tipo == 0:  # PLAYER
+        Notificar(u1.idu, s)
+        if resultado == 1:
+            adicionarVitoria(u1.idu)
+            adicionarDerrota(u2.idu)
+            if Recompensar(u1.idu, 6):
+                return False
+            if Recompensar(u2.idu, 3):
+                return False
+        elif resultado == 2:
+            adicionarVitoria(u2.idu)
+            adicionarDerrota(u1.idu)
+            if Recompensar(u2.idu, 6):
+                return False
+            if Recompensar(u1.idu, 3):
+                return False
+
     # resultado = 0 -> Empate
     # resultado = 1 -> u1 venceu
     # resultado = 2 -> u2 venceu
