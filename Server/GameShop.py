@@ -3,18 +3,20 @@ import functools as fun
 def comprar(ssid,itens):
     custo = 0
     ids = []
+    # obtem o xp do utilizador
     error,xp = DB.run_query(ssid, f"SELECT xp FROM user WHERE id = {ssid}")
     if error:
         return "ERRO NA SHOP",False
-    
+    # obtem os itens
     for item in itens:
         error,info_item = DB.run_query(ssid, f"SELECT ID,price FROM loja WHERE itemName ='{item}'")
-        
         if error:
             return "ITEM NAO ENCONTRADO",False
-        
+
+        # calcula o preço final
         item_id,price = info_item.rstrip("\n").split(" ")
         custo += int(price)
+        # prepara para adicionar os items ao utilizador com base no id
         ids.append(item_id)
 
     #verifica se o balanço é positivo
@@ -22,16 +24,27 @@ def comprar(ssid,itens):
 
     if  bal > -1:
         for item_id in ids:
-            _,info_item = DB.run_query(ssid, f"SELECT forca,magia,defesa,defesaMagica,vida FROM loja WHERE id = {item_id}")
-            # organiza o item
-            _,nome = DB.run_query(ssid, f"SELECT itemName FROM loja WHERE id = {item_id}")
+            # obtem os status
+            err,info_item = DB.run_query(ssid, f"SELECT forca,magia,defesa,defesaMagica,vida FROM loja WHERE id = {item_id}")
+            if err:
+                return err,False
+            # obtem o nome
+            err,nome = DB.run_query(ssid, f"SELECT itemName FROM loja WHERE id = {item_id}")
+            if err:
+                return err,False
+            
+            # prepara a query a ser enviada
             nome = nome.rstrip("\n")
-            info = fun.reduce(lambda x,y:x+ f",{y}",info_item.rstrip("\n").split(" "),f" ({item_id},'{nome}''")
-
-            query = f"INSERT INTO inventario (ID,itemName,forca,magia,defesa,defesaMagica,vida,userID) VALUES{info},{ssid})"
+            next_ele = DB.next_id("inventario")
+            if not next_ele:
+                return "",False
+            info = fun.reduce(lambda x,y:x+ f",{y}",info_item.rstrip("\n").split(" "),f" ({next_ele},{ssid},'{nome}',{item_id}")
+            query = f"INSERT INTO inventario (id,iduser,idarma,itemName,forca,magia,defesa,defesaMagica,vida) VALUES{info})"
             error,_ = DB.run_query(ssid,query)
+            # verifica se a operação ocorreu com sucesso, não precisamos de saber que foi adicionado, apenas queremos saber se houve algum erro
             if error:
                 return error,False
+
             # Atualiza o novo xp do utilizador
             query = f"UPDATE user SET xp = {bal} WHERE id = {ssid};"
             error,_ = DB.run_query(ssid,query)
@@ -56,12 +69,12 @@ def vender(ssid,itens):
 
         # Preço do item em questão
         info_price = info_item.rstrip("\n")
-        error,info_item_inventario = DB.run_query(ssid, f"SELECT ID FROM inventario WHERE itemName = '{item}'' AND userID = {ssid}")
+        error,info_item_inventario = DB.run_query(ssid, f"SELECT id FROM inventario WHERE itemName = '{item}'' AND iduser = {ssid}")
         if info_item_inventario != "":
-            listItem = info_item_inventario.rstrip("\n").split(" ")
-            for _ in listItem:
+            listItem = str(info_item_inventario).rstrip("\n").split(" ")
+            for id_item in listItem:
                 valor += int( int(info_price) * 0.4)
-            DB.run_query(ssid, f"DELETE FROM inventario WHERE itemName = '{item}'' AND userID = {ssid}")
+                DB.run_query(ssid, f"DELETE FROM inventario WHERE id = {id_item} AND itemName = '{item}'' AND iduser = {ssid}")
         else:
             return False, "ITEM INEXISTENTE NO SEU INVENTARIO"
 
@@ -74,7 +87,7 @@ def vender(ssid,itens):
 
 # Recebe e organiza o input
 def parse(ssid,operation):
-    opsplited = operation.split(" ")
+    opsplited = str(operation).split(" ")
     itens = opsplited[1:len(opsplited)-1]
     if opsplited[0] == "Comprar":
         return comprar(ssid,itens)
