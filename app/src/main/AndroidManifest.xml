@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lol.LEGIONofLENDAS">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,18 +12,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LEGIONofLENDAS">
-        <activity android:name=".Inventario"></activity>
-        <activity android:name=".Shop" />
-        <activity android:name=".MenuPrincipal" />
-        <activity android:name=".Login" />
-        <activity android:name=".CharCreationIcone">
-
+        <activity android:name=".ParseBatalha"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
+        <activity android:name=".QrCamera"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar">
         </activity>
-
-        <activity android:name=".CharCreationInfo" />
-
-        <activity android:name=".MainActivity">
-
+        <activity android:name=".QrcodeStarter"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"
+            />
+        <activity android:name=".Inventario"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
+        <activity android:name=".Shop"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
+        <activity android:name=".MenuPrincipal"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
+        <activity android:name=".Login"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
+        <activity android:name=".CharCreationInfo"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

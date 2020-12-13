@@ -9,4 +9,27 @@
     <string name="upgrade_status">Melhorar Habilidades</string>
     <string name="current_xp">Pontos:</string>
     <string name="current_xp_integer">10000</string>
+    <string name="qr_helper_text">Partilhe este codigo QR</string>
+    <string name="register">REGISTAR JOGADOR</string>
+    <string name="username">USERNAME:</string>
+    <string name="password">PASSWORD:</string>
+    <string name="create_account">REGISTAR</string>
+    <string name="already_registed">É UM JOGADOR REGISTADO? INICIE SESSÃO AQUI!</string>
+    <string name="create_account_login">AINDA NÃO TEM UMA CONTA? CRIE UMA AQUI!</string>
+    <string name="login_text">INICIAR SESSÃO</string>
+    <string name="username_login">USERNAME:</string>
+    <string name="password_loggin">PASSWORD:</string>
+    <string name="play_login_btn">JOGAR</string>
+    <string name="main_menu_store">LOJA</string>
+    <string name="main_menu_rank">RANKING</string>
+    <string name="main_menu_inventory">INVENTÁRIO</string>
+    <string name="main_menu_upgrade_habilities">MELHORAR HABILIDADES</string>
+    <string name="main_menu_start_fight">LUTA</string>
+    <string name="main_menu_level">NIVEL:</string>
+    <string name="main_menu_exp">EXP:</string>
+    <string name="main_menu_username">USERNAME:</string>
+    <string name="main_menu_logout">LOGOUT</string>
+    <string name="main_menu_level_update">\"NIVEL:  \"</string>
+    <string name="main_menu_exp_update">\"EXP:  \"</string>
+    <string name="fight_qrcode">LUTAR</string>
 </resources>

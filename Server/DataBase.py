@@ -33,6 +33,7 @@ conn = sqlite3.connect("AndroidDB.db")
 conn = sqlite3.connect("AndroidDB.db")
 def create_member_user(operation_context):
     test = str(operation_context).split(' ')
+    print(test)
     if test[0] != "INSERT":
         return False
     try:
@@ -53,7 +54,7 @@ def create_member_user(operation_context):
                 new_str = test[0] + " " + test[1] + " " + test[2] + " " + test[3] + " " + test[4] +" "
                 new_arg = (test[len(test)-1])
                 new_arg = val + new_arg[7:]
-                print(new_arg)
+                print("VALORES RECEBIDOS: " + new_arg)
                 print("Query: " + new_str + new_arg)    
                 conn.execute(new_str + new_arg)
                 conn.commit()

@@ -98,9 +98,9 @@ public class Client {
      * @param password password pre transformada da pessoa
      * @return ver sendMessage
      */
-    public String login (String username, String password){
+    public String login(String username, String password){
         password = getMd5Hash(password);
-        return sendMESSAGE(format("1","DB","SELECT id,nome,image FROM user WHERE nome = '"+username+"' AND password = '"+password+"';"));
+        return sendMESSAGE(format("1","DB","SELECT id,nome,image,level,xp FROM user WHERE nome = '"+username+"' AND password = '"+password+"';"));
     }
     /**
      * atualiza os status do userID
@@ -141,7 +141,7 @@ public class Client {
                 + ", derrotas = "       + derrotas
                 + " WHERE id = "        + exists
                 + ";";
-        return sendMESSAGE(format("0","DB",query));
+        return sendMESSAGE(format("1","DB",query));
     }
     /**
      * Mostra o top X de xp para motivos de comparação
@@ -243,5 +243,16 @@ public class Client {
             Log.e("MD5", Objects.requireNonNull(e.getLocalizedMessage()));
             return null;
         }
+    }
+    /**
+     * Verifica se ja existe algum utilizador na BD
+     * @param username nome a ser usado
+     * @return DISPONIVEL ou NAO DISPONIVEL
+     */
+    public String checkIfExists(String username){
+        String output = sendMESSAGE(format("1","DB","SELECT id FROM user WHERE nome ='"+username+"';"));
+        Log.i("check", output );
+        if (output.equals("NENHUM ELEMENTO")) return "DISPONIVEL";
+        return "NAO DISPONIVEL";
     }
 }

@@ -1,5 +1,4 @@
 package com.lol.LEGIONofLENDAS;
-
 import java.util.ArrayList;
 /**
  * CLASS MESSAGESERVER
@@ -9,10 +8,7 @@ import java.util.ArrayList;
  * do lado de cada janela é required implementar onStart e onStop do bind e um service connection
  * como uma variavel para classe e um boolean de vinculo
  */
-
 public class MessageServer {
-
-
     /**
      *
      * @param sessionID Id do utilizador
@@ -21,7 +17,6 @@ public class MessageServer {
      * @return Retorna o output do server
      */
     public static String callService(String sessionID,String pedidoAFazer,ArrayList<String> argumentos){
-
         StringBuilder posparsed = new StringBuilder();
         //Wrapper de funções, á possibilidade da necessidade de recriar  o if a baixo
         for(String arg : argumentos) posparsed.append(arg).append(" ");
@@ -34,7 +29,6 @@ public class MessageServer {
           o USER -1 serve so para controlo administrativo de toda a base de dados
           usem apenas os metodos seguros, ou seja que não usam o user -1 diretamente,
           ou seja o metodo TESTINGADMIN como esta descrito explicitamente
-
         */
         switch (pedidoAFazer){
             case "fightRandom":
@@ -57,6 +51,8 @@ public class MessageServer {
                 return client.inserirStatusUserDB(sessionID,argumentos.get(0),argumentos.get(1),argumentos.get(2),argumentos.get(3),argumentos.get(4),argumentos.get(5),argumentos.get(6));
             case "rankingxp":
                 return client.rankingByXpTopN(Integer.parseInt(argumentos.get(0)));
+            case "verificar":
+                return client.checkIfExists(argumentos.get(0));
             case "TESTINGADMIN":
                 return client.operacaoNaBD("-1",argumentos.get(0));
             default:
