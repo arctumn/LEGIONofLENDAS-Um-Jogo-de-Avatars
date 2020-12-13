@@ -3,7 +3,7 @@ import random as rand
 
 import DataBase as db
 
-from Server.DataBase import conn
+from DataBase import conn
 
 
 def get_itens(id):  # Vai buscar os items
@@ -323,7 +323,7 @@ def Recompensar(id, x):
     if err:
         return False
     xp = xp.split("\n")
-    err, _ = db.run_query(id, f"UPDATE user SET xp = {x + xp[0]} WHERE id = {id};")
+    err, _ = db.run_query(id, f"UPDATE user SET xp = {x + int(xp[0])} WHERE id = {id};")
     return err
     # Adicionar x pontos ao user id
 
@@ -333,7 +333,7 @@ def adicionarVitoria(id):
     if err:
         return False
     vic = vic.split("\n")
-    err, _ = db.run_query(id, f"UPDATE status SET vitorias = {1 + vic[0]} WHERE id = {id};")
+    err, _ = db.run_query(id, f"UPDATE status SET vitorias = {1 + int(vic[0])} WHERE id = {id};")
     return err
 
 
@@ -342,7 +342,7 @@ def adicionarDerrota(id):
     if err:
         return False
     der = der.split("\n")
-    err, _ = db.run_query(id, f"UPDATE status SET derrotas = {1 + der[0]} WHERE id = {id};")
+    err, _ = db.run_query(id, f"UPDATE status SET derrotas = {1 + int(der[0])} WHERE id = {id};")
     return err
 
 
@@ -354,7 +354,7 @@ def Notificar(id, s):
             print("Value of id: " + str(row[0] + 1))
             cid = row[0] + 1
 
-    err, _ = db.run_query(id, f"INSERT INTO batalhaLOG (id, texto, iduser, visto) VALUES {cid},{s},{id},{0}")
+    err, _ = db.run_query(id, f"INSERT INTO batalhaLOG (id, texto, iduser, visto) VALUES ({cid},{s},{id},{0})")
     # 0-> não lido
 
     # Adicionar s à pilha notificações do user id
