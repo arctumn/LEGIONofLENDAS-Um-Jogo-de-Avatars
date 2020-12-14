@@ -31,8 +31,10 @@ public class MessageServer {
           ou seja o metodo TESTINGADMIN como esta descrito explicitamente
         */
         switch (pedidoAFazer){
-            case "fightRandom":
-                return client.fightRandom(sessionID,posparsed.toString());
+            case "fightRandomBot":
+                return client.fightRandomBot(sessionID);
+            case "fightRandomPlayer":
+                return client.fightRandomPlayer(sessionID);
             case "fightNonRandom":
                 return client.fightNonRandom(sessionID,posparsed.toString());
             case "Comprar":

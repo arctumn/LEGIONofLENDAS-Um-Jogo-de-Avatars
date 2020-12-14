@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MenuLutaOpcoes extends AppCompatActivity {
     Button btnpvp, btnbots, btnamigo;
@@ -27,8 +29,8 @@ public class MenuLutaOpcoes extends AppCompatActivity {
         btnpvp.setOnClickListener(v -> {
             op="Player";
             luta.add(op);
-            util.txtMessageServer(id, "fightRandom", luta);
-            outputLuta = util.output;
+            util.txtMessageServer(id, "fightRandomPlayer", luta);
+            outputLuta = getFightLog();
             Intent intent = new Intent(MenuLutaOpcoes.this, ParseBatalha.class);
             intent.putExtra("userid",id);
             intent.putExtra("ava", ava);
@@ -41,8 +43,8 @@ public class MenuLutaOpcoes extends AppCompatActivity {
         btnbots.setOnClickListener(v -> {
             op="Bot";
             luta.add(op);
-            util.txtMessageServer(id, "fightRandom", luta);
-            outputLuta = util.output;
+            util.txtMessageServer(id, "fightRandomBot", luta);
+            outputLuta = getFightLog();
             Intent intent = new Intent(MenuLutaOpcoes.this, Shop.class);
             intent.putExtra("userid",id);
             intent.putExtra("ava", ava);
@@ -57,5 +59,18 @@ public class MenuLutaOpcoes extends AppCompatActivity {
             startActivity(intent);
         });
 
+    }
+
+    private String getFightLog() {
+        String query = "SELECT texto FROM batalhaLOG WHERE iduser ="+id+" AND visto = 0";
+        util.txtMessageServer(id,"TESTINGADMIN",new ArrayList<>(Collections.singletonList(query)));
+        Log.i("SERVERFIGHT",util.output);
+        // recebe o texto da batalha
+        String final_outputLuta = util.output;
+        // atualiza a informação do lado do server
+        query = "UPDATE batalhaLOG SET visto = 1 WHERE iduser = "+id+" AND visto = 0";
+        util.txtMessageServer(id,"TESTINGADMIN",new ArrayList<>(Collections.singletonList(query)));
+        Log.i("TESTLISTA",final_outputLuta);
+        return final_outputLuta;
     }
 }

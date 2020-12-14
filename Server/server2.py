@@ -45,13 +45,8 @@ def parse_input(user_address, client_socket, pre_parsed_message):
                 client_socket.send(output.encode("utf-8"))
         # operações no jogo
         elif operation == "GAME":
-            error, output = Game.find_enemy(session_id,operation_context)
-            if error:
-                client_socket.send(str(error).encode("utf-8"))
-                print("ERROR + GAME: " + error)
-            else:
-                client_socket.send(str(output).encode("utf-8"))
-                print("OK + GAME")
+            Game.find_enemy(session_id,operation_context)
+            print("OK + GAME")
         # operações na shop
         elif operation == "SHOP":
             error, output = Shop.parse(session_id,operation_context)

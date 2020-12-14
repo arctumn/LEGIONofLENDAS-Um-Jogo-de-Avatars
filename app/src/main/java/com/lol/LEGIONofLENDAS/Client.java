@@ -71,12 +71,18 @@ public class Client {
     /**
      * lutas aleatorias
      * @param userId id do utilizador
-     * @param oponente pergunta se é do tipo player ou do tipo bot
      * @return ver sendMessage
      */
-    public String fightRandom(String userId, String oponente){
-        if (oponente.equals("Player")) return sendMESSAGE(format(userId,"GAME","Player"));
+    public String fightRandomBot(String userId){
         return sendMESSAGE(format(userId,"GAME","Bot"));
+    }
+    /**
+     * lutas aleatorias
+     * @param userId id do utilizador
+     * @return ver sendMessage
+     */
+    public String fightRandomPlayer(String userId){
+       return sendMESSAGE(format(userId,"GAME","Player"));
     }
     /**
      * cria utilizadores
