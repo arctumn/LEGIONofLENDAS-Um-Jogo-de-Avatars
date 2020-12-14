@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#857A542B"
             android:text="@string/main_menu_store"
+            android:textColor="#ffffff"
             app:layout_column="0"
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
@@ -48,6 +49,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#857A542B"
             android:text="@string/main_menu_rank"
+            android:textColor="#ffffff"
             app:layout_column="1"
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
@@ -60,6 +62,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#857A542B"
             android:text="@string/main_menu_inventory"
+            android:textColor="#ffffff"
             app:layout_column="0"
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
@@ -72,6 +75,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#857A542B"
             android:text="@string/main_menu_upgrade_habilities"
+            android:textColor="#ffffff"
             app:layout_column="1"
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
@@ -84,6 +88,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#857A542B"
             android:text="@string/main_menu_start_fight"
+            android:textColor="#ffffff"
             app:layout_column="0"
             app:layout_columnSpan="2"
             app:layout_columnWeight="1"
@@ -144,7 +149,7 @@
             app:layout_column="1"
             app:layout_gravity="fill"
             app:layout_row="0"
-            app:layout_rowSpan="4" />
+            app:layout_rowSpan="3" />
 
 
     </androidx.gridlayout.widget.GridLayout>

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 
 public class MenuPrincipal extends AppCompatActivity {
+    String userid;
     Button btnloja, btnrank, btninv, btnhab, btnluta, btnlogout;
 
     @Override
@@ -17,6 +18,8 @@ public class MenuPrincipal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principal);
         Intent in = getIntent();
+
+        userid = in.getStringExtra("id");
 
         btnloja=findViewById(R.id.btn_loja);
         btnloja.setOnClickListener(v -> {
@@ -40,8 +43,9 @@ public class MenuPrincipal extends AppCompatActivity {
         });
         btnluta=findViewById(R.id.btn_luta);
         btnluta.setOnClickListener(v -> {
-            Intent intent = new Intent(MenuPrincipal.this, QrCamera.class);
-            intent.putExtra("id",in.getStringExtra("id"));
+            Intent intent = new Intent(MenuPrincipal.this, MenuLutaOpcoes.class);
+            intent.putExtra("userid",userid);
+            intent.putExtra("ava",in.getStringExtra("imagem"));
             startActivity(intent);
         });
         btnlogout=findViewById(R.id.btn_logout);
@@ -53,9 +57,9 @@ public class MenuPrincipal extends AppCompatActivity {
         });
 
 
-       final ImageView avatar = findViewById(R.id.imgAvatar);
+        final ImageView avatar = findViewById(R.id.imgAvatar);
 
-       int id = Integer.parseInt(in.getStringExtra("imagem"));
+        int id = Integer.parseInt(in.getStringExtra("imagem"));
         avatar.setImageResource(id);
 
         final TextView nome = findViewById(R.id.textusername);
@@ -66,10 +70,6 @@ public class MenuPrincipal extends AppCompatActivity {
 
         final TextView exp = findViewById(R.id.textexp);
         exp.setText(String.format("%s%s", getString(R.string.main_menu_exp_update), in.getStringExtra("exp")));
-
-
-
-
 
     }
 }

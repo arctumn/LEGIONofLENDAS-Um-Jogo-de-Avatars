@@ -7,14 +7,19 @@ from DataBase import conn
 
 
 def get_itens(id):  # Vai buscar os items
-    err, userID_itens = db.run_query(id,
-                                     f"SELECT * FROM inventario WHERE userid = {id};")  # idarma + str + mag + def + defm + hp + iduser
+    err, userID_itens = db.run_query(id,f"SELECT * FROM inventario WHERE iduser = {id};")  # idarma + str + mag + def + defm + hp + iduser
+    if userID_itens == "":
+        return False, ""
     userID_itens = userID_itens.split("\n")
     return err, userID_itens
 
 
 def get_stats(id):  # Vai buscar os stats
-    err, userID_status = db.run_query(id, f"SELECT * FROM status WHERE userid = {id};")
+    err, userID_status = db.run_query(id, f"SELECT * FROM status WHERE ID = {id};")
+    if userID_status == "":
+        return False, ""
+    print(userID_status)
+    print(err)    
     userID_status = userID_status.split("\n")
     return err, userID_status
 
@@ -38,33 +43,32 @@ def randomuser(id1, userSTAT):
 # trata de encorporar isso dentro do find_enemy depois é so somares ou usares o user2/itens/stats e user1/itens/stats
 
 
-def find_enemy(id1, operation_context, enemyID):
+def find_enemy(id1, operation_context):
     # operation context = PLAYER (um player aleatorio)
     # operation context = BOT (pegas nas infos do primeiro e fazes um rand entre -10 e + 10 de todos os status do player)
     # operation context = ID (Player através do QR code)
     # itens u1
     err, user1_itens = get_itens(id1)
-    """ Versao de teste:
-    # user1_itens = TesteItems1.split("\n")[:-1]
-    # for a in user1_itens:
-    # print(a)
-    # err = False
-    """
+    print("AQUI")
     if err:
         print(err)
         return err, False
     user1_itens = user1_itens[:-1]
     # status u1
+    print("ALI")
     err, user1_status = get_stats(id1)
-
+    print(f"Valor de err: {err} e valor de itens: {user1_itens}")
     # Versao de teste:
     # user1_status = TesteUser1.split("\n")[:-1]
 
     if err:
         print(err)
         return err, False
+
+    print("AQUI2")    
     user1_status = user1_status[:-1]
     user1STAT = ((user1_status[0]).split(" "))[1:6]
+    print("ALI2")
 
     # s = ""
     # for a in user1STAT:
@@ -95,7 +99,7 @@ def find_enemy(id1, operation_context, enemyID):
         # for a in user2STAT:
         #    s = s + str(a) + " "
         # print("u2 carregado com os seguintes stats: " + s)
-        inicioCombate(user1STAT, user2STAT, user1_itens, user2_itens, id1, uid, 0)
+        return inicioCombate(user1STAT, user2STAT, user1_itens, user2_itens, id1, uid, 0)
 
     elif operation_context == "BOT":
         # faz a matematica para os status do bot
@@ -108,49 +112,31 @@ def find_enemy(id1, operation_context, enemyID):
         # isto é os id do user2 + status do user 2 separados por espaço
         # example input lista = ["5", "10", "15", "20", "25", "30"] output = "5 0 6 16 22 28"
         user2_stats = fun.reduce(calcStatus, user1STAT[1:], user1STAT[0])
-        inicioCombate(user1STAT, user2_stats, user1_itens, user2_itens, id1, id1, 1)
+        return inicioCombate(user1STAT, user2_stats, user1_itens, user2_itens, id1, id1, 1)
 
-    elif operation_context == "ID":
+    else:
         # itens u2
-        """ Versao teste:
-        err = False
-        user2_itens = TesteItems2.split("\n")[:-1]
-        user2_stats = TesteUser2.split("\n")[:-1]
-        for a in user2_itens:
-            print(a)
-        print(" ID1 E 2: " + str(id1) + " " + str(enemyID))
-        """
-
-        err, user2_itens = get_itens(enemyID)
+        operation_context = str(operation_context).rstrip("\n")
+        print("Value of opc: ["+operation_context+"] ")
+        err, user2_itens = get_itens(operation_context)
+        print("CHEGUEI ANTES DO INICIO DO COMBATE")
         if err:
             print(err)
             return err, False
             # status u2
         user2_itens = user2_itens[:-1]
-        err, user2_stats = get_stats(enemyID)
+        err, user2_stats = get_stats(operation_context)
         if err:
             print(err)
             return err, False
         user2_stats = user2_stats[:-1]
         user2STAT = ((user2_stats[0]).split(" "))[1:6]
+        print("CHEGUEI ANTES DO INICIO DO COMBATE")
         # s = ""
         # for a in user2STAT:
         #    s = s + str(a) + " "
         # print("u2 carregado com os seguintes stats: " + s)
-        inicioCombate(user1STAT, user2STAT, user1_itens, user2_itens, id1, enemyID, 2)
-
-    else:
-        # itens u2
-        err, user2_itens = get_itens(operation_context)
-        if err:
-            print(err)
-            return err, False
-            # status u2
-        err, user2_stats = get_stats(operation_context)
-        if err:
-            print(err)
-            return err, False
-    pass
+        return inicioCombate(user1STAT, user2STAT, user1_itens, user2_itens, id1, operation_context, 2)
 
 
 class Combatente:  # Warriors
@@ -244,122 +230,117 @@ def damageDone(magicDamage, magicDefense, physicDamage, physicDefense):
     return magicDamage * 0.5 + physicDamage * 0.5
 
 
-def Combate(u1, u2, it1, it2, pa, n, s):  # Pa -> Primeiro a Atacar
+def Combate(u1, u2, it1, it2, pa, numero_ronda, string_output_ronda):  # Pa -> Primeiro a Atacar
 
-    if n == 0:
-        s = controloResults(u1, u2, 0, n, s)
-        n = 1
+    if numero_ronda == 0:
+        string_output_ronda = controloResults(u1, u2, 0, numero_ronda, string_output_ronda)
+        numero_ronda = 1
 
-    print(" A iniciar ronda: " + str(n))
+    print(" A iniciar ronda: " + str(numero_ronda))
     if u1.hp <= 0:
         print("acabar combate, u2 venceu")
-        return 2, s
+        return 2, str(string_output_ronda)
     elif u2.hp <= 0:
         print("acabar combate, u1 venceu")
-        return 1, s
+        return 1, str(string_output_ronda)
+    else:
 
     # d1 = calculoDano(u1, it1)
     # d2 = calculoDano(u2, it2)
 
-    if pa == -1:  # Primeira execução, escolhe um para começar aleatóriamente
-        pa = rand.randint(1, 2)
-        print("Escolhido o utilizador u" + str(pa))
+        if pa == -1:  # Primeira execução, escolhe um para começar aleatóriamente
+            pa = rand.randint(1, 2)
+            print("Escolhido o utilizador u" + str(pa))
 
-    if pa == 1:  # User 1 é o primeiro a atacar
-        print("A iniciar o ataque de u1...")
-        defesa = [0, 0]
-        d = calculoDano(u1, it1)
-        print("Dano = " + str(d[0]) + ", dano mágico = " + str(d[1]))
+        if pa == 1:  # User 1 é o primeiro a atacar
+            print("A iniciar o ataque de u1...")
+            defesa = [0, 0]
+            d = calculoDano(u1, it1)
+            print("Dano = " + str(d[0]) + ", dano mágico = " + str(d[1]))
 
-        for x in it2:
-            defesa[0] = defesa[0] + x.defn
-            defesa[0] = defesa[1] + x.defm
-        print("Defesa do adversário = " + str(defesa[0]) + ", defesa mágica = " + str(defesa[1]))
-        fd = damageDone(d[1], defesa[1], d[0], defesa[0])
+            for x in it2:
+                defesa[0] = defesa[0] + x.defn
+                defesa[0] = defesa[1] + x.defm
+            print("Defesa do adversário = " + str(defesa[0]) + ", defesa mágica = " + str(defesa[1]))
+            fd = damageDone(d[1], defesa[1], d[0], defesa[0])
 
-        print("Dano = " + str(fd))
-        if fd < 0:
-            print("Vida antes do ataque (u1): " + str(u1.hp))
-            u1.hp = u1.hp + fd
-            print("Vida depois do ataque (u1): " + str(u1.hp))
-        elif fd > 0:
-            print("Vida antes do ataque (u2): " + str(u2.hp))
-            u2.hp = u2.hp - fd
-            print("Vida depois do ataque (u2): " + str(u2.hp))
-        pa = 2
-        s = controloResults(u2, u1, fd, n, s)
-        # Obs na minha opinião poderíamos mudar a defesa
-        # para ser feita com base em %.
+            print("Dano = " + str(fd))
+            if fd < 0:
+                print("Vida antes do ataque (u1): " + str(u1.hp))
+                u1.hp = u1.hp + fd
+                print("Vida depois do ataque (u1): " + str(u1.hp))
+            else:
+                print("Vida antes do ataque (u2): " + str(u2.hp))
+                u2.hp = u2.hp - fd
+                print("Vida depois do ataque (u2): " + str(u2.hp))
+            pa = 2
+            string_output_ronda = controloResults(u2, u1, fd, numero_ronda, string_output_ronda)
+            # Obs na minha opinião poderíamos mudar a defesa
+            # para ser feita com base em %.
 
-    elif pa == 2:  # User 2 é o primeiro a atacar
-        print("A iniciar o ataque de u2...")
-        defesa = [0, 0]
-        d = calculoDano(u2, it2)
-        print("Dano = " + str(d[0]) + ", dano mágico = " + str(d[1]))
+        else:  # User 2 é o primeiro a atacar
+            print("A iniciar o ataque de u2...")
+            defesa = [0, 0]
+            d = calculoDano(u2, it2)
+            print("Dano = " + str(d[0]) + ", dano mágico = " + str(d[1]))
+    
+            for x in it1:
+                defesa[0] = defesa[0] + x.defn
+                defesa[1] = defesa[1] + x.defm
+            print("Defesa do adversário = " + str(defesa[0]) + ", defesa mágica = " + str(defesa[1]))
+            fd = damageDone(d[1], defesa[1], d[0], d[1])
+    
+            print("Dano = " + str(fd))
+            if fd < 0:
+                print("Vida antes do ataque (u2): " + str(u2.hp))
+                u2.hp = u2.hp + fd
+                print("Vida depois do ataque (u2): " + str(u2.hp))
+            else:
+                print("Vida antes do ataque (u1): " + str(u1.hp))
+                u1.hp = u1.hp - fd
+                print("Vida depois do ataque (u1): " + str(u1.hp))
+            pa = 1
+            string_output_ronda = controloResults(u1, u2, fd, numero_ronda, string_output_ronda)
+            print(f"VALOR DE S --------->[{string_output_ronda}]")
+    return Combate(u1, u2, it1, it2, pa, numero_ronda + 1, string_output_ronda)
+          
 
-        for x in it1:
-            defesa[0] = defesa[0] + x.defn
-            defesa[1] = defesa[1] + x.defm
-        print("Defesa do adversário = " + str(defesa[0]) + ", defesa mágica = " + str(defesa[1]))
-        fd = damageDone(d[1], defesa[1], d[0], d[1])
+def Recompensar(uid, x):
+    print("ENTREI NO RECOMPENSAR")
+    _, xp = db.run_query(uid, f"SELECT xp FROM user WHERE id = {uid};")
 
-        print("Dano = " + str(fd))
-        if fd < 0:
-            print("Vida antes do ataque (u2): " + str(u2.hp))
-            u2.hp = u2.hp + fd
-            print("Vida depois do ataque (u2): " + str(u2.hp))
-        elif fd > 0:
-            print("Vida antes do ataque (u1): " + str(u1.hp))
-            u1.hp = u1.hp - fd
-            print("Vida depois do ataque (u1): " + str(u1.hp))
-        pa = 1
-        s = controloResults(u1, u2, fd, n, s)
-
-    Combate(u1, u2, it1, it2, pa, n + 1, s)
-
-
-def Recompensar(id, x):
-    err, xp = db.run_query(id, f"SELECT xp FROM user WHERE id = {id};")
-    if err:
-        return False
     xp = xp.split("\n")
-    err, _ = db.run_query(id, f"UPDATE user SET xp = {x + int(xp[0])} WHERE id = {id};")
-    return err
-    # Adicionar x pontos ao user id
-
+    db.conn.execute(f"UPDATE user SET xp = {int(x) + int(xp[0])} WHERE id = {uid};")
+    db.conn.commit()
+    print("FIM")
+    return True
 
 def adicionarVitoria(id):
-    err, vic = db.run_query(id, f"SELECT vitorias FROM status WHERE id = {id};")
-    if err:
-        return False
+    _, vic = db.run_query(id, f"SELECT vitorias FROM status WHERE id = {id};")
     vic = vic.split("\n")
-    err, _ = db.run_query(id, f"UPDATE status SET vitorias = {1 + int(vic[0])} WHERE id = {id};")
-    return err
+    print(vic)
+    db.conn.execute(f"UPDATE status SET vitorias = {1 + int(vic[0])} WHERE id = {id};")
+    db.conn.commit()
 
 
 def adicionarDerrota(id):
-    err, der = db.run_query(id, f"SELECT derrotas FROM status WHERE id = {id};")
-    if err:
-        return False
+    _, der = db.run_query(id, f"SELECT derrotas FROM status WHERE id = {id};")
     der = der.split("\n")
-    err, _ = db.run_query(id, f"UPDATE status SET derrotas = {1 + int(der[0])} WHERE id = {id};")
-    return err
+    print(der)
+    db.conn.execute(f"UPDATE status SET derrotas = {1 + int(der[0])} WHERE id = {id};")
+    db.conn.commit()
 
-
-def Notificar(id, s):
+def Notificar(uid, s):
     cid = 0
-    cursor = conn.execute("SELECT id FROM batalhaLOG ORDER BY id DESC LIMIT 1;")
+    cursor = db.conn.execute("SELECT id FROM batalhaLOG ORDER BY id DESC LIMIT 1;")
     for row in cursor:
-        if row[0]:
-            print("Value of id: " + str(row[0] + 1))
+        if row[0]+1:
             cid = row[0] + 1
-
-    err, _ = db.run_query(id, f"INSERT INTO batalhaLOG (id, texto, iduser, visto) VALUES ({cid},{s},{id},{0})")
-    # 0-> não lido
-
-    # Adicionar s à pilha notificações do user id
-
-
+            
+    print(f"VALORES: [{cid}, {s}, {uid}, {0}]")
+    db.conn.execute(f"INSERT INTO batalhaLOG (id, texto, idUSER, visto) VALUES ({cid},'{s}',{uid},{0})")
+    _ = db.conn.commit()
+    print("OLA")
 # Função Principal do decorrer do combate
 def inicioCombate(u1, u2, i1, i2, id1, id2, tipo):
     # Fazer query da string users e da string items
@@ -379,75 +360,55 @@ def inicioCombate(u1, u2, i1, i2, id1, id2, tipo):
     for x in i2:
         b = x.split(" ")
         item2.append(ItemPorUser(int(b[1]), int(b[2]), int(b[3]), int(b[4]), int(b[5]), int(b[6])))
-    resultado, s = Combate(user1, user2, item1, item2, -1, 0, s)
-    print(" Resultado = " + str(resultado))
+    resultado,s = Combate(user1, user2, item1, item2, -1, 0, s)
+    #print(" Resultado = " + str(resultado))
 
     # Enviar s para os users user1.idu e user2.idu
     if tipo == 1:  # BOT
-        Notificar(u1.idu, s)
+        Notificar(user1.idu, s)
+        print(user1.idu)
         if resultado == 1:
-            if Recompensar(u1.idu, 4):
-                return False
-        elif resultado == 2:
-            if Recompensar(u1.idu, 2):
-                return False
+            Recompensar(user1.idu, 4)
+        else:
+            Recompensar(user1.idu, 2)
 
     elif tipo == 2:  # ID
-        Notificar(u1.idu, s)
-        Notificar(u2.idu, s)
+        print("ANTES DE NOTIFICAR")
+        Notificar(user1.idu, s)
+        Notificar(user2.idu, s)
+        print("DEPOIS DE NOTIFICAR")
         if resultado == 1:
-            if Recompensar(u1.idu, 3):
-                return False
-            if Recompensar(u2.idu, 1):
-                return False
-        elif resultado == 2:
-            if Recompensar(u2.idu, 3):
-                return False
-            if Recompensar(u1.idu, 1):
-                return False
+            Recompensar(user1.idu, 3)
+            Recompensar(user2.idu, 1)
 
-    elif tipo == 0:  # PLAYER
-        Notificar(u1.idu, s)
+        else:
+            Recompensar(user2.idu, 3)
+            Recompensar(user1.idu, 1)
+
+
+    else:  # PLAYER
+        Notificar(user1.idu, s)
         if resultado == 1:
-            adicionarVitoria(u1.idu)
-            adicionarDerrota(u2.idu)
-            if Recompensar(u1.idu, 6):
-                return False
-            if Recompensar(u2.idu, 3):
-                return False
-        elif resultado == 2:
-            adicionarVitoria(u2.idu)
-            adicionarDerrota(u1.idu)
-            if Recompensar(u2.idu, 6):
-                return False
-            if Recompensar(u1.idu, 3):
-                return False
-
+            print("ANTESVITORIA")
+            adicionarVitoria(user1.idu)
+            print("DEPOISVITORIA")
+            adicionarDerrota(user2.idu)
+            print("ANTESVITORIA")
+            Recompensar(user1.idu, 6)
+            Recompensar(user2.idu, 3)
+            
+        else:
+            print("ANTESVITORIA")
+            adicionarVitoria(user2.idu)
+            print("DEPOISVITORIA")
+            adicionarDerrota(user1.idu)
+            print("ANTESVITORIA")
+            Recompensar(user2.idu, 6)
+            Recompensar(user1.idu, 3)
+            
     # resultado = 0 -> Empate
     # resultado = 1 -> u1 venceu
     # resultado = 2 -> u2 venceu
     # Enviar resultado para o utilizador
     # Actualizar a base de dados com vitórias/etc
     # Actualizar a base de dados com xp para os users consoante o resultado
-
-
-"""
-Testes:
-
-def GerarUser():
-    a = 0
-    s = ""
-    while a < 4:
-        s = s + " " + str(rand.randint(0, 10))
-        a = a + 1
-    s = s + " " + str(rand.randint(50, 200))
-    return s + "\n"
-
-# TesteUser1 = "0 5 6 7 8 9\n"
-# TesteUser2 = "1 9 8 7 6 5\n"
-TesteUser1 = "0" + GerarUser()
-TesteUser2 = "1" + GerarUser()
-TesteItems1 = "1 2 0 3 0 2 0\n2 0 3 0 5 1 0\n"
-TesteItems2 = "3 5 0 3 1 2 1\n4 0 2 0 1 5 1\n"
-find_enemy(0, "ID", 1)
-"""

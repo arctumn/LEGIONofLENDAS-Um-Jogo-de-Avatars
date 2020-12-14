@@ -30,4 +30,13 @@ public class Utils extends Activity {
             e.printStackTrace();
         }
     }
+    /**
+     * numeroDEPessoasAMostrar = 15
+     * util.txtMEssageServer("1","rankingxp",""+numeroDEPessoasAMostrar);
+     *
+     * recebido = util.output
+     * "infoU1\ninfoU2\ninfoU3\n....\ninfoU15\n"
+     * lista = new ArrayList<String>(Arrays.asList(recebido.split(\n))
+     * lista ["VALUEnome VALUElvl VALUExp",...,"infoU15"]
+     */
 }
