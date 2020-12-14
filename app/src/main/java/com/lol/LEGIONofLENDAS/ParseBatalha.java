@@ -4,10 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -18,25 +23,35 @@ public class ParseBatalha extends AppCompatActivity {
     Thread thread;
     int flag;
     Utils util = new Utils();
+
     ProgressBar pb_left;
     ProgressBar pb_right;
-    // Definir avatar ava1
-    // Definir avatar ava2
-    // Definir TextView HP1
-    // Definir TextView HP2
-    // Definir TextView Name1
-    // Definir TextView Name2
-    // Definir TextView Ronda
-    // Definir TextView Dano
-    // Definir TextView Level1
-    // Definir TextView Level2
-    int i = 25;
+
+    ImageView ava1;
+    ImageView ava2;
+
+    int hpinitial1;
+    int hpinitial2;
+    boolean jogoFinalizado;
+
+    TextView name1;
+    TextView name2;
+    TextView ronda;
+    TextView level1;
+    TextView level2;
+    TextView btn;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parse_batalha);
         GridLayout grid = findViewById(R.id.gridluta);
         grid.setColumnCount(2);
+
+        Intent intent = getIntent();
+        String LOG = "";
+        LOG = intent.getStringExtra("strLuta");
 
         pb_left = findViewById(R.id.pb_left);
         pb_right = findViewById(R.id.pb_right);
@@ -45,26 +60,27 @@ public class ParseBatalha extends AppCompatActivity {
                 pb_right.setMax(25);
         });
 
+        jogoFinalizado = false;
+        ava1 = findViewById(R.id.imgAvatar1);
+        ava2 = findViewById(R.id.imgAvatar2);
 
-        Button btn_test = findViewById(R.id.btn_menu);
-            btn_test.setOnClickListener(v -> {
-                runOnUiThread(() ->{
-                    setVida(i+1, i, true);
-                    setVida(i+1, i,false);
-                    //Toast.makeText(ParseBatalha.this,""+i,Toast.LENGTH_SHORT).show();
-                    i--;
-                });
-            });
-
+        name1 = findViewById(R.id.username1);
+        name2 = findViewById(R.id.username2);
+        ronda = findViewById(R.id.textRonda);
+        level1 = findViewById(R.id.usernivel1);
+        level2 = findViewById(R.id.usernivel2);
+        btn = findViewById(R.id.btn_menu);
 
         flag = 0;
+        String finalLOG = LOG;
         thread = new Thread() {
 
             @Override
             public void run() {
                 runOnUiThread(() -> {
                     try {
-                        parseBatalha("");
+                        jogoFinalizado = parseBatalha(finalLOG);
+                        btn.setText("Voltar ao menu principal");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -75,7 +91,10 @@ public class ParseBatalha extends AppCompatActivity {
     }
 
     public void darSkip( View v){
+
         flag = 1;
+        if(jogoFinalizado)
+            Sair(v);
     }
 
     public String getNome(int id){
@@ -118,78 +137,93 @@ public class ParseBatalha extends AppCompatActivity {
         return ava;
     }
 
-    public void parseBatalha(String Mensagem) throws InterruptedException {
+    public boolean parseBatalha(String Mensagem) throws InterruptedException {
 
+        btn.setText("Passar batalha à frente");
         int id1 = 0;
         int id2 = 0;
-        int hp1 = 0;  // Vida user 1
-        int hp2 = 0;  // Vida user 2
-        int dano = 0;
-        int ronda = 0;
+        int hp1antigo = 0;  // Vida user 1
+        int hp2antigo = 0;  // Vida user 2
+        int progresso1 = 0;
+        int progresso2 = 0;
 
         String[] Relatorio = Mensagem.split("\n");
-        for(int i = 0; i < Relatorio.length; i++){
+        for(int i = 0; i < Relatorio.length; i++) {
             String[] Ronda = Relatorio[i].split(" ");
 
-            if (Ronda[0].compareTo("") == 0){
-                return;
+            if (Ronda[0].compareTo("") == 0) {
+                return true;
             }
 
-            if (flag == 1){ // Dar Skip
-                String[] u1 = Relatorio[Relatorio.length-1].split("");
-                String[] u2 = Relatorio[Relatorio.length-2].split("");
-                // Ronda.setText(Ronda[3]) Actualizar Ronda
-                // Dano.setText(Ronda[2]) Actualizar Dano
-                if( Integer.parseInt(u1[0]) == id1){
-                    // HP1.setText(u1[1]) // Actualiza o HP do jogador 1
-                    // HP1.setTextColor( Color.parseColor("#D14519")); // Muda o HP para vermelho
-                    // HP2.setText(u2[1]) // Actualiza o HP do jogador 2
-                }else{
-                    // HP2.setText(u1[1]) // Actualiza o HP do jogador 2
-                    // HP2.setTextColor( Color.parseColor("#D14519")); // Muda o HP para vermelho
-                    // HP1.setText(u2[1]) // Actualiza o HP do jogador 1
+            if (flag == 1) { // Dar Skip
+                String[] u1 = Relatorio[Relatorio.length - 1].split("");
+                String[] u2 = Relatorio[Relatorio.length - 2].split("");
+                ronda.setText(Ronda[3]);
+
+                if (Integer.parseInt(u1[0]) == id1) {
+
+                    setVida(hpinitial1,0,true);
+                    setVida(hpinitial2,getLifePercentage(hpinitial2,Integer.parseInt(u2[1])),false);
+
+                } else {
+
+                    setVida(hpinitial2,0,false);
+                    setVida(hpinitial1,getLifePercentage(hpinitial2,Integer.parseInt(u1[1])),true);
                 }
-            }
+                return true;
+            } else {
+                if (Integer.parseInt(Ronda[3]) == 0) { // Primeira entrada
+                    id1 = Integer.parseInt(Ronda[0]);
+                    id2 = Integer.parseInt(Ronda[1]);
+                    hpinitial1 = Integer.parseInt(Ronda[2]);
+                    hpinitial2 = Integer.parseInt(Ronda[4]);
+                    hp1antigo = 100;
+                    hp2antigo = 100;
 
-            if( Integer.parseInt(Ronda[3]) == 0 ){ // Primeira entrada
-                id1 = Integer.parseInt(Ronda[0]);
-                id2 = Integer.parseInt(Ronda[1]);
-                hp1 = Integer.parseInt(Ronda[2]);
-                hp2 = Integer.parseInt(Ronda[4]);
+                    pb_left.setMax(Integer.parseInt(Ronda[2]));
+                    pb_right.setMax(Integer.parseInt(Ronda[4]));
 
-                // Inicializar ava1 avatar.setImageResource( getAvatar(id1));
-                // Inicializar ava2 avatar.setImageResource( getAvatar(id2));
-                // Inicializar HP1 textView.setText(getLevel("" + hp1));
-                // Inicializar HP2 textView.setText(getLevel("" + hp2));
-                // Inicializar Name1 textView.setText(getNome(id1)[0]);
-                // Inicializar Name2 textView.setText(getNome(id2)[0]);
-                // Inicializar Level1 textView.setText(getLevel(id1));
-                // Inicializar Level2 textView.setText(getLevel(id2));
+                    ava1.setImageResource( getAvatar(id1));
+                    ava2.setImageResource( getAvatar(id2));
+                    name1.setText( getNome(id1));
+                    name2.setText( getNome(id2));
+                    level1.setText(getLevel(id1));
+                    level2.setText(getLevel(id1));
 
-            }
-            else{ // Nas outras rondas
-                // Ronda.setText(Ronda[3]) Actualizar Ronda
-                // Dano.setText(Ronda[2]) Actualizar Dano
-                if( Integer.parseInt(Ronda[0]) == id1){
-                    // HP1.setText(Ronda[1]) // Actualiza o HP do jogador 1
-                    // HP1.setTextColor( Color.parseColor("#D14519")); // Muda o HP para vermelho
-                    Thread.sleep(2000);
-                    // HP1.setTextColor( Color.parseColor("#FFFFFF")); // Muda o HP para branco
-                }
-                else{
-                    // HP2.setText(Ronda[1]) // Actualiza o HP do jogador 2
-                    // HP2.setTextColor( Color.parseColor("#D14519")); // Muda o HP para vermelho
-                    Thread.sleep(2000);
-                    // HP2.setTextColor( Color.parseColor("#FFFFFF")); // Muda o HP para branco
+                } else { // Nas outras rondas
+                    ronda.setText(Ronda[3]);
+
+                    if (Integer.parseInt(Ronda[0]) == id1) {
+                        pb_left.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#D14519")));
+
+                        progresso1 = getLifePercentage(hpinitial1,Integer.parseInt(Ronda[1]));
+                        setVida(hp1antigo, progresso1,true);
+                        hp1antigo = progresso1;
+
+                        Thread.sleep(2000);
+                        pb_left.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#2AFF05")));
+                    } else {
+                        pb_right.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#D14519")));
+
+                        progresso2 = getLifePercentage(hpinitial1,Integer.parseInt(Ronda[1]));
+                        setVida(hp2antigo, progresso2,false);
+                        hp2antigo = progresso2;
+
+                        Thread.sleep(2000);
+                        pb_right.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#2AFF05")));
+                    }
                 }
             }
         }
-
-        // RONDA ACABOU JESUS
-
+        return true;
     }
-    private int getLifePercentage(int inicalLife, int currentLife){
+
+    public void Sair( View v) {
+        finish();
+    }
+
+    private int getLifePercentage(int initialLife, int currentLife){
         if(currentLife <= 0) return 0;
-            return (int)((currentLife/inicalLife)*100);
+            return (int)((currentLife/initialLife)*100);
     }
 }
