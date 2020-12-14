@@ -38,29 +38,32 @@ public class Inventario extends AppCompatActivity {
         Utils util = new Utils();
 
         ArrayList<String> lista1 = new ArrayList<String>();
-        String query = "SELECT image,nome FROM show WHERE idUser = "+in.getStringExtra("id");
+        String query = "SELECT image,itemName FROM inventario WHERE iduser = "+in.getStringExtra("userid");
         lista1.add(query);
 
         util.txtMessageServer("1", "TESTINGADMIN", lista1);
 
         String recebido = util.output;
 
-        ArrayList<String> lista2 = new ArrayList<>(Arrays.asList(recebido.split("\n")));
+        ArrayList<String> lista2 = new ArrayList<>(Arrays.asList(recebido.split("\n\n")));
 
         System.out.println(Arrays.toString(lista2.toArray()));
         // lista.forEach();
         lista2.forEach( string -> {
             String[] pre = string.split(" ");
+            String ab = pre[1];
+            for(int i = 2; i <pre.length;i++) ab += " "+pre[i];
+            System.out.println(pre[0]+ " out: "+ab);
             items.add(new itemsRanking(
                     getResources()
                             .getIdentifier(pre[0], "drawable", this.getPackageName()),
-                    pre[1],
+                    ab,
                     0)
             );
         });
 
         items.sort(DESCENDING_COMPARATOR);
-        rankingRecyclerView = findViewById(R.id.recyclerViewRanking);
+        rankingRecyclerView = findViewById(R.id.recyclerViewInventario);
         rankingRecyclerView.setHasFixedSize(true);
         rankingLayoutManager = new LinearLayoutManager(this);
         rankingAdapter = new itemInventoryAdapter(items);

@@ -32,14 +32,17 @@ def comprar(ssid,itens):
             err,nome = DB.run_query(ssid, f"SELECT itemName FROM loja WHERE id = {item_id}")
             if err:
                 return err,False
-            
+            err,image = DB.run_query(ssid, f"SELECT image FROM loja WHERE id = {item_id}")
+            if err:
+                return err,False
             # prepara a query a ser enviada
             nome = nome.rstrip("\n")
+            image = image.rstrip("\n")
             next_ele = DB.next_id("inventario")
             if not next_ele:
                 return "",False
-            info = fun.reduce(lambda x,y:x+ f",{y}",info_item.rstrip("\n").split(" "),f" ({next_ele},{ssid},'{nome}',{item_id}")
-            query = f"INSERT INTO inventario (id,iduser,idarma,itemName,forca,magia,defesa,defesaMagica,vida) VALUES{info})"
+            info = fun.reduce(lambda x,y:x+ f",{y}",info_item.rstrip("\n").split(" "),f" ({next_ele},{ssid},'{nome}','{image}',{item_id}")
+            query = f"INSERT INTO inventario (id,iduser,idarma,itemName,image,forca,magia,defesa,defesaMagica,vida) VALUES{info})"
             error,_ = DB.run_query(ssid,query)
             # verifica se a operação ocorreu com sucesso, não precisamos de saber que foi adicionado, apenas queremos saber se houve algum erro
             if error:

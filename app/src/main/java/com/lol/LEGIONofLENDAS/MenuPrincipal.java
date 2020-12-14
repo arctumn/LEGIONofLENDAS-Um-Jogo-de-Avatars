@@ -34,6 +34,7 @@ public class MenuPrincipal extends AppCompatActivity {
         btninv=findViewById(R.id.btn_inventario);
         btninv.setOnClickListener(v -> {
             Intent intent = new Intent(MenuPrincipal.this, Inventario.class);
+            intent.putExtra("userid",userid);
             startActivity(intent);
         });
         btnhab=findViewById(R.id.btn_habilidades);

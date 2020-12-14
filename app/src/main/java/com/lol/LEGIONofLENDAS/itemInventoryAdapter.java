@@ -24,8 +24,8 @@ public class itemInventoryAdapter extends RecyclerView.Adapter<itemInventoryAdap
         public itemViewHolder(View itemView) {
             super(itemView);
 
-            mImageView = itemView.findViewById(R.id.rnkAvatar);
-            mTextView1 = itemView.findViewById(R.id.rnkNome);
+            mImageView = itemView.findViewById(R.id.itemAvatar);
+            mTextView1 = itemView.findViewById(R.id.itemNome);
 
         }
     }
@@ -37,7 +37,7 @@ public class itemInventoryAdapter extends RecyclerView.Adapter<itemInventoryAdap
     @NonNull
     @Override
     public itemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ranking, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_inventario, parent, false);
         return new itemViewHolder(v);
     }
 
