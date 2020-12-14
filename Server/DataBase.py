@@ -53,10 +53,10 @@ def create_member_user(operation_context):
         
         # caso não existam ids, provavelmente já é obsoleto
         if cursor.fetchall() == []:
-            conn.execute("INSERT INTO user (id,nome,password,level,xp) VALUES (0, 'ADMIN','ADMIN', 999, 5234201, 0)")
+            conn.execute("INSERT INTO user (id,nome,password,level,xp) VALUES (0, 'ADMIN','ADMIN', 999, '5234201', 0)")
             conn.execute("INSERT INTO status (ID,forca,magia,defesa,defesaMagica,vida,vitorias,derrotas) VALUES (0,999,999,999,999,999,0,0);")
             conn.commit()
-            conn.execute("INSERT INTO user (id,nome,password,level,xp) VALUES (1, 'ADMIN2','ADMIN2', 999, 5234201, 0)")
+            conn.execute("INSERT INTO user (id,nome,password,level,xp) VALUES (1, 'ADMIN2','ADMIN2', 999, '5234201', 0)")
             conn.execute("INSERT INTO status (ID,forca,magia,defesa,defesaMagica,vida,vitorias,derrotas) VALUES (1,999,999,999,999,999,0,0);")
             conn.commit()
         # pega o novo id e prepara a query 

@@ -28,7 +28,7 @@ public class MenuPrincipal extends AppCompatActivity {
         });
         btnrank=findViewById(R.id.btn_ranking);
         btnrank.setOnClickListener(v -> {
-            Intent intent = new Intent(MenuPrincipal.this, Shop.class);
+            Intent intent = new Intent(MenuPrincipal.this, Ranking.class);
             startActivity(intent);
         });
         btninv=findViewById(R.id.btn_inventario);
@@ -59,7 +59,7 @@ public class MenuPrincipal extends AppCompatActivity {
 
         final ImageView avatar = findViewById(R.id.imgAvatar);
 
-        int id = Integer.parseInt(in.getStringExtra("imagem"));
+        int id = getResources().getIdentifier(in.getStringExtra("imagem"),"drawable",this.getPackageName());
         avatar.setImageResource(id);
 
         final TextView nome = findViewById(R.id.textusername);

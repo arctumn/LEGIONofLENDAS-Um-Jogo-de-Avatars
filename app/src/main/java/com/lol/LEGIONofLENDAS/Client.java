@@ -89,7 +89,7 @@ public class Client {
      */
     public String inserirUserNaDB(String nome, String password, String nivel,String xp, String image){
         password = getMd5Hash(password);
-        String query = "INSERT INTO user (id,nome,password,level,xp,image) VALUES (NEWELE,"+"'"+nome+"','"+password+"',"+nivel+","+xp+","+image+");";
+        String query = "INSERT INTO user (id,nome,password,level,xp,image) VALUES (NEWELE,"+"'"+nome+"','"+password+"',"+nivel+","+xp+",'"+image+"');";
         return sendMESSAGE(format("0","DB",query));
     }
     /**
@@ -149,7 +149,7 @@ public class Client {
      * @return ver sendMessage
      */
     public String rankingByXpTopN(int quantidadeElementos){
-        return sendMESSAGE(format("1","DB","SELECT nome,level,xp FROM user WHERE id <> 0 ORDER BY xp DESC LIMIT "+quantidadeElementos+";"));
+        return sendMESSAGE(format("1","DB","SELECT image,nome,level FROM user WHERE id != 0 AND id != 1 ORDER BY xp DESC LIMIT "+quantidadeElementos+";"));
     }
     /**
      * Retorna uma string com os status da pessoa, necessario vir parsed

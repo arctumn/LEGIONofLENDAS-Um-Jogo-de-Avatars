@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LEGIONofLENDAS">
         <meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="barcode" />
-
+        <activity android:name=".Ranking"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
         <activity
             android:name=".MenuAmigoOpcoes"
             android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />

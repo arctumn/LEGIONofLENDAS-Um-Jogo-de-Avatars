@@ -40,52 +40,49 @@ public class CharCreationInfo extends AppCompatActivity {
         tcontaexistente = findViewById(R.id.temconta);
 
 
-        btnreg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                name = username.getText().toString();
-                pass = password.getText().toString();
+        btnreg.setOnClickListener(v -> {
+            name = username.getText().toString();
+            pass = password.getText().toString();
 
-                ArrayList<String> newuser = new ArrayList<String>();
-                newuser.add(name);
-                newuser.add(pass);
-                newuser.add("0");
-                newuser.add("0");
-                if((name.equals(""))||(pass.equals(""))) {
-                    Toast.makeText(CharCreationInfo.this, "ERRO! USERNAME OU PASSWORD INVALIDOS", Toast.LENGTH_SHORT).show();
-                }
-                else {
+            ArrayList<String> newuser = new ArrayList<String>();
+            newuser.add(name);
+            newuser.add(pass);
+            newuser.add("0");
+            newuser.add("0");
+            if((name.equals(""))||(pass.equals(""))) {
+                Toast.makeText(CharCreationInfo.this, "ERRO! USERNAME OU PASSWORD INVALIDOS", Toast.LENGTH_SHORT).show();
+            }
+            else {
 
-                    int imagem = getResources().getIdentifier("ava"+pager.getCurrentItem(), "drawable", getPackageName());
-                    newuser.add(""+imagem);
-                    util.txtMessageServer("0", "verificar", newuser);
-                    verif =  util.output;
+                int imagem = getResources().getIdentifier("ava"+pager.getCurrentItem(), "drawable", getPackageName());
+                newuser.add(""+getResources().getResourceName(imagem));
+                util.txtMessageServer("0", "verificar", newuser);
+                verif =  util.output;
 
-                        if(verif.equals("NAO DISPONIVEL")) {
-                            Toast.makeText(CharCreationInfo.this, "USERNAME JÁ EXISTE", Toast.LENGTH_SHORT).show();
-                            name = "";
-                            pass = "";
-                        }
-                        else{
+                    if(verif.equals("NAO DISPONIVEL")) {
+                        Toast.makeText(CharCreationInfo.this, "USERNAME JÁ EXISTE", Toast.LENGTH_SHORT).show();
+                        name = "";
+                        pass = "";
+                    }
+                    else{
 
-                            util.txtMessageServer("0", "criarUtilizador", newuser);
-                            user =  util.output;
-                            util.txtMessageServer("1", "login", new ArrayList<>(Arrays.asList(name, pass)));
-                            userinfo = util.output;
-                            userinfo = userinfo.substring(0,userinfo.length()-1);
-                            String[] args = userinfo.split(" ");
-                            Intent intent = new Intent(CharCreationInfo.this, MenuPrincipal.class);
-                            intent.putExtra("id",args[0]);
-                            intent.putExtra("nome", name);
-                            intent.putExtra("imagem", ""+imagem);
-                            intent.putExtra("nivel", "0");
-                            intent.putExtra("exp", "0");
-                            startActivity(intent);
-                            finish();
-                        }
+                        util.txtMessageServer("0", "criarUtilizador", newuser);
+                        user =  util.output;
+                        util.txtMessageServer("1", "login", new ArrayList<>(Arrays.asList(name, pass)));
+                        userinfo = util.output;
+                        userinfo = userinfo.substring(0,userinfo.length()-1);
+                        String[] args = userinfo.split(" ");
+                        Intent intent = new Intent(CharCreationInfo.this, MenuPrincipal.class);
+                        intent.putExtra("id",args[0]);
+                        intent.putExtra("nome", name);
+                        intent.putExtra("imagem", ""+imagem);
+                        intent.putExtra("nivel", "0");
+                        intent.putExtra("exp", "0");
+                        startActivity(intent);
+                        finish();
+                    }
 
 
-                }
             }
         });
 
