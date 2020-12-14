@@ -45,7 +45,7 @@ public class MenuLutaOpcoes extends AppCompatActivity {
             luta.add(op);
             util.txtMessageServer(id, "fightRandomBot", luta);
             outputLuta = getFightLog();
-            Intent intent = new Intent(MenuLutaOpcoes.this, Shop.class);
+            Intent intent = new Intent(MenuLutaOpcoes.this, ParseBatalha.class);
             intent.putExtra("userid",id);
             intent.putExtra("ava", ava);
             intent.putExtra("strluta", outputLuta);

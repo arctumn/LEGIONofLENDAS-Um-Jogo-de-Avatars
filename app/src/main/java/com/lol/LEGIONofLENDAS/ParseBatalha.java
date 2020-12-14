@@ -1,6 +1,7 @@
 package com.lol.LEGIONofLENDAS;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.gridlayout.widget.GridLayout;
 
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +29,8 @@ public class ParseBatalha extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parse_batalha);
+        GridLayout grid = findViewById(R.id.gridluta);
+        grid.setColumnCount(2);
 
         flag = 0;
         thread = new Thread() {
