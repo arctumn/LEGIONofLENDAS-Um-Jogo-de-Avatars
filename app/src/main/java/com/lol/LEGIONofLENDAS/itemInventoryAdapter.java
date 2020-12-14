@@ -11,24 +11,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class itemRankingAdapter  extends RecyclerView.Adapter<itemRankingAdapter.itemViewHolder> {
+
+public class itemInventoryAdapter extends RecyclerView.Adapter<itemInventoryAdapter.itemViewHolder> {
     public ArrayList<itemsRanking> mLista;
-    public static class itemViewHolder extends RecyclerView.ViewHolder{
+
+    public static class itemViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView mImageView;
         public TextView mTextView1;
-        public TextView mTextView2;
-        public TextView mTextVRank;
-        public itemViewHolder(View itemView){
+
+
+        public itemViewHolder(View itemView) {
             super(itemView);
-            mTextVRank = itemView.findViewById(R.id.rank);
+
             mImageView = itemView.findViewById(R.id.rnkAvatar);
             mTextView1 = itemView.findViewById(R.id.rnkNome);
-            mTextView2 = itemView.findViewById(R.id.rnkNivel);
+
         }
     }
 
-    public itemRankingAdapter(ArrayList<itemsRanking> listaItems){
+    public itemInventoryAdapter(ArrayList<itemsRanking> listaItems) {
         mLista = listaItems;
     }
 
@@ -45,19 +47,10 @@ public class itemRankingAdapter  extends RecyclerView.Adapter<itemRankingAdapter
         itemsRanking currentItem = mLista.get(position);
         holder.mImageView.setImageResource(currentItem.getmImageResource());
         holder.mTextView1.setText(currentItem.getmText1());
-        holder.mTextView2.setText(String.valueOf(currentItem.getmText2()));
-        holder.mTextVRank.setText(String.valueOf(position+1));
     }
 
     @Override
     public int getItemCount() {
         return mLista.size();
     }
-
-
-
-
-
-
-
 }

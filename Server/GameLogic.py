@@ -6,7 +6,7 @@ import DataBase as db
 
 
 def get_itens(id):  # Vai buscar os items
-    err, userID_itens = db.run_query(id,f"SELECT * FROM inventario WHERE iduser = {id};")  # idarma + str + mag + def + defm + hp + iduser
+    err, userID_itens = db.run_query(id,f"SELECT id,forca,magia,defesa,defesaMagica,vida,iduser FROM inventario WHERE iduser = {id};")  # idarma + str + mag + def + defm + hp + iduser
     if userID_itens == "":
         return False, ""
     userID_itens = userID_itens.split("\n")

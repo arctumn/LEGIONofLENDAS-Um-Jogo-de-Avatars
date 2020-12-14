@@ -26,6 +26,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:orientation="vertical">
 
+        <ProgressBar
+            android:id="@+id/pb_left"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="62dp"
+            android:progress="100"
+            android:progressTint="#E10B0B"
+            android:scaleY="5"
+            app:layout_column="0"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_row="5" />
+
         <TextView
             android:id="@+id/textRonda"
             android:layout_width="wrap_content"
@@ -92,35 +105,6 @@
             app:layout_rowSpan="2"
             app:srcCompat="@drawable/ava7" />
 
-        <TextView
-            android:id="@+id/uservida1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/life_battle2"
-            android:textAlignment="center"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            app:layout_column="0"
-            app:layout_columnWeight="1"
-            app:layout_gravity="fill"
-            app:layout_row="5" />
-
-
-        <TextView
-            android:id="@+id/uservida2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/life_battle"
-            android:textAlignment="center"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            app:layout_column="1"
-            app:layout_columnWeight="1"
-            app:layout_gravity="fill"
-            app:layout_row="5" />
-
 
         <TextView
             android:id="@+id/usernivel1"
@@ -150,6 +134,20 @@
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
             app:layout_row="6" />
+
+        <ProgressBar
+            android:id="@+id/pb_right"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progress="100"
+            android:progressTint="#E10B0B"
+            android:scaleX="-1"
+            android:scaleY="5"
+            app:layout_column="1"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_row="5" />
 
 
     </androidx.gridlayout.widget.GridLayout>

@@ -13,6 +13,7 @@ import java.lang.reflect.Array;
 import java.security.cert.PolicyQualifierInfo;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class Ranking extends AppCompatActivity {
 
@@ -46,27 +47,22 @@ public class Ranking extends AppCompatActivity {
         util.txtMessageServer("1", "rankingxp", lista1);
 
         String recebido = util.output;
-         System.out.println("ola    "+recebido);
-
+        System.out.println("ola    "+recebido);
         ArrayList<String> lista2 = new ArrayList<>(Arrays.asList(recebido.split("\n")));
 
          System.out.println(Arrays.toString(lista2.toArray()));
-
        // lista.forEach();
         lista2.forEach( string -> {
             String[] pre = string.split(" ");
             items.add(new itemsRanking(
                     getResources()
-                            .getIdentifier(
-                                    pre[0],
-                                    "drawable",
-                                    this.getPackageName()),
+                            .getIdentifier(pre[0], "drawable", this.getPackageName()),
                     pre[1],
-                    pre[2])
+                    Integer.parseInt(pre[2]))
             );
         });
 
-
+        items.sort(DESCENDING_COMPARATOR);
         rankingRecyclerView = findViewById(R.id.recyclerViewRanking);
         rankingRecyclerView.setHasFixedSize(true);
         rankingLayoutManager = new LinearLayoutManager(this);
@@ -76,4 +72,6 @@ public class Ranking extends AppCompatActivity {
         rankingRecyclerView.setAdapter(rankingAdapter);
 
     }
+    public static final Comparator<itemsRanking> DESCENDING_COMPARATOR =
+            Comparator.comparingInt( itemsRanking::getmText2).reversed();
 }

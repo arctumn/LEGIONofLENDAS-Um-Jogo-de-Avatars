@@ -4,7 +4,8 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,32 +13,47 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LEGIONofLENDAS">
-        <meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="barcode" />
-        <activity android:name=".Ranking"
+        <activity android:name=".SubirLevel"></activity>
+
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="barcode" />
+
+        <activity
+            android:name=".Ranking"
             android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
         <activity
             android:name=".MenuAmigoOpcoes"
             android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
-        <activity android:name=".MenuLutaOpcoes"
-            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
-        <activity android:name=".ParseBatalha"
-            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
-        <activity android:name=".QrCamera"
-            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar">
-        </activity>
-        <activity android:name=".QrcodeStarter"
+        <activity
+            android:name=".MenuLutaOpcoes"
             android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
-        <activity android:name=".Inventario"
-            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
-        <activity android:name=".Shop"
-            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
-        <activity android:name=".MenuPrincipal"
-            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
-        <activity android:name=".Login"
-            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
-        <activity android:name=".CharCreationInfo"
-            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".ParseBatalha"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
+        <activity
+            android:name=".QrCamera"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"></activity>
+        <activity
+            android:name=".QrcodeStarter"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
+        <activity
+            android:name=".Inventario"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
+        <activity
+            android:name=".Shop"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
+        <activity
+            android:name=".MenuPrincipal"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
+        <activity
+            android:name=".Login"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
+        <activity
+            android:name=".CharCreationInfo"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
             android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,8 +61,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
     </application>
 
 </manifest>
