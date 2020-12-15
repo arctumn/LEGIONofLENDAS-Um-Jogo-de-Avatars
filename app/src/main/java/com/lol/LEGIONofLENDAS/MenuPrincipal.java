@@ -49,7 +49,7 @@ public class MenuPrincipal extends AppCompatActivity {
             Intent intent = new Intent(MenuPrincipal.this, LevelUp.class);
             intent.putExtra("userid",userid);
             intent.putExtra("nivel",level);
-            intent.putExtra("xp",xp);
+            intent.putExtra("exp",xp);
             startActivity(intent);
         });
         btnluta=findViewById(R.id.btn_luta);

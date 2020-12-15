@@ -11,17 +11,18 @@
         android:id="@+id/btnLvlUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="200dp"
+        android:layout_marginBottom="80dp"
         android:backgroundTint="#FD7A542B"
         android:padding="15dp"
         android:text="Level Up"
         android:textColor="@color/white"
         android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/txt_hp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5"
-        app:layout_constraintVertical_bias="0.338" />
+        app:layout_constraintVertical_bias="0.5" />
 
     <Button
         android:id="@+id/btn_upgrade_str"
@@ -33,6 +34,7 @@
         android:backgroundTint="#FD7A542B"
         android:text="mais força"
         android:textColor="#FFFFFF"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_upgrade_life"
         app:layout_constraintStart_toStartOf="parent" />
@@ -47,6 +49,7 @@
         android:backgroundTint="#FD7A542B"
         android:text="Mais    Vida"
         android:textColor="#FFFFFF"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_upgrade_magic"
         app:layout_constraintStart_toEndOf="@+id/btn_upgrade_str" />
@@ -61,6 +64,7 @@
         android:backgroundTint="#FD7A542B"
         android:text="Mais Magia"
         android:textColor="#FFFFFF"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_upgrade_life" />
@@ -71,7 +75,6 @@
         android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_marginTop="164dp"
-        android:max="75"
         android:progress="55"
         android:progressTint="#921EE9D8"
         android:scaleY="10"
@@ -105,7 +108,7 @@
         android:layout_marginTop="70dp"
         android:layout_marginBottom="25dp"
         android:gravity="center"
-        android:text="NIVEL 50"
+        android:text="NIVEL: "
         android:textColor="#FD7A542B"
         android:textSize="36sp"
         android:textStyle="bold"
@@ -121,7 +124,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="351dp"
+        android:layout_marginTop="349dp"
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="20dp"
         android:text="NUM"
@@ -135,7 +138,7 @@
         android:id="@+id/txt_hp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="95dp"
+        android:layout_marginTop="62dp"
         android:layout_marginBottom="20dp"
         android:text="NUM"
         android:textColor="#FFFFFF"
@@ -171,6 +174,7 @@
         android:textColor="#FD7A542B"
         android:textSize="36sp"
         android:textStyle="bold"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar" />
