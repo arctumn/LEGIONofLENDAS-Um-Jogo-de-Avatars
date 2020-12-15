@@ -25,11 +25,11 @@ def get_stats(id):  # Vai buscar os stats
 
 def randomuser(id1, userSTAT):
     query = f"SELECT ID FROM status WHERE \
-    forca > {int(userSTAT[0]) - 40} AND forca < {int(userSTAT[0]) + 65} \
-    AND magia > {int(userSTAT[1]) - 40} AND magia < {int(userSTAT[1]) + 65} \
-    AND defesa > {int(userSTAT[2]) - 40} AND defesa < {int(userSTAT[2]) + 65} \
-    AND defesaMagica > {int(userSTAT[3]) - 40} AND defesaMagica < {int(userSTAT[3]) + 65} \
-    AND vida > {int(userSTAT[4]) - 40} AND vida < {int(userSTAT[4]) + 65} AND ID != {id1};"
+    forca > {int(userSTAT[0]) - 30} AND forca < {int(userSTAT[0]) + 30} \
+    AND magia > {int(userSTAT[1]) - 30} AND magia < {int(userSTAT[1]) + 30} \
+    AND defesa > {int(userSTAT[2]) - 30} AND defesa < {int(userSTAT[2]) + 30} \
+    AND defesaMagica > {int(userSTAT[3]) - 30} AND defesaMagica < {int(userSTAT[3]) + 30} \
+    AND vida > {int(userSTAT[4]) - 30} AND vida < {int(userSTAT[4]) + 30} AND ID != {id1};"
 
     err, elements = db.run_query(id1, query)
     print(f"Valor de err = [{err}] dentro do randomuser\n Valores de elements = [{elements}]")
@@ -122,7 +122,7 @@ def find_enemy(id1, operation_context):
         user2_stats = fun.reduce(calcStatus, user1STAT[1:], user1STAT[0]).split(" ")
         # print(user2_stats)
         # print("POS FORMAT")
-        return inicioCombate(user1STAT, user2_stats, user1_itens, user2_itens, id1, 999999, 1)
+        return inicioCombate(user1STAT, user2_stats, user1_itens, user2_itens, id1, 2, 1)
 
     else:
         # itens u2
