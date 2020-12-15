@@ -56,8 +56,8 @@ public class ParseBatalha extends AppCompatActivity {
         pb_left = findViewById(R.id.pb_left);
         pb_right = findViewById(R.id.pb_right);
         runOnUiThread(() ->{
-                pb_left.setMax(25);
-                pb_right.setMax(25);
+            pb_left.setMax(25);
+            pb_right.setMax(25);
         });
 
         jogoFinalizado = false;
@@ -81,14 +81,14 @@ public class ParseBatalha extends AppCompatActivity {
         thread = new Thread() {
             @Override
             public void run() {
-                    try {
-                        jogoFinalizado = parseBatalha(LOG);
-                        runOnUiThread( () -> {
-                            btn.setText("Voltar ao menu principal");
-                        });
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    jogoFinalizado = parseBatalha(LOG);
+                    runOnUiThread( () -> {
+                        btn.setText("Voltar ao menu principal");
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         };
         thread.start();
@@ -97,7 +97,7 @@ public class ParseBatalha extends AppCompatActivity {
     public void darSkip( View v){
         flag = 1;
         if(jogoFinalizado){
-          Sair(v);
+            Sair(v);
         }
     }
 
@@ -166,6 +166,8 @@ public class ParseBatalha extends AppCompatActivity {
                 return true;
             }
 
+            /*
+
             if (flag == 1) { // Dar Skip
                 String[] u1 = Relatorio[Relatorio.length - 2].split(" ");
                 String[] u2 = Relatorio[Relatorio.length - 3].split(" ");
@@ -193,82 +195,82 @@ public class ParseBatalha extends AppCompatActivity {
                     });
                 }
                 return true;
-            } else {
-                if (Integer.parseInt(Ronda[3]) == 0) { // Primeira entrada
-                    id1 = Integer.parseInt(Ronda[0]);
-                    id2 = Integer.parseInt(Ronda[1]);
-                    hpinitial1 = (int) Float.parseFloat(Ronda[2]);
-                    hpinitial2 = (int) Float.parseFloat(Ronda[4]);
-                    // hp1antigo = 100;
-                    // hp2antigo = 100;
+            } else { */
+            if (Integer.parseInt(Ronda[3]) == 0) { // Primeira entrada
+                id1 = Integer.parseInt(Ronda[0]);
+                id2 = Integer.parseInt(Ronda[1]);
+                hpinitial1 = (int) Float.parseFloat(Ronda[2]);
+                hpinitial2 = (int) Float.parseFloat(Ronda[4]);
+                // hp1antigo = 100;
+                // hp2antigo = 100;
 
-                    pb_left.setMax((int) Float.parseFloat(Ronda[2]));
-                    pb_right.setMax((int) Float.parseFloat(Ronda[4]));
+                pb_left.setMax((int) Float.parseFloat(Ronda[2]));
+                pb_right.setMax((int) Float.parseFloat(Ronda[4]));
 
-                    int finalId1 = id1;
-                    int finalId2 = id2;
-                    runOnUiThread(() -> {
-                        ava1.setImageResource( getAvatar(finalId1));
-                        ava2.setImageResource( getAvatar(finalId2));
-                        name1.setText( getNome(finalId1));
-                        name2.setText( getNome(finalId2));
-                        level1.setText(getLevel(finalId1));
-                        level2.setText(getLevel(finalId2));
-                    });
+                int finalId1 = id1;
+                int finalId2 = id2;
+                runOnUiThread(() -> {
+                    ava1.setImageResource( getAvatar(finalId1));
+                    ava2.setImageResource( getAvatar(finalId2));
+                    name1.setText( getNome(finalId1));
+                    name2.setText( getNome(finalId2));
+                    level1.setText(getLevel(finalId1));
+                    level2.setText(getLevel(finalId2));
+                });
 
-                } else { // Nas outras rondas
-                    runOnUiThread(() -> {
-                        ronda.setText(Ronda[3]);
-                    });
+            } else { // Nas outras rondas
+                runOnUiThread(() -> {
+                    ronda.setText(Ronda[3]);
+                });
 
-                    if (Integer.parseInt(Ronda[0]) == id1) {
-                        //progresso1 = getLifePercentage(hpinitial1, (int) Float.parseFloat(Ronda[1]));
-                        //                        int finalHp1antigo = hp1antigo;
-                        //                        int finalProgresso = progresso1;
-                        progresso1 = (int) Float.parseFloat(Ronda[1]);
-                        if (progresso1 <= 0){
-                            progresso1 = 0;
-                            runOnUiThread(() -> {
-                                ava1.setImageAlpha(125);
-                            });
-                        }
-
-                        int finalProgresso2 = progresso1;
+                if (Integer.parseInt(Ronda[0]) == id1) {
+                    //progresso1 = getLifePercentage(hpinitial1, (int) Float.parseFloat(Ronda[1]));
+                    //                        int finalHp1antigo = hp1antigo;
+                    //                        int finalProgresso = progresso1;
+                    progresso1 = (int) Float.parseFloat(Ronda[1]);
+                    if (progresso1 <= 0){
+                        progresso1 = 0;
                         runOnUiThread(() -> {
-                            pb_left.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#D14519")));
-                            //setVida(finalHp1antigo, finalProgresso,true);
-                            pb_left.setProgress(finalProgresso2,true);
-                        });
-                        // hp1antigo = progresso1;
-                        Thread.sleep(2000);
-                        runOnUiThread(() -> {
-                            pb_left.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#2AFF05")));
-                        });
-
-                    } else {
-                        // progresso2 = getLifePercentage(hpinitial1,(int) Float.parseFloat(Ronda[1]));
-                        // int finalHp2antigo = hp2antigo;
-                        // int finalProgresso1 = progresso2;
-                        progresso2 = (int) Float.parseFloat(Ronda[1]);
-                        if (progresso2 <= 0){
-                            progresso2 = 0;
-                            runOnUiThread(() -> {
-                                ava2.setImageAlpha(176);
-                            });
-                        }
-                        int finalProgresso = progresso2;
-                        runOnUiThread(() -> {
-                            pb_right.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#D14519")));
-                            // setVida(finalHp2antigo, finalProgresso1,false);
-                            pb_right.setProgress(finalProgresso,true);
-                        });
-                        // hp2antigo = progresso2;
-
-                        Thread.sleep(2000);
-                        runOnUiThread(() -> {
-                            pb_right.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#2AFF05")));
+                            ava1.setImageAlpha(125);
                         });
                     }
+
+                    int finalProgresso2 = progresso1;
+                    runOnUiThread(() -> {
+                        pb_left.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#D14519")));
+                        //setVida(finalHp1antigo, finalProgresso,true);
+                        pb_left.setProgress(finalProgresso2,true);
+                    });
+                    // hp1antigo = progresso1;
+                    if( flag != 1 )
+                        Thread.sleep(2000);
+                    runOnUiThread(() -> {
+                        pb_left.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#2AFF05")));
+                    });
+
+                } else {
+                    // progresso2 = getLifePercentage(hpinitial1,(int) Float.parseFloat(Ronda[1]));
+                    // int finalHp2antigo = hp2antigo;
+                    // int finalProgresso1 = progresso2;
+                    progresso2 = (int) Float.parseFloat(Ronda[1]);
+                    if (progresso2 <= 0){
+                        progresso2 = 0;
+                        runOnUiThread(() -> {
+                            ava2.setImageAlpha(125);
+                        });
+                    }
+                    int finalProgresso = progresso2;
+                    runOnUiThread(() -> {
+                        pb_right.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#D14519")));
+                        // setVida(finalHp2antigo, finalProgresso1,false);
+                        pb_right.setProgress(finalProgresso,true);
+                    });
+                    // hp2antigo = progresso2;
+                    if( flag != 1 )
+                        Thread.sleep(2000);
+                    runOnUiThread(() -> {
+                        pb_right.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#2AFF05")));
+                    });
                 }
             }
         }
@@ -276,13 +278,13 @@ public class ParseBatalha extends AppCompatActivity {
     }
 
     public void Sair( View v) {
-        Intent intent = new Intent(ParseBatalha.this, MenuPrincipal.class);
-        startActivity(intent);
+        //Intent intent = new Intent(ParseBatalha.this, MenuPrincipal.class);
+        //startActivity(intent);
         finish();
     }
 
     private int getLifePercentage(int initialLife, int currentLife){
         if(currentLife <= 0) return 0;
-            return (int)((currentLife/initialLife)*100);
+        return (int)((currentLife/initialLife)*100);
     }
 }
