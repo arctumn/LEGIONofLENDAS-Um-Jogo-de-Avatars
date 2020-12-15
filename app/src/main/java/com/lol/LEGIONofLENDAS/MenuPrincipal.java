@@ -7,10 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class MenuPrincipal extends AppCompatActivity {
-    String userid;
+    String userid;String level;String xp;String unome;String imagem;
     Button btnloja, btnrank, btninv, btnhab, btnluta, btnlogout;
 
     @Override
@@ -18,8 +22,9 @@ public class MenuPrincipal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principal);
         Intent in = getIntent();
-
         userid = in.getStringExtra("id");
+        Utils util = new Utils();
+        updateInfo(util);
 
         btnloja=findViewById(R.id.btn_loja);
         btnloja.setOnClickListener(v -> {
@@ -30,6 +35,7 @@ public class MenuPrincipal extends AppCompatActivity {
         btnrank=findViewById(R.id.btn_ranking);
         btnrank.setOnClickListener(v -> {
             Intent intent = new Intent(MenuPrincipal.this, Ranking.class);
+            intent.putExtra("userid",userid);
             startActivity(intent);
         });
         btninv=findViewById(R.id.btn_inventario);
@@ -42,14 +48,15 @@ public class MenuPrincipal extends AppCompatActivity {
         btnhab.setOnClickListener(v -> {
             Intent intent = new Intent(MenuPrincipal.this, LevelUp.class);
             intent.putExtra("userid",userid);
-            intent.putExtra("nivel",in.getStringExtra("nivel"));
+            intent.putExtra("nivel",level);
+            intent.putExtra("xp",xp);
             startActivity(intent);
         });
         btnluta=findViewById(R.id.btn_luta);
         btnluta.setOnClickListener(v -> {
             Intent intent = new Intent(MenuPrincipal.this, MenuLutaOpcoes.class);
             intent.putExtra("userid",userid);
-            intent.putExtra("ava",in.getStringExtra("imagem"));
+            intent.putExtra("ava",getResources().getIdentifier(imagem,"drawable",this.getPackageName()));
             startActivity(intent);
         });
         btnlogout=findViewById(R.id.btn_logout);
@@ -60,20 +67,35 @@ public class MenuPrincipal extends AppCompatActivity {
             finish();
         });
 
-
         final ImageView avatar = findViewById(R.id.imgAvatar);
 
-        int id = getResources().getIdentifier(in.getStringExtra("imagem"),"drawable",this.getPackageName());
-        avatar.setImageResource(id);
-
-        final TextView nome = findViewById(R.id.textusername);
-        nome.setText(in.getStringExtra("nome"));
         runOnUiThread( () -> {
-            final TextView nivel = findViewById(R.id.textnivel);
-            nivel.setText(String.format("%s%s", getString(R.string.main_menu_level_update), in.getStringExtra("nivel")));
 
-            final TextView exp = findViewById(R.id.textexp);
-            exp.setText(String.format("%s%s", getString(R.string.main_menu_exp_update), in.getStringExtra("exp")));
+            System.out.println("RECEBIDO = [---->"+imagem+"<----]"+" VALOR Da IMAGEM: "+getResources().getIdentifier(imagem,"drawable",this.getPackageName()));
+            avatar.setImageResource(getResources().getIdentifier(imagem,"drawable",this.getPackageName()));
+
+            final TextView nome = findViewById(R.id.textusername);
+            nome.setText(unome);
+            TextView nivel = findViewById(R.id.textnivel);
+            nivel.setText(String.format("%s%s", getString(R.string.main_menu_level_update), level));
+
+            TextView exp = findViewById(R.id.textexp);
+            exp.setText(String.format("%s%s", getString(R.string.main_menu_exp_update), xp));
         });
+    }
+
+    private void updateInfo(Utils util) {
+        runOnUiThread(() ->{
+        util.txtMessageServer(userid,"TESTINGADMIN",new ArrayList<>(Collections.singletonList("SELECT level from user where id = "+userid)));
+         level = util.output.replace("\n","");
+        util.txtMessageServer(userid,"TESTINGADMIN",new ArrayList<>(Collections.singletonList("SELECT xp from user where id = "+userid)));
+         xp = util.output.replace("\n","");
+        util.txtMessageServer(userid,"TESTINGADMIN",new ArrayList<>(Collections.singletonList("SELECT nome from user where id = "+userid)));
+        unome = util.output.replace("\n","");
+        util.txtMessageServer(userid,"TESTINGADMIN",new ArrayList<>(Collections.singletonList("SELECT image from user where id = "+userid)));
+        String []pre = util.output.split(" ");
+        imagem = pre[0];
+        //Toast.makeText(this,"[---->"+imagem+"<----]",Toast.LENGTH_SHORT).show();
+    });
     }
 }

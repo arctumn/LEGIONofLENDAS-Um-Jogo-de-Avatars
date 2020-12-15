@@ -278,8 +278,10 @@ public class ParseBatalha extends AppCompatActivity {
     }
 
     public void Sair( View v) {
-        //Intent intent = new Intent(ParseBatalha.this, MenuPrincipal.class);
-        //startActivity(intent);
+        Intent intent = new Intent(ParseBatalha.this, MenuPrincipal.class);
+        Intent out = getIntent();
+        intent.putExtra("id",out.getStringExtra("userid"));
+        startActivity(intent);
         finish();
     }
 

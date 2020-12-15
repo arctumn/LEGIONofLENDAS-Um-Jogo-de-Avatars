@@ -86,4 +86,13 @@ public class Shop extends AppCompatActivity {
         rankingRecyclerView.setAdapter(rankingAdapter);
 
     }
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        Intent out = getIntent();
+        Intent intent = new Intent(this,MenuPrincipal.class);
+        intent.putExtra("id",out.getStringExtra("userid"));
+        startActivity(intent);
+        finish();
+    }
 }

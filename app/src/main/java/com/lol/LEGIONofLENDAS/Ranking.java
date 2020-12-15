@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -71,6 +72,15 @@ public class Ranking extends AppCompatActivity {
         rankingRecyclerView.setLayoutManager(rankingLayoutManager);
         rankingRecyclerView.setAdapter(rankingAdapter);
 
+    }
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        Intent out = getIntent();
+        Intent intent = new Intent(this,MenuPrincipal.class);
+        intent.putExtra("id",out.getStringExtra("userid"));
+        startActivity(intent);
+        finish();
     }
     public static final Comparator<itemsRanking> DESCENDING_COMPARATOR =
             Comparator.comparingInt( itemsRanking::getmText2).reversed();

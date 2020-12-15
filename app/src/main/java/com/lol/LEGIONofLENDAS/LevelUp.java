@@ -19,17 +19,18 @@ public class LevelUp extends AppCompatActivity {
         setContentView(R.layout.activity_level_up);
         Intent in = getIntent();
 
-        PrimeXP prime = new PrimeXP(Integer.parseInt(in.getStringExtra("nivel")));
-        //int  next = prime.getNextXP();
-
+        PrimeXP prime = new PrimeXP(Integer.parseInt(in.getStringExtra("nivel").trim()));
+        int next = prime.getNextXP();
+        System.out.println("\n\n\n\nValor de NEXT:"+next+"\n\n\n");
         Button btnlvlup  = (Button) findViewById(R.id.btnLvlUp);
-        if(true){//next == Integer.parseInt(in.getStringExtra("exp"))){
+        if(next > Integer.parseInt(in.getStringExtra("exp"))){//)){
+            btnlvlup.setEnabled(false);
+
+        }else{
             btnlvlup.setEnabled(true);
             btnlvlup.setOnClickListener(v -> {
 
             });
-        }else{
-            btnlvlup.setEnabled(false);
         }
 
 

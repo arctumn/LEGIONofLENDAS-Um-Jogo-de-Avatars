@@ -3,6 +3,7 @@ package com.lol.LEGIONofLENDAS;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,10 +27,15 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        final SharedPreferences oSP = getPreferences(MODE_PRIVATE);
         username = findViewById(R.id.teditusername);
         password = findViewById(R.id.teditpassword);
-
+        runOnUiThread(() -> {
+                    if (!oSP.getString("username", "vazio").equals("vazio") && !oSP.getString("password", "vazio").equals("vazio")) {
+                        username.setText(oSP.getString("username", "vazio"));
+                        password.setText(oSP.getString("password", "vazio"));
+                    }
+                });
         btnlogin = findViewById(R.id.btn_login);
 
         btnlogin.setOnClickListener(v -> {
@@ -68,5 +74,15 @@ public class Login extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences oSP = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor oEditor = oSP.edit();
+        oEditor.putString("username",username.getText().toString());
+        oEditor.putString("password",password.getText().toString());
+        oEditor.apply();
     }
 }
