@@ -54,9 +54,9 @@ public class Login extends AppCompatActivity {
                    intent.putExtra("nivel", args[3]);
                    intent.putExtra("exp", args[4]);
                    startActivity(intent);
+                   finish();
                }
            }
-            finish();
         });
 
         tnovaconta = findViewById(R.id.criarconta);
