@@ -36,6 +36,7 @@ public class MenuLutaOpcoes extends AppCompatActivity {
             intent.putExtra("ava", ava);
             intent.putExtra("strluta", outputLuta);
             startActivity(intent);
+            finish();
 
 
         });
@@ -50,6 +51,7 @@ public class MenuLutaOpcoes extends AppCompatActivity {
             intent.putExtra("ava", ava);
             intent.putExtra("strluta", outputLuta);
             startActivity(intent);
+            finish();
         });
         btnamigo=findViewById(R.id.btn_amigo);
         btnamigo.setOnClickListener(v -> {
@@ -57,6 +59,7 @@ public class MenuLutaOpcoes extends AppCompatActivity {
             intent.putExtra("userid",id);
             intent.putExtra("ava", ava);
             startActivity(intent);
+            finish();
         });
 
     }

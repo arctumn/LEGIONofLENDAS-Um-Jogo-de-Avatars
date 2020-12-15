@@ -7,52 +7,71 @@ def comprar(ssid,itens):
     error,xp = DB.run_query(ssid, f"SELECT xp FROM user WHERE id = {ssid}")
     if error:
         return "ERRO NA SHOP",False
+    print(xp)
+    print(f"VALOR DE ITENS[{itens}]")
+    itens = itens[1:]
+    print(itens[1])
+    itens = fun.reduce(lambda x,y: x+f" {y}",itens[1:],itens[0])
     # obtem os itens
-    for item in itens:
-        error,info_item = DB.run_query(ssid, f"SELECT ID,price FROM loja WHERE itemName ='{item}'")
-        if error:
-            return "ITEM NAO ENCONTRADO",False
-
-        # calcula o preço final
-        item_id,price = info_item.rstrip("\n").split(" ")
-        custo += int(price)
-        # prepara para adicionar os items ao utilizador com base no id
-        ids.append(item_id)
+    
+    print(f"VALOR DE ITEM [{itens}]")
+    error,info_item = DB.run_query(ssid, f"SELECT ID,price FROM loja WHERE itemName ='{itens}'")
+    if error:
+        return "ITEM NAO ENCONTRADO",False
+    # calcula o preço final
+    print("AQUI")
+    info_item = info_item.rstrip("\n").split(" ")
+    print(info_item)
+    item_id = info_item[0]
+    price = info_item[1]
+    print(f"price {price}, item_id {item_id}")
+    custo += int(price)
+    # prepara para adicionar os items ao utilizador com base no id
+    ids.append(item_id)
 
     #verifica se o balanço é positivo
     bal = int(xp)-custo
-
+    print(bal)
     if  bal > -1:
         for item_id in ids:
             # obtem os status
             err,info_item = DB.run_query(ssid, f"SELECT forca,magia,defesa,defesaMagica,vida FROM loja WHERE id = {item_id}")
             if err:
+                print("Valor de err "+err)
                 return err,False
             # obtem o nome
             err,nome = DB.run_query(ssid, f"SELECT itemName FROM loja WHERE id = {item_id}")
             if err:
+                print(err)
                 return err,False
             err,image = DB.run_query(ssid, f"SELECT image FROM loja WHERE id = {item_id}")
             if err:
+                print(err)
                 return err,False
             # prepara a query a ser enviada
-            nome = nome.rstrip("\n")
-            image = image.rstrip("\n")
+            nome = nome.rstrip("\n").rsplit(" ")
+            nome = fun.reduce(lambda x,y: x+f" {y}",nome[:-1])
+            print(nome)
+            image = image.rstrip("\n").rstrip(" ")
+            print(image)
             next_ele = DB.next_id("inventario")
+            print("O proximo:"+str(next_ele))
             if not next_ele:
                 return "",False
-            info = fun.reduce(lambda x,y:x+ f",{y}",info_item.rstrip("\n").split(" "),f" ({next_ele},{ssid},'{nome}','{image}',{item_id}")
+            info = fun.reduce(lambda x,y:x+ f",{y}",info_item.rstrip("\n").split(" ")[:-1],f" ({next_ele},{ssid},{item_id},'{nome}','{image}'")
+            print(info)
             query = f"INSERT INTO inventario (id,iduser,idarma,itemName,image,forca,magia,defesa,defesaMagica,vida) VALUES{info})"
-            error,_ = DB.run_query(ssid,query)
+            print(f"Valor da {query}")
+            DB.conn.execute(query)
+            DB.conn.commit()
             # verifica se a operação ocorreu com sucesso, não precisamos de saber que foi adicionado, apenas queremos saber se houve algum erro
-            if error:
-                return error,False
+            
 
             # Atualiza o novo xp do utilizador
             query = f"UPDATE user SET xp = {bal} WHERE id = {ssid};"
-            error,_ = DB.run_query(ssid,query)
-            if error:
-                return error,False
+            DB.conn.execute(query)
+            DB.conn.commit()
+            
             return False,"Compra efetuada!"
     else:
         return False, "Sem fundos para comprar esses itens!"

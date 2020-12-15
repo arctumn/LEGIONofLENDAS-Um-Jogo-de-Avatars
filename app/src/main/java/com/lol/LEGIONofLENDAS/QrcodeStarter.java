@@ -43,7 +43,7 @@ public class QrcodeStarter extends AppCompatActivity {
             util.txtMessageServer(id,"TESTINGADMIN",new ArrayList<>(Collections.singletonList(query)));
 
             Intent out = new Intent(var, ParseBatalha.class);
-            out.putExtra("RESULTADO",batalha);
+            out.putExtra("strluta",batalha);
             startActivity(out);
         });
     }

@@ -38,26 +38,31 @@ public class Inventario extends AppCompatActivity {
         Utils util = new Utils();
 
         ArrayList<String> lista1 = new ArrayList<String>();
-        String query = "SELECT image,itemName FROM inventario WHERE iduser = "+in.getStringExtra("userid");
+        String query = "SELECT image,itemName,forca FROM inventario WHERE iduser = "+in.getStringExtra("userid");
         lista1.add(query);
 
         util.txtMessageServer("1", "TESTINGADMIN", lista1);
 
         String recebido = util.output;
 
-        ArrayList<String> lista2 = new ArrayList<>(Arrays.asList(recebido.split("\n\n")));
+        ArrayList<String> lista2 = new ArrayList<>(Arrays.asList(recebido.split("\n")));
 
         System.out.println(Arrays.toString(lista2.toArray()));
         // lista.forEach();
         lista2.forEach( string -> {
+            System.out.println("Valor da string"+ string);
             String[] pre = string.split(" ");
-            String ab = pre[1];
-            for(int i = 2; i <pre.length;i++) ab += " "+pre[i];
-            System.out.println(pre[0]+ " out: "+ab);
+            StringBuilder ab = new StringBuilder(pre[1]);
+            for(int i = 2; i <pre.length-1;i++){ ab.append(" ").append(pre[i]);
+                System.out.println("Valor de AB: "+ab);
+            }
+            System.out.println("nome: "+ab);
+            System.out.println("Valor do pre[0] = ["+pre[0]+"]");
+
             items.add(new itemsRanking(
                     getResources()
                             .getIdentifier(pre[0], "drawable", this.getPackageName()),
-                    ab,
+                    ab.toString(),
                     0)
             );
         });

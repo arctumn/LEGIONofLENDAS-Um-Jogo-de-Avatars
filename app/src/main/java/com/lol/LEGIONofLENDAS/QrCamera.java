@@ -73,7 +73,7 @@ public class QrCamera extends AppCompatActivity {
         cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     //Request permission
                     ActivityCompat.requestPermissions(QrCamera.this,
                             new String[]{Manifest.permission.CAMERA},RequestCameraPermissionID);
@@ -121,16 +121,17 @@ public class QrCamera extends AppCompatActivity {
                                     "fightNonRandom",
                                     new ArrayList<>(Collections.singletonList(txtResult.getText().toString()))
                             );
+                            Log.d("IDQRCAMERA","" + in.getStringExtra("id"));
                             String query = "SELECT texto FROM batalhaLOG WHERE iduser ="+in.getStringExtra("id")+" AND visto = 0";
                             util.txtMessageServer(in.getStringExtra("id"),"TESTINGADMIN",new ArrayList<>(Collections.singletonList(query)));
-                            Log.i("SERVERFIGHT",util.output);
+                            Log.i("SERVERFIGHT", util.output);
                             // recebe o texto da batalha
                             String batalha = util.output;
                             // atualiza a informação do lado do server
                             query = "UPDATE batalhaLOG SET visto = 1 WHERE iduser = "+in.getStringExtra("id")+" AND visto = 0";
                             util.txtMessageServer(in.getStringExtra("id"),"TESTINGADMIN",new ArrayList<>(Collections.singletonList(query)));
                             Intent out = new Intent(QrCamera.this, ParseBatalha.class);
-                            out.putExtra("RESULTADO",batalha);
+                            out.putExtra("strluta",batalha);
                             startActivity(out);
                         }
                     });

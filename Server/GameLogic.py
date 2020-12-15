@@ -277,13 +277,15 @@ def Combate(u1, u2, it1, it2, pa, numero_ronda, string_output_ronda):  # Pa -> P
             if fd < 0:
                 #print("Vida antes do ataque (u1): " + str(u1.hp))
                 u1.hp = u1.hp + fd
+                string_output_ronda = controloResults(u1, u2, fd, numero_ronda, string_output_ronda)
                 #print("Vida depois do ataque (u1): " + str(u1.hp))
             else:
                 #print("Vida antes do ataque (u2): " + str(u2.hp))
                 u2.hp = u2.hp - fd
+                string_output_ronda = controloResults(u2, u1, fd, numero_ronda, string_output_ronda)
                 #print("Vida depois do ataque (u2): " + str(u2.hp))
             pa = 2
-            string_output_ronda = controloResults(u2, u1, fd, numero_ronda, string_output_ronda)
+            # string_output_ronda = controloResults(u2, u1, fd, numero_ronda, string_output_ronda)
             # Obs na minha opinião poderíamos mudar a defesa
             # para ser feita com base em %.
 
@@ -303,13 +305,15 @@ def Combate(u1, u2, it1, it2, pa, numero_ronda, string_output_ronda):  # Pa -> P
             if fd < 0:
                 #print("Vida antes do ataque (u2): " + str(u2.hp))
                 u2.hp = u2.hp + fd
+                string_output_ronda = controloResults(u2, u1, fd, numero_ronda, string_output_ronda)
                #print("Vida depois do ataque (u2): " + str(u2.hp))
             else:
                 #print("Vida antes do ataque (u1): " + str(u1.hp))
                 u1.hp = u1.hp - fd
+                string_output_ronda = controloResults(u1, u2, fd, numero_ronda, string_output_ronda)
                 #print("Vida depois do ataque (u1): " + str(u1.hp))
             pa = 1
-            string_output_ronda = controloResults(u1, u2, fd, numero_ronda, string_output_ronda)
+            # string_output_ronda = controloResults(u1, u2, fd, numero_ronda, string_output_ronda)
             #print(f"VALOR DE S --------->[{string_output_ronda}]")
     return Combate(u1, u2, it1, it2, pa, numero_ronda + 1, string_output_ronda)
           

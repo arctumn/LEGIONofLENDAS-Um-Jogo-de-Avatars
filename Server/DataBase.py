@@ -17,7 +17,8 @@ def create_connection(db_file):
 def next_id(table):
     cursor = conn.execute(f"SELECT id FROM {table} ORDER BY id DESC LIMIT 1;")
     for row in cursor:
-        if row[0]:
+        print("AQUI "+str(row[0]))
+        if row[0]+1:
             print("Value of id: " + str(row[0]+1))
             return int(row[0]+1)
     return False        

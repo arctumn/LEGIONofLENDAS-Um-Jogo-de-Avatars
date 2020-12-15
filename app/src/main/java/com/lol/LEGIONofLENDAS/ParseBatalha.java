@@ -4,10 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -18,25 +24,34 @@ public class ParseBatalha extends AppCompatActivity {
     Thread thread;
     int flag;
     Utils util = new Utils();
+
+    Button btn;
+
     ProgressBar pb_left;
     ProgressBar pb_right;
-    // Definir avatar ava1
-    // Definir avatar ava2
-    // Definir TextView HP1
-    // Definir TextView HP2
-    // Definir TextView Name1
-    // Definir TextView Name2
-    // Definir TextView Ronda
-    // Definir TextView Dano
-    // Definir TextView Level1
-    // Definir TextView Level2
-    int i = 25;
+
+    ImageView ava1;
+    ImageView ava2;
+
+    int hpinitial1;
+    int hpinitial2;
+    boolean jogoFinalizado;
+
+    TextView name1;
+    TextView name2;
+    TextView ronda;
+    TextView level1;
+    TextView level2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parse_batalha);
         GridLayout grid = findViewById(R.id.gridluta);
         grid.setColumnCount(2);
+
+        Intent intent = getIntent();
+        final String LOG = intent.getStringExtra("strluta");
 
         pb_left = findViewById(R.id.pb_left);
         pb_right = findViewById(R.id.pb_right);
@@ -45,30 +60,35 @@ public class ParseBatalha extends AppCompatActivity {
                 pb_right.setMax(25);
         });
 
+        jogoFinalizado = false;
+        ava1 = findViewById(R.id.imgAvatar1);
+        ava2 = findViewById(R.id.imgAvatar2);
 
-        Button btn_test = findViewById(R.id.btn_menu);
-            btn_test.setOnClickListener(v -> {
-                runOnUiThread(() ->{
-                    setVida(i+1, i, true);
-                    setVida(i+1, i,false);
-                    //Toast.makeText(ParseBatalha.this,""+i,Toast.LENGTH_SHORT).show();
-                    i--;
-                });
-            });
-
+        name1 = findViewById(R.id.username1);
+        name2 = findViewById(R.id.username2);
+        ronda = findViewById(R.id.textRonda);
+        level1 = findViewById(R.id.usernivel1);
+        level2 = findViewById(R.id.usernivel2);
+        btn = findViewById(R.id.btn_menu);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                darSkip(v);
+            }
+        });
 
         flag = 0;
         thread = new Thread() {
-
             @Override
             public void run() {
-                runOnUiThread(() -> {
                     try {
-                        parseBatalha("");
+                        jogoFinalizado = parseBatalha(LOG);
+                        runOnUiThread( () -> {
+                            btn.setText("Voltar ao menu principal");
+                        });
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                });
             }
         };
         thread.start();
@@ -76,19 +96,22 @@ public class ParseBatalha extends AppCompatActivity {
 
     public void darSkip( View v){
         flag = 1;
+        if(jogoFinalizado){
+          Sair(v);
+        }
     }
 
     public String getNome(int id){
         ArrayList<String> query = new ArrayList<>();
         String nome;
-        query.set(0, "SELECT nome FROM user WHERE ID = "+id+";");
+        query.add("SELECT nome FROM user WHERE ID = "+id+";");
         util.txtMessageServer("4","TESTINGADMIN",query);
         return util.output.split("\n")[0];
     }
 
     public String getLevel(int id){
         ArrayList<String> query = new ArrayList<>();
-        query.set(0,"SELECT level FROM user WHERE ID = "+id+";");
+        query.add("SELECT level FROM user WHERE ID = "+id+";");
         util.txtMessageServer("4","TESTINGADMIN",query);
         return "Lvl " + util.output.split("\n")[0];
     }
@@ -102,94 +125,164 @@ public class ParseBatalha extends AppCompatActivity {
     public void setVida(int previous_state,int current_life,Boolean elemento_esquerda){
         if(elemento_esquerda) {
             ObjectAnimator.ofInt(pb_left,"progress",previous_state,current_life).setDuration(300).start();
-           // pb_left.setProgress(getLifePercentage(start_life,current_life),true);
+            //pb_left.setProgress(getLifePercentage(hpinitial1,current_life),true);
         }else {
             ObjectAnimator.ofInt(pb_right,"progress",previous_state,current_life).setDuration(300).start();
-            //pb_right.setProgress(getLifePercentage(start_life,current_life),true);
+            //pb_right.setProgress(getLifePercentage(hpinitial2,current_life),true);
         }
     }
     public int getAvatar(int id){
         int ava;
         ArrayList<String> query = new ArrayList<>();
-        query.set(0,"SELECT image FROM user WHERE ID = "+id+";");
+        query.add("SELECT image FROM user WHERE ID = "+id+";");
         util.txtMessageServer("4","TESTINGADMIN",query);
-        ava = getResources().getIdentifier(util.output.split("\n")[0],"drawable",getPackageName());
+        ava = getResources().getIdentifier(util.output.split(" ")[0],"drawable",getPackageName());
 
         return ava;
     }
 
-    public void parseBatalha(String Mensagem) throws InterruptedException {
+    public boolean parseBatalha(String Mensagem) throws InterruptedException {
 
+        Log.d("ParseBatalha",Mensagem);
+        btn.setText("Passar batalha à frente");
         int id1 = 0;
         int id2 = 0;
-        int hp1 = 0;  // Vida user 1
-        int hp2 = 0;  // Vida user 2
-        int dano = 0;
-        int ronda = 0;
+        int hp1antigo = 0;  // Vida user 1
+        int hp2antigo = 0;  // Vida user 2
+        int progresso1 = 0;
+        int progresso2 = 0;
 
         String[] Relatorio = Mensagem.split("\n");
-        for(int i = 0; i < Relatorio.length; i++){
+        for(int i = 0; i < Relatorio.length-1; i++) {
             String[] Ronda = Relatorio[i].split(" ");
 
+            if (Relatorio[i].compareTo("\n") == 0) {
+                return true;
+            }
+            if ( Ronda.length == 0){
+                return true;
+            }
             if (Ronda[0].compareTo("") == 0){
-                return;
+                return true;
             }
 
-            if (flag == 1){ // Dar Skip
-                String[] u1 = Relatorio[Relatorio.length-1].split("");
-                String[] u2 = Relatorio[Relatorio.length-2].split("");
-                // Ronda.setText(Ronda[3]) Actualizar Ronda
-                // Dano.setText(Ronda[2]) Actualizar Dano
-                if( Integer.parseInt(u1[0]) == id1){
-                    // HP1.setText(u1[1]) // Actualiza o HP do jogador 1
-                    // HP1.setTextColor( Color.parseColor("#D14519")); // Muda o HP para vermelho
-                    // HP2.setText(u2[1]) // Actualiza o HP do jogador 2
-                }else{
-                    // HP2.setText(u1[1]) // Actualiza o HP do jogador 2
-                    // HP2.setTextColor( Color.parseColor("#D14519")); // Muda o HP para vermelho
-                    // HP1.setText(u2[1]) // Actualiza o HP do jogador 1
+            if (flag == 1) { // Dar Skip
+                String[] u1 = Relatorio[Relatorio.length - 2].split(" ");
+                String[] u2 = Relatorio[Relatorio.length - 3].split(" ");
+
+                Log.d("TESTE"," " + Relatorio.length);
+
+                runOnUiThread(() -> {
+                    ronda.setText(u1[3]);
+                });
+
+                if (Integer.parseInt(u1[0]) == id1) {
+                    runOnUiThread(() -> {
+                        pb_left.setProgress(0,true);
+                        ava1.setImageAlpha(176);
+                        pb_right.setProgress((int) Float.parseFloat(u2[1]),true);
+                        // setVida(hpinitial1,0,true);
+                        // setVida(hpinitial2,getLifePercentage(hpinitial2,(int) Float.parseFloat(u2[1])),false);
+
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        pb_right.setProgress(0,true);
+                        ava2.setImageAlpha(176);
+                        pb_left.setProgress((int) Float.parseFloat(u1[1]),true);
+                    });
                 }
-            }
+                return true;
+            } else {
+                if (Integer.parseInt(Ronda[3]) == 0) { // Primeira entrada
+                    id1 = Integer.parseInt(Ronda[0]);
+                    id2 = Integer.parseInt(Ronda[1]);
+                    hpinitial1 = (int) Float.parseFloat(Ronda[2]);
+                    hpinitial2 = (int) Float.parseFloat(Ronda[4]);
+                    // hp1antigo = 100;
+                    // hp2antigo = 100;
 
-            if( Integer.parseInt(Ronda[3]) == 0 ){ // Primeira entrada
-                id1 = Integer.parseInt(Ronda[0]);
-                id2 = Integer.parseInt(Ronda[1]);
-                hp1 = Integer.parseInt(Ronda[2]);
-                hp2 = Integer.parseInt(Ronda[4]);
+                    pb_left.setMax((int) Float.parseFloat(Ronda[2]));
+                    pb_right.setMax((int) Float.parseFloat(Ronda[4]));
 
-                // Inicializar ava1 avatar.setImageResource( getAvatar(id1));
-                // Inicializar ava2 avatar.setImageResource( getAvatar(id2));
-                // Inicializar HP1 textView.setText(getLevel("" + hp1));
-                // Inicializar HP2 textView.setText(getLevel("" + hp2));
-                // Inicializar Name1 textView.setText(getNome(id1)[0]);
-                // Inicializar Name2 textView.setText(getNome(id2)[0]);
-                // Inicializar Level1 textView.setText(getLevel(id1));
-                // Inicializar Level2 textView.setText(getLevel(id2));
+                    int finalId1 = id1;
+                    int finalId2 = id2;
+                    runOnUiThread(() -> {
+                        ava1.setImageResource( getAvatar(finalId1));
+                        ava2.setImageResource( getAvatar(finalId2));
+                        name1.setText( getNome(finalId1));
+                        name2.setText( getNome(finalId2));
+                        level1.setText(getLevel(finalId1));
+                        level2.setText(getLevel(finalId2));
+                    });
 
-            }
-            else{ // Nas outras rondas
-                // Ronda.setText(Ronda[3]) Actualizar Ronda
-                // Dano.setText(Ronda[2]) Actualizar Dano
-                if( Integer.parseInt(Ronda[0]) == id1){
-                    // HP1.setText(Ronda[1]) // Actualiza o HP do jogador 1
-                    // HP1.setTextColor( Color.parseColor("#D14519")); // Muda o HP para vermelho
-                    Thread.sleep(2000);
-                    // HP1.setTextColor( Color.parseColor("#FFFFFF")); // Muda o HP para branco
-                }
-                else{
-                    // HP2.setText(Ronda[1]) // Actualiza o HP do jogador 2
-                    // HP2.setTextColor( Color.parseColor("#D14519")); // Muda o HP para vermelho
-                    Thread.sleep(2000);
-                    // HP2.setTextColor( Color.parseColor("#FFFFFF")); // Muda o HP para branco
+                } else { // Nas outras rondas
+                    runOnUiThread(() -> {
+                        ronda.setText(Ronda[3]);
+                    });
+
+                    if (Integer.parseInt(Ronda[0]) == id1) {
+                        //progresso1 = getLifePercentage(hpinitial1, (int) Float.parseFloat(Ronda[1]));
+                        //                        int finalHp1antigo = hp1antigo;
+                        //                        int finalProgresso = progresso1;
+                        progresso1 = (int) Float.parseFloat(Ronda[1]);
+                        if (progresso1 <= 0){
+                            progresso1 = 0;
+                            runOnUiThread(() -> {
+                                ava1.setImageAlpha(125);
+                            });
+                        }
+
+                        int finalProgresso2 = progresso1;
+                        runOnUiThread(() -> {
+                            pb_left.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#D14519")));
+                            //setVida(finalHp1antigo, finalProgresso,true);
+                            pb_left.setProgress(finalProgresso2,true);
+                        });
+                        // hp1antigo = progresso1;
+                        Thread.sleep(2000);
+                        runOnUiThread(() -> {
+                            pb_left.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#2AFF05")));
+                        });
+
+                    } else {
+                        // progresso2 = getLifePercentage(hpinitial1,(int) Float.parseFloat(Ronda[1]));
+                        // int finalHp2antigo = hp2antigo;
+                        // int finalProgresso1 = progresso2;
+                        progresso2 = (int) Float.parseFloat(Ronda[1]);
+                        if (progresso2 <= 0){
+                            progresso2 = 0;
+                            runOnUiThread(() -> {
+                                ava2.setImageAlpha(176);
+                            });
+                        }
+                        int finalProgresso = progresso2;
+                        runOnUiThread(() -> {
+                            pb_right.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#D14519")));
+                            // setVida(finalHp2antigo, finalProgresso1,false);
+                            pb_right.setProgress(finalProgresso,true);
+                        });
+                        // hp2antigo = progresso2;
+
+                        Thread.sleep(2000);
+                        runOnUiThread(() -> {
+                            pb_right.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#2AFF05")));
+                        });
+                    }
                 }
             }
         }
-
-        // RONDA ACABOU JESUS
-
+        return true;
     }
-    private int getLifePercentage(int inicalLife, int currentLife){
+
+    public void Sair( View v) {
+        Intent intent = new Intent(ParseBatalha.this, MenuPrincipal.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private int getLifePercentage(int initialLife, int currentLife){
         if(currentLife <= 0) return 0;
-            return (int)((currentLife/inicalLife)*100);
+            return (int)((currentLife/initialLife)*100);
     }
 }

@@ -24,6 +24,7 @@ public class MenuPrincipal extends AppCompatActivity {
         btnloja=findViewById(R.id.btn_loja);
         btnloja.setOnClickListener(v -> {
             Intent intent = new Intent(MenuPrincipal.this, Shop.class);
+            intent.putExtra("userid",userid);
             startActivity(intent);
         });
         btnrank=findViewById(R.id.btn_ranking);

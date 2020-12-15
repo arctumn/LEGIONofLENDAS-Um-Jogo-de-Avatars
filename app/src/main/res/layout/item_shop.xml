@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="#00000000"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#41FFEB3B"
+        android:layout_margin="4dp">
+
+        <ImageView
+            android:id="@+id/shopAvatar"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:padding="2dp" />
+
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="21dp"
+            android:layout_toEndOf="@id/shopAvatar"
+            android:text="NOME"
+            android:textColor="@android:color/black"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shopAvatar"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="21dp"
+            android:layout_toEndOf="@id/shopAvatar"
+            android:text="STR:"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/magic_Shop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shopAvatar"
+            android:layout_marginStart="62dp"
+            android:layout_marginTop="21dp"
+            android:layout_toEndOf="@id/shopAvatar"
+            android:text="M:"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/defense_Shop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shopAvatar"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="21dp"
+            android:layout_toEndOf="@id/magic_Shop"
+            android:text="D:"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/magic_defense_Shop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shopAvatar"
+            android:layout_marginStart="98dp"
+            android:layout_marginLeft="98dp"
+            android:layout_marginTop="21dp"
+            android:layout_toEndOf="@id/magic_Shop"
+            android:layout_toRightOf="@id/magic_Shop"
+            android:text="MD:"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/hp_Shop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shopAvatar"
+            android:layout_marginStart="171dp"
+            android:layout_marginLeft="171dp"
+            android:layout_marginTop="21dp"
+            android:layout_toEndOf="@id/magic_Shop"
+            android:layout_toRightOf="@id/magic_Shop"
+            android:text="HP:"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/shopPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="65dp"
+            android:layout_marginEnd="45dp"
+            android:text="Preço:"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/button_comprar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-85dp"
+            android:layout_marginTop="85dp"
+            android:layout_toEndOf="@id/shopAvatar"
+            android:backgroundTint="#DF7A542B"
+            android:text="Comprar" />
+    </RelativeLayout>
+
+
+
+</androidx.cardview.widget.CardView>

@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LEGIONofLENDAS">
-        <activity android:name=".SubirLevel"></activity>
+        <activity android:name=".itemShopAdapter"></activity>
+        <activity android:name=".LevelUp" />
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
@@ -33,7 +34,7 @@
             android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
         <activity
             android:name=".QrCamera"
-            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"></activity>
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
         <activity
             android:name=".QrcodeStarter"
             android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
