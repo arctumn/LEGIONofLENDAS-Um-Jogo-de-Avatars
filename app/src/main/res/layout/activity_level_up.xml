@@ -22,7 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.50"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_level_percentage" />
 
     <Button
         android:id="@+id/btn_upgrade_str"
@@ -37,55 +37,59 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_upgrade_magic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnLvlUp" />
+        app:layout_constraintTop_toTopOf="@+id/btnLvlUp"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/txt_level_percentage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
+        android:layout_marginTop="122dp"
         android:layout_marginEnd="150dp"
-        android:layout_marginBottom="164dp"
+        android:layout_marginBottom="127dp"
         android:backgroundTint="#FD7A542B"
         android:text="Button"
-        app:layout_constraintBottom_toTopOf="@+id/btn_upgrade_magic"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLvlUp" />
 
     <Button
         android:id="@+id/btn_upgrade_magic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="55dp"
+        android:layout_marginTop="357dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="127dp"
         android:backgroundTint="#FD7A542B"
         android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btn_upgrade_str" />
+        app:layout_constraintStart_toEndOf="@+id/btn_upgrade_str"
+        app:layout_constraintTop_toBottomOf="@+id/txt_level_percentage" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="35dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginBottom="55dp"
+        android:layout_marginTop="164dp"
         android:max="75"
         android:progress="55"
         android:progressTint="#921EE9D8"
         android:scaleY="10"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/btn_upgrade_life"
+        android:id="@+id/txt_level_percentage"
         android:layout_width="0dp"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
         android:layout_marginBottom="55dp"
         android:gravity="center"
@@ -93,7 +97,7 @@
         android:textColor="#FD7A542B"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/txt_level_percentage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -111,7 +115,7 @@
         android:textColor="#FD7A542B"
         android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/btn_upgrade_life"
+        app:layout_constraintBottom_toTopOf="@+id/txt_level_percentage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
