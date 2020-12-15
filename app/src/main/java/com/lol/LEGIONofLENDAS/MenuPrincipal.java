@@ -40,7 +40,9 @@ public class MenuPrincipal extends AppCompatActivity {
         });
         btnhab=findViewById(R.id.btn_habilidades);
         btnhab.setOnClickListener(v -> {
-            Intent intent = new Intent(MenuPrincipal.this, Shop.class);
+            Intent intent = new Intent(MenuPrincipal.this, LevelUp.class);
+            intent.putExtra("userid",userid);
+            intent.putExtra("nivel",in.getStringExtra("nivel"));
             startActivity(intent);
         });
         btnluta=findViewById(R.id.btn_luta);

@@ -18,26 +18,18 @@ public class LevelUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level_up);
         Intent in = getIntent();
-        final ImageView avatar = findViewById(R.id.lvlUpAvatar);
 
-        int id = Integer.parseInt(in.getStringExtra("imagem"));
-        avatar.setImageResource(id);
-
-        final TextView nome = findViewById(R.id.lvlUpNome);
-        nome.setText(in.getStringExtra("nome"));
-
-        final TextView nivel = findViewById(R.id.lvlUpNivel);
-        nivel.setText(String.format("%s%s", getString(R.string.main_menu_level_update), in.getStringExtra("nivel")));
-
-        final TextView exp = findViewById(R.id.lvlUpXP);
-        exp.setText(String.format("%s%s", getString(R.string.main_menu_exp_update), in.getStringExtra("exp")));
+        PrimeXP prime = new PrimeXP(Integer.parseInt(in.getStringExtra("nivel")));
+        //int  next = prime.getNextXP();
 
         Button btnlvlup  = (Button) findViewById(R.id.btnLvlUp);
-        if(!exp.equals("\"EXP:\"100")){
-            btnlvlup.setEnabled(false);
+        if(true){//next == Integer.parseInt(in.getStringExtra("exp"))){
+            btnlvlup.setEnabled(true);
             btnlvlup.setOnClickListener(v -> {
 
             });
+        }else{
+            btnlvlup.setEnabled(false);
         }
 
 
