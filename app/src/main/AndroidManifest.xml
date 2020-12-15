@@ -8,13 +8,14 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.LEGIONofLENDAS">
-        <activity android:name=".itemShopAdapter"></activity>
-        <activity android:name=".LevelUp" />
+        <activity android:name=".itemShopAdapter" />
+        <activity android:name=".LevelUp"
+            android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
