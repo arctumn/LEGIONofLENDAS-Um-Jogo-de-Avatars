@@ -13,7 +13,7 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.LEGIONofLENDAS">
-        <activity android:name=".itemShopAdapter" />
+
         <activity android:name=".LevelUp"
             android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar"/>
 
