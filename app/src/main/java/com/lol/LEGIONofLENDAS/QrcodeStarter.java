@@ -23,7 +23,7 @@ public class QrcodeStarter extends AppCompatActivity {
         WebView qr_code = findViewById(R.id.getQRCODE);
 
         Intent in = getIntent();
-        String id = in.getStringExtra("id");
+        String id = in.getStringExtra("userid");
 
         String url1 = "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl="+id;
         qr_code.setWebChromeClient(new WebChromeClient());

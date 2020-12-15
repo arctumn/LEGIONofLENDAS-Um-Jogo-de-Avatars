@@ -66,12 +66,12 @@ public class MenuPrincipal extends AppCompatActivity {
 
         final TextView nome = findViewById(R.id.textusername);
         nome.setText(in.getStringExtra("nome"));
+        runOnUiThread( () -> {
+            final TextView nivel = findViewById(R.id.textnivel);
+            nivel.setText(String.format("%s%s", getString(R.string.main_menu_level_update), in.getStringExtra("nivel")));
 
-        final TextView nivel = findViewById(R.id.textnivel);
-        nivel.setText(String.format("%s%s", getString(R.string.main_menu_level_update), in.getStringExtra("nivel")));
-
-        final TextView exp = findViewById(R.id.textexp);
-        exp.setText(String.format("%s%s", getString(R.string.main_menu_exp_update), in.getStringExtra("exp")));
-
+            final TextView exp = findViewById(R.id.textexp);
+            exp.setText(String.format("%s%s", getString(R.string.main_menu_exp_update), in.getStringExtra("exp")));
+        });
     }
 }

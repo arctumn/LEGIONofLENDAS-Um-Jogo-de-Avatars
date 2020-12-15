@@ -117,18 +117,19 @@ public class QrCamera extends AppCompatActivity {
                         if(!txtResult.getText().toString().equals(getResources().getString(R.string.value_check))){
                             Utils util = new Utils();
                             util.txtMessageServer(
-                                    in.getStringExtra("id"),
+                                    in.getStringExtra("userid"),
                                     "fightNonRandom",
                                     new ArrayList<>(Collections.singletonList(txtResult.getText().toString()))
                             );
-                            Log.d("IDQRCAMERA","" + in.getStringExtra("id"));
-                            String query = "SELECT texto FROM batalhaLOG WHERE iduser ="+in.getStringExtra("id")+" AND visto = 0";
+                            System.out.println("Valor do qrcode: "+txtResult.getText().toString());
+                            Log.d("IDQRCAMERA","" + in.getStringExtra("userid"));
+                            String query = "SELECT texto FROM batalhaLOG WHERE iduser = "+in.getStringExtra("userid")+" AND visto = 0";
                             util.txtMessageServer(in.getStringExtra("id"),"TESTINGADMIN",new ArrayList<>(Collections.singletonList(query)));
                             Log.i("SERVERFIGHT", util.output);
                             // recebe o texto da batalha
                             String batalha = util.output;
                             // atualiza a informação do lado do server
-                            query = "UPDATE batalhaLOG SET visto = 1 WHERE iduser = "+in.getStringExtra("id")+" AND visto = 0";
+                            query = "UPDATE batalhaLOG SET visto = 1 WHERE iduser = "+in.getStringExtra("userid")+" AND visto = 0";
                             util.txtMessageServer(in.getStringExtra("id"),"TESTINGADMIN",new ArrayList<>(Collections.singletonList(query)));
                             Intent out = new Intent(QrCamera.this, ParseBatalha.class);
                             out.putExtra("strluta",batalha);
