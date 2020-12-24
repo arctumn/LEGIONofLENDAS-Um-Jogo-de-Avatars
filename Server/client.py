@@ -1,7 +1,7 @@
 import socket
 
 
-IP = "82.155.86.142"
+IP = "NO NEED TO BE VISIBLE"
 #IP = "127.0.0.1"
 PORT = 3003
 
