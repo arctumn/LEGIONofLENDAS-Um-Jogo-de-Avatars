@@ -44,4 +44,8 @@
     <string name="name_battle2">nome</string>
     <string name="round_battle">RONDA</string>
     <string name="Shop_text">Compre aqui os seus itens</string>
+    <string name="Level_UP">Subir de Nível</string>
+    <string name="Plus_Force">Mais Força</string>
+    <string name="Plus_Life">Mais Vida</string>
+    <string name="Plus_Magic">Mais Magia</string>
 </resources>

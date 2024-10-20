@@ -5,7 +5,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -44,18 +43,18 @@ public class CharCreationInfo extends AppCompatActivity {
             name = username.getText().toString();
             pass = password.getText().toString();
 
-            ArrayList<String> newuser = new ArrayList<String>();
+            ArrayList<String> newuser = new ArrayList<>();
             newuser.add(name);
             newuser.add(pass);
             newuser.add("0");
             newuser.add("0");
-            if((name.equals(""))||(pass.equals(""))) {
+            if((name.isEmpty())||(pass.isEmpty())) {
                 Toast.makeText(CharCreationInfo.this, "ERRO! USERNAME OU PASSWORD INVALIDOS", Toast.LENGTH_SHORT).show();
             }
             else {
 
                 int imagem = getResources().getIdentifier("ava"+pager.getCurrentItem(), "drawable", getPackageName());
-                newuser.add(""+getResources().getResourceName(imagem));
+                newuser.add(getResources().getResourceName(imagem));
                 util.txtMessageServer("0", "verificar", newuser);
                 verif =  util.output;
 
@@ -73,7 +72,7 @@ public class CharCreationInfo extends AppCompatActivity {
                         userinfo = userinfo.substring(0,userinfo.length()-1);
                         String[] args = userinfo.split(" ");
                         Intent intent = new Intent(CharCreationInfo.this, MenuPrincipal.class);
-                        intent.putExtra("id",args[0]);
+                        intent.putExtra("userd",args[0]);
                         intent.putExtra("nome", name);
                         intent.putExtra("imagem", ""+imagem);
                         intent.putExtra("nivel", "0");
@@ -86,13 +85,9 @@ public class CharCreationInfo extends AppCompatActivity {
             }
         });
 
-        tcontaexistente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CharCreationInfo.this, Login.class);
-                startActivity(intent);
-            }
-
+        tcontaexistente.setOnClickListener(v -> {
+            Intent intent = new Intent(CharCreationInfo.this, Login.class);
+            startActivity(intent);
         });
 
     }

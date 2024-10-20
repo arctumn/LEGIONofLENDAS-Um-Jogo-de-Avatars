@@ -54,7 +54,7 @@ public class Login extends AppCompatActivity {
                    args = userinfo.split(" ");
                    Toast.makeText(Login.this, "LOGIN COM SUCESSO", Toast.LENGTH_SHORT).show();
                    Intent intent = new Intent(Login.this, MenuPrincipal.class);
-                   intent.putExtra("id",args[0]);
+                   intent.putExtra("userid",args[0]);
                    intent.putExtra("nome", args[1]);
                    intent.putExtra("imagem", args[2]);
                    intent.putExtra("nivel", args[3]);

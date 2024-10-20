@@ -11,10 +11,10 @@
         android:id="@+id/btnLvlUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
+
         android:backgroundTint="#FD7A542B"
         android:padding="15dp"
-        android:text="Level Up"
+        android:text="@string/Level_UP"
         android:textColor="@color/white"
         android:textSize="25sp"
         android:visibility="invisible"
@@ -22,49 +22,43 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5"
-        app:layout_constraintVertical_bias="0.5" />
+         />
 
     <Button
         android:id="@+id/btn_upgrade_str"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="127dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:backgroundTint="#FD7A542B"
-        android:text="mais força"
+        android:text="@string/Plus_Force"
         android:textColor="#FFFFFF"
         android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/txt_str"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_upgrade_life"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btn_upgrade_life"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="127dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:backgroundTint="#FD7A542B"
-        android:text="Mais    Vida"
+        android:text="@string/Plus_Life"
         android:textColor="#FFFFFF"
         android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/txt_hp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_upgrade_magic"
         app:layout_constraintStart_toEndOf="@+id/btn_upgrade_str" />
 
     <Button
         android:id="@+id/btn_upgrade_magic"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="127dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:backgroundTint="#FD7A542B"
-        android:text="Mais Magia"
+        android:text="@string/Plus_Magic"
         android:textColor="#FFFFFF"
         android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/txt_m"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_upgrade_life" />
@@ -75,6 +69,8 @@
         android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_marginTop="164dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:progress="55"
         android:progressTint="#921EE9D8"
         android:scaleY="10"
@@ -89,11 +85,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="156dp"
         android:gravity="center"
-        android:text="66/100"
         android:textColor="#FD7A542B"
         android:textSize="30sp"
         android:textStyle="bold"
-
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         app:layout_constraintBottom_toTopOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -103,7 +99,7 @@
 
     <TextView
         android:id="@+id/txt_level"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
         android:layout_marginBottom="25dp"
@@ -114,7 +110,6 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/txt_level_upgrade_per"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
@@ -123,45 +118,37 @@
         android:id="@+id/txt_str"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="349dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="20dp"
-        android:text="NUM"
+        android:text="Força"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/btn_upgrade_str"
-        app:layout_constraintEnd_toStartOf="@+id/txt_hp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintEnd_toStartOf="@+id/txt_hp"
+        app:layout_constraintTop_toBottomOf="@+id/btnLvlUp"
+        />
 
     <TextView
         android:id="@+id/txt_hp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="62dp"
-        android:layout_marginBottom="20dp"
-        android:text="NUM"
+        android:text="Vida"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/btn_upgrade_life"
+        app:layout_constraintBottom_toTopOf="@id/btn_upgrade_life"
         app:layout_constraintEnd_toStartOf="@+id/txt_m"
         app:layout_constraintStart_toEndOf="@+id/txt_str"
-        app:layout_constraintTop_toBottomOf="@+id/btnLvlUp"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/btnLvlUp" />
 
     <TextView
         android:id="@+id/txt_m"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="349dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="20dp"
-        android:text="NUM"
+        android:text="Magia"
         android:textColor="#FFFFFF"
+        android:layout_marginStart="16dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_upgrade_magic"
+        app:layout_constraintTop_toBottomOf="@+id/btnLvlUp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txt_hp"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintStart_toEndOf="@id/txt_hp"
+        />
 
     <TextView
         android:id="@+id/textView5"

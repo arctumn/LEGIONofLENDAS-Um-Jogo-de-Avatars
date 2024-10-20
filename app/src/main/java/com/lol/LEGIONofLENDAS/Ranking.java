@@ -6,21 +6,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.google.android.gms.vision.text.Line;
-
-import java.lang.reflect.Array;
-import java.security.cert.PolicyQualifierInfo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
 public class Ranking extends AppCompatActivity {
-
-    private RecyclerView rankingRecyclerView;
-    private RecyclerView.Adapter rankingAdapter;
-    private RecyclerView.LayoutManager rankingLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +20,7 @@ public class Ranking extends AppCompatActivity {
 
         ArrayList<itemsRanking> items = new ArrayList<>();
 
-        /**
-         * numeroDEPessoasAMostrar = 15
-         * util.txtMEssageServer("1","rankingxp",""+numeroDEPessoasAMostrar);
-         *
-         * recebido = util.output
-         * "infoU1\ninfoU2\ninfoU3\n....\ninfoU15\n"
-         * lista = new ArrayList<String>(Arrays.asList(recebido.split(\n))
-         * lista ["VALUEnome VALUElvl VALUExp",...,"infoU15"]
-         */
+
 
         Utils util = new Utils();
         int num = 15;
@@ -64,10 +47,10 @@ public class Ranking extends AppCompatActivity {
         });
 
         items.sort(DESCENDING_COMPARATOR);
-        rankingRecyclerView = findViewById(R.id.recyclerViewRanking);
+        RecyclerView rankingRecyclerView = findViewById(R.id.recyclerViewRanking);
         rankingRecyclerView.setHasFixedSize(true);
-        rankingLayoutManager = new LinearLayoutManager(this);
-        rankingAdapter = new itemRankingAdapter(items);
+        RecyclerView.LayoutManager rankingLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.Adapter<itemRankingAdapter.itemViewHolder> rankingAdapter = new itemRankingAdapter(items);
 
         rankingRecyclerView.setLayoutManager(rankingLayoutManager);
         rankingRecyclerView.setAdapter(rankingAdapter);
@@ -78,7 +61,7 @@ public class Ranking extends AppCompatActivity {
         super.onBackPressed();
         Intent out = getIntent();
         Intent intent = new Intent(this,MenuPrincipal.class);
-        intent.putExtra("id",out.getStringExtra("userid"));
+        intent.putExtra("userid",out.getStringExtra("userid"));
         startActivity(intent);
         finish();
     }

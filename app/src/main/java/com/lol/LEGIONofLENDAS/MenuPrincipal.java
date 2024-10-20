@@ -22,7 +22,7 @@ public class MenuPrincipal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principal);
         Intent in = getIntent();
-        userid = in.getStringExtra("id");
+        userid = in.getStringExtra("userid");
         Utils util = new Utils();
         updateInfo(util);
 

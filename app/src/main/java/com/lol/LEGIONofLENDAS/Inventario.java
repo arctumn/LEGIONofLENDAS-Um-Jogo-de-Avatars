@@ -82,7 +82,7 @@ public class Inventario extends AppCompatActivity {
         super.onBackPressed();
         Intent out = getIntent();
         Intent intent = new Intent(this,MenuPrincipal.class);
-        intent.putExtra("id",out.getStringExtra("userid"));
+        intent.putExtra("userid",out.getStringExtra("userid"));
         startActivity(intent);
         finish();
     }

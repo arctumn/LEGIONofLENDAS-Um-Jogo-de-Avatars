@@ -14,11 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Objects;
-
 public class ParseBatalha extends AppCompatActivity {
 
     Thread thread;
@@ -70,12 +67,7 @@ public class ParseBatalha extends AppCompatActivity {
         level1 = findViewById(R.id.usernivel1);
         level2 = findViewById(R.id.usernivel2);
         btn = findViewById(R.id.btn_menu);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                darSkip(v);
-            }
-        });
+        btn.setOnClickListener(this::darSkip);
 
         flag = 0;
         thread = new Thread() {
@@ -87,7 +79,7 @@ public class ParseBatalha extends AppCompatActivity {
                         btn.setText("Voltar ao menu principal");
                     });
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Log.e("ParseBatalha","Não consegui processar a batalha",e);
                 }
             }
         };
@@ -125,10 +117,10 @@ public class ParseBatalha extends AppCompatActivity {
     public void setVida(int previous_state,int current_life,Boolean elemento_esquerda){
         if(elemento_esquerda) {
             ObjectAnimator.ofInt(pb_left,"progress",previous_state,current_life).setDuration(300).start();
-            //pb_left.setProgress(getLifePercentage(hpinitial1,current_life),true);
+
         }else {
             ObjectAnimator.ofInt(pb_right,"progress",previous_state,current_life).setDuration(300).start();
-            //pb_right.setProgress(getLifePercentage(hpinitial2,current_life),true);
+
         }
     }
     public int getAvatar(int id){
@@ -147,8 +139,6 @@ public class ParseBatalha extends AppCompatActivity {
         btn.setText("Passar batalha à frente");
         int id1 = 0;
         int id2 = 0;
-        int hp1antigo = 0;  // Vida user 1
-        int hp2antigo = 0;  // Vida user 2
         int progresso1 = 0;
         int progresso2 = 0;
 
@@ -166,43 +156,12 @@ public class ParseBatalha extends AppCompatActivity {
                 return true;
             }
 
-            /*
-
-            if (flag == 1) { // Dar Skip
-                String[] u1 = Relatorio[Relatorio.length - 2].split(" ");
-                String[] u2 = Relatorio[Relatorio.length - 3].split(" ");
-
-                Log.d("TESTE"," " + Relatorio.length);
-
-                runOnUiThread(() -> {
-                    ronda.setText(u1[3]);
-                });
-
-                if (Integer.parseInt(u1[0]) == id1) {
-                    runOnUiThread(() -> {
-                        pb_left.setProgress(0,true);
-                        ava1.setImageAlpha(176);
-                        pb_right.setProgress((int) Float.parseFloat(u2[1]),true);
-                        // setVida(hpinitial1,0,true);
-                        // setVida(hpinitial2,getLifePercentage(hpinitial2,(int) Float.parseFloat(u2[1])),false);
-
-                    });
-                } else {
-                    runOnUiThread(() -> {
-                        pb_right.setProgress(0,true);
-                        ava2.setImageAlpha(176);
-                        pb_left.setProgress((int) Float.parseFloat(u1[1]),true);
-                    });
-                }
-                return true;
-            } else { */
             if (Integer.parseInt(Ronda[3]) == 0) { // Primeira entrada
                 id1 = Integer.parseInt(Ronda[0]);
                 id2 = Integer.parseInt(Ronda[1]);
                 hpinitial1 = (int) Float.parseFloat(Ronda[2]);
                 hpinitial2 = (int) Float.parseFloat(Ronda[4]);
-                // hp1antigo = 100;
-                // hp2antigo = 100;
+
 
                 pb_left.setMax((int) Float.parseFloat(Ronda[2]));
                 pb_right.setMax((int) Float.parseFloat(Ronda[4]));
@@ -224,9 +183,6 @@ public class ParseBatalha extends AppCompatActivity {
                 });
 
                 if (Integer.parseInt(Ronda[0]) == id1) {
-                    //progresso1 = getLifePercentage(hpinitial1, (int) Float.parseFloat(Ronda[1]));
-                    //                        int finalHp1antigo = hp1antigo;
-                    //                        int finalProgresso = progresso1;
                     progresso1 = (int) Float.parseFloat(Ronda[1]);
                     if (progresso1 <= 0){
                         progresso1 = 0;
@@ -238,7 +194,7 @@ public class ParseBatalha extends AppCompatActivity {
                     int finalProgresso2 = progresso1;
                     runOnUiThread(() -> {
                         pb_left.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#D14519")));
-                        //setVida(finalHp1antigo, finalProgresso,true);
+
                         pb_left.setProgress(finalProgresso2,true);
                     });
                     // hp1antigo = progresso1;
@@ -249,9 +205,7 @@ public class ParseBatalha extends AppCompatActivity {
                     });
 
                 } else {
-                    // progresso2 = getLifePercentage(hpinitial1,(int) Float.parseFloat(Ronda[1]));
-                    // int finalHp2antigo = hp2antigo;
-                    // int finalProgresso1 = progresso2;
+
                     progresso2 = (int) Float.parseFloat(Ronda[1]);
                     if (progresso2 <= 0){
                         progresso2 = 0;
@@ -262,10 +216,10 @@ public class ParseBatalha extends AppCompatActivity {
                     int finalProgresso = progresso2;
                     runOnUiThread(() -> {
                         pb_right.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#D14519")));
-                        // setVida(finalHp2antigo, finalProgresso1,false);
+
                         pb_right.setProgress(finalProgresso,true);
                     });
-                    // hp2antigo = progresso2;
+
                     if( flag != 1 )
                         Thread.sleep(2000);
                     runOnUiThread(() -> {
@@ -277,10 +231,10 @@ public class ParseBatalha extends AppCompatActivity {
         return true;
     }
 
-    public void Sair( View v) {
+    public void Sair(View v) {
         Intent intent = new Intent(ParseBatalha.this, MenuPrincipal.class);
         Intent out = getIntent();
-        intent.putExtra("id",out.getStringExtra("userid"));
+        intent.putExtra("userid",out.getStringExtra("userid"));
         startActivity(intent);
         finish();
     }

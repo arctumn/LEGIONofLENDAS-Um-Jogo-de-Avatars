@@ -17,14 +17,14 @@ public class itemRankingAdapter  extends RecyclerView.Adapter<itemRankingAdapter
 
         public ImageView mImageView;
         public TextView mTextView1;
-        public TextView mTextView2;
+        public TextView mTextRnkTxtNivel;
         public TextView mTextVRank;
         public itemViewHolder(View itemView){
             super(itemView);
             mTextVRank = itemView.findViewById(R.id.rank);
             mImageView = itemView.findViewById(R.id.rnkAvatar);
             mTextView1 = itemView.findViewById(R.id.rnkNome);
-            mTextView2 = itemView.findViewById(R.id.rnkNivel);
+            mTextRnkTxtNivel = itemView.findViewById(R.id.rnkTxtNivel);
         }
     }
 
@@ -45,7 +45,7 @@ public class itemRankingAdapter  extends RecyclerView.Adapter<itemRankingAdapter
         itemsRanking currentItem = mLista.get(position);
         holder.mImageView.setImageResource(currentItem.getmImageResource());
         holder.mTextView1.setText(currentItem.getmText1());
-        holder.mTextView2.setText(String.valueOf(currentItem.getmText2()));
+        holder.mTextRnkTxtNivel.setText("LVL:" + currentItem.getmText2());
         holder.mTextVRank.setText(String.valueOf(position+1));
     }
 

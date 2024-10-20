@@ -2,6 +2,8 @@ package com.lol.LEGIONofLENDAS;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -20,7 +22,9 @@ public class Client {
     //ip e port
     private static final String IP = "144.126.244.193";
     private static final int PORT  =  3003;
-
+    private static final String Source = IP + ":" + PORT;
+    private static final  String ClientToServer = "ClientLol->ServerLol";
+    private static final  String ServerToClient = "ServerLol->ClientLoL";
     /**
      * função de escrita utilitaria
      * @param param1 primeiro elemento
@@ -188,13 +192,20 @@ public class Client {
      * @param parsedMESSAGE mensagem formatada pronta para ser enviada para o server
      * @return mensagem recebida do server
      */
+    @NonNull
     private String sendMESSAGE(String parsedMESSAGE){
-        Log.i("SERVERLOL","try CONNECT");
+        Log.i(ClientToServer,"try CONNECT");
         try {
+            var connectionLog = "Connecting to the server on HOST: "+Source;
+            Log.i(ClientToServer,connectionLog);
             //abre o socket
             Socket socket = new Socket(IP,PORT);
-
-            Log.i("SERVERLOL","ENTREI NO SERVER");
+            if(socket.isConnected())
+                Log.i(ServerToClient,"ENTREI NO SERVER");
+            else {
+                Log.e("ClientLol", "Falhei a conectar no server com HOST:" +Source);
+                throw new IOException(ClientToServer + "Erro a Comunicar com o Server com HOST:" +Source);
+            }
             //prepara o input
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -209,14 +220,11 @@ public class Client {
                 resultado.append(tester).append("\n");
             }
             in.close();
-            String aux = resultado.toString();
-            aux = "["+resultado.toString()+"]";
+            String aux = "["+resultado+"]";
             //fecha o socket
-            //if(resultado.length() == 0) Log.i("SERVERLOL","ERROR RECEIVING");
-            Log.i("SERVERLOL", aux);
+            Log.i(ServerToClient, aux);
 
             out.close();
-
             socket.close();
             //retorna
             if (aux.equals("[]")) return "NENHUM ELEMENTO";
@@ -224,9 +232,11 @@ public class Client {
 
         } catch (UnknownHostException e){
             //retorna caso nao encontre host
+            Log.e("ClientLol",e.toString());
             return "NO HOST FOUND";
         } catch ( IOException e){
             //retorna caso tenha problemas de leitura
+            Log.e("ClientLol",e.toString());
             return e.toString();
         }
 
