@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class Client {
     //ip e port
-    private static final String IP = "NO NEED TO BE VISIBLE";
+    private static final String IP = "144.126.244.193";
     private static final int PORT  =  3003;
 
     /**
