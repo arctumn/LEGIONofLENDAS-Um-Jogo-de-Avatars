@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/LEGIONofLENDAS.iml" filepath="$PROJECT_DIR$/.idea/modules/LEGIONofLENDAS.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/LEGIONofLENDAS.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/LEGIONofLENDAS.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/LEGIONofLENDAS.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/LEGIONofLENDAS.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/LEGIONofLENDAS.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/LEGIONofLENDAS.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/LEGIONofLENDAS.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/LEGIONofLENDAS.app.unitTest.iml" />
     </modules>
   </component>
 </project>
