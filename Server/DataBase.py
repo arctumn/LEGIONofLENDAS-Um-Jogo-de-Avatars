@@ -78,17 +78,6 @@ def create_member_user(operation_context):
     except Error as err:
         return err, False
 
-# primeiro nivel de segurança, a query (tem a falha de permite desde que a pessoa acerte um id, é ignorado s eo id for o do superADMIN)
-def check(session_id):
-
-    cursor = conn.execute(f"SELECT * FROM user WHERE id={session_id}")
-    for row in cursor:
-        if row[1]:
-            print("User: " + row[1])
-
-            return True
-    print(f"Session id {session_id} does not exist!")
-    return False
 
 def loja_insert(operation_context):
     splitted = str(operation_context).split(" ")

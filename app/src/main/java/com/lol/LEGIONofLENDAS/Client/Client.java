@@ -1,4 +1,4 @@
-package com.lol.LEGIONofLENDAS;
+package com.lol.LEGIONofLENDAS.Client;
 
 import android.util.Log;
 
@@ -47,14 +47,11 @@ public class Client {
         if(items == null) elementos.append("");
         else for (String item : items) elementos.append(item).append(" ");
 
-        switch (operacaoAFazer){
-            case "Vender":
-                return sendMESSAGE(format(userId ,"SHOP", "Vender " + elementos));
-            case "Comprar":
-                return sendMESSAGE(format(userId ,"SHOP", "Comprar " + elementos));
-            default:
-                return sendMESSAGE(format(userId ,"SHOP", "Nada"));
-        }
+        return switch (operacaoAFazer) {
+            case "Vender" -> sendMESSAGE(format(userId, "SHOP", "Vender " + elementos));
+            case "Comprar" -> sendMESSAGE(format(userId, "SHOP", "Comprar " + elementos));
+            default -> sendMESSAGE(format(userId, "SHOP", "Nada"));
+        };
     }
     /**
      * mostra os itens da loja
