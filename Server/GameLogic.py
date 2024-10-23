@@ -24,14 +24,14 @@ def get_stats(id):  # Vai buscar os stats
 
 
 def randomuser(id1, userSTAT):
-    query = f"SELECT ID FROM status WHERE ID != {id1};"
+    query = f"SELECT ID FROM status WHERE ID not in (1,{id1});"
 
     err, elements = db.run_query(id1, query)
     print(f"Valor de err = [{err}] dentro do randomuser\n Valores de elements = [{elements}]")
     if elements == "":
         return "TRYBOT", False
     listofchoosen = elements.split("\n")
-    return False, (listofchoosen[rand.randint(0, len(listofchoosen) - 1)])
+    return False, (listofchoosen[rand.randint(0, len(listofchoosen) - 2)])
 
 
 # Precisas englobar isso tudo dentro de uma função bc isso é chamado para diferentes players
@@ -295,7 +295,7 @@ def Combate(u1, u2, it1, it2, pa, numero_ronda, string_output_ronda):  # Pa -> P
                 defesa[0] = defesa[0] + x.defn
                 defesa[1] = defesa[1] + x.defm
             # print("Defesa do adversário = " + str(defesa[0]) + ", defesa mágica = " + str(defesa[1]))
-            fd = damageDone(d[1], defesa[1], d[0], d[1])
+            fd = damageDone(d[1], defesa[1], d[0], defesa[0])
 
             # print("Dano = " + str(fd))
             if fd < 0:
