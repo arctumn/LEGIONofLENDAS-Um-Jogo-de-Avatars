@@ -55,13 +55,16 @@
     <string name="SuccessLogin">LOGIN COM SUCESSO</string>
     <string name="ErrorLogin">ERRO! NOME OU SENHA INCORRETO</string>
     <string name="Item_Name">Nome:</string>
-    <string name="Item_STR">Força:</string>
+    <string name="STR">Força:</string>
     <string name="Item_Buy">Comprar</string>
     <string name="Item_Price">Preço:</string>
-    <string name="Item_HP">Vida:</string>
-    <string name="Item_Magic_Defence">Defesa Mágica:</string>
-    <string name="Item_Defence">Defesa:</string>
-    <string name="Item_Magic">Magia:</string>
+    <string name="HP">Vida:</string>
+    <string name="Magic_Defence">Defesa Mágica:</string>
+    <string name="Defence">Defesa:</string>
+    <string name="Magic">Magia:</string>
     <string name="shopAvatarDescription">Imagem do Item</string>
     <string name="Item_Bought">Item Comprado!</string>
+    <string name="Item_Not_Bought">Não tem experiencia suficient!.</string>
+    <string name="Skip_Fight">Passar batalha à frente</string>
+    <string name="Avaliable_Points">Pontos A Atribuir:</string>
 </resources>

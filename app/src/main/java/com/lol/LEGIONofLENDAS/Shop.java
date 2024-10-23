@@ -29,15 +29,6 @@ public class Shop extends AppCompatActivity {
 
         ArrayList<itemsShop> items = new ArrayList<>();
         Intent in = getIntent();
-        /**
-         * numeroDEPessoasAMostrar = 15
-         * util.txtMEssageServer("1","rankingxp",""+numeroDEPessoasAMostrar);
-         *
-         * recebido = util.output
-         * "infoU1\ninfoU2\ninfoU3\n....\ninfoU15\n"
-         * lista = new ArrayList<String>(Arrays.asList(recebido.split(\n))
-         * lista ["VALUEnome VALUElvl VALUExp",...,"infoU15"]
-         */
 
         Utils util = new Utils();
 
@@ -80,7 +71,8 @@ public class Shop extends AppCompatActivity {
         rankingRecyclerView = findViewById(R.id.recyclerViewShop);
         rankingRecyclerView.setHasFixedSize(true);
         rankingLayoutManager = new LinearLayoutManager(this);
-        rankingAdapter = new itemShopAdapter(items,this);
+        var context = Shop.this;
+        rankingAdapter = new itemShopAdapter(items,context);
         rankingRecyclerView.setLayoutManager(rankingLayoutManager);
         rankingRecyclerView.setAdapter(rankingAdapter);
 

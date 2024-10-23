@@ -1,7 +1,6 @@
 package com.lol.LEGIONofLENDAS;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import java.util.Collections;
 public class itemShopAdapter  extends RecyclerView.Adapter<itemShopAdapter.itemViewHolder> {
     public ArrayList<itemsShop> mLista;
     public Shop shop;
+    private int experience;
     public static class itemViewHolder extends RecyclerView.ViewHolder{
         public ImageView mImageView;
         public TextView price;
@@ -45,7 +45,9 @@ public class itemShopAdapter  extends RecyclerView.Adapter<itemShopAdapter.itemV
 
     public itemShopAdapter(ArrayList<itemsShop> listaItems,Shop shop){
         mLista = listaItems;
-        shop = shop;
+        this.shop = shop;
+        Intent in = shop.getIntent();
+        this.experience = in.getIntExtra("exp",0);
     }
 
     @NonNull
@@ -59,14 +61,13 @@ public class itemShopAdapter  extends RecyclerView.Adapter<itemShopAdapter.itemV
     @Override
     public void onBindViewHolder(@NonNull itemViewHolder holder, int position) {
         itemsShop currentItem = mLista.get(position);
-        var _shop = shop;
-        var price = shop.getString(R.string.Item_Price) + " " + currentItem.getPrice();
-        var name =  shop.getString(R.string.Item_Name) + " " + currentItem.getName();
-        var life = shop.getString(R.string.Item_HP) + " " + currentItem.getLife();
-        var strength = shop.getString(R.string.Item_STR) + " " + currentItem.getStr();
-        var magic = shop.getString(R.string.Item_Magic) + " " + currentItem.getMagic();
-        var defence = shop.getString(R.string.Item_Defence) + " " + currentItem.getDefense();
-        var magicDefence = shop.getString(R.string.Item_Magic_Defence) + " " + currentItem.getMagicDefense();
+        var price = shop.getString(R.string.Item_Price) + " " + currentItem.getPrice() + "XP";
+        var name =  shop.getString(R.string.Item_Name) + " " + currentItem.getName() + "XP";
+        var life = shop.getString(R.string.HP) + " " + currentItem.getLife() + "XP";
+        var strength = shop.getString(R.string.STR) + " " + currentItem.getStr() + "XP";
+        var magic = shop.getString(R.string.Magic) + " " + currentItem.getMagic() + "XP";
+        var defence = shop.getString(R.string.Defence) + " " + currentItem.getDefense() + "XP";
+        var magicDefence = shop.getString(R.string.Magic_Defence) + " " + currentItem.getMagicDefense() + "XP";
 
         holder.mImageView.setImageResource(currentItem.getImage());
         holder.price.setText(price);
@@ -77,12 +78,17 @@ public class itemShopAdapter  extends RecyclerView.Adapter<itemShopAdapter.itemV
         holder.defence.setText(defence);
         holder.magicDefence.setText(magicDefence);
         holder.buy.setOnClickListener(v -> {
-            util.txtMessageServer(
-                    currentItem.getUid(),"Comprar",
-                    new ArrayList<>(Collections.singletonList(currentItem.getName()))
-            );
-            var itemBough = R.string.Item_Bought;
-            Toast.makeText(shop,R.string.Item_Bought,Toast.LENGTH_SHORT).show();
+            int _price = Integer.parseInt(currentItem.getPrice());
+            if(this.experience - _price >= 0){
+                util.txtMessageServer(
+                        currentItem.getUid(),"Comprar",
+                        new ArrayList<>(Collections.singletonList(currentItem.getName()))
+                );
+
+            } else{
+                Toast.makeText(shop,R.string.Item_Not_Bought,Toast.LENGTH_SHORT).show();
+            }
+
         });
 
     }

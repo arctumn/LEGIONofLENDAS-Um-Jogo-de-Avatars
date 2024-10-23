@@ -136,7 +136,7 @@ public class ParseBatalha extends AppCompatActivity {
     public boolean parseBatalha(String Mensagem) throws InterruptedException {
 
         Log.d("ParseBatalha",Mensagem);
-        btn.setText("Passar batalha à frente");
+        btn.setText(R.string.Skip_Fight);
         int id1 = 0;
         int id2 = 0;
         int progresso1 = 0;
