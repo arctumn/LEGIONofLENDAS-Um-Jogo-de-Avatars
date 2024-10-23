@@ -62,12 +62,12 @@ public class itemShopAdapter  extends RecyclerView.Adapter<itemShopAdapter.itemV
     public void onBindViewHolder(@NonNull itemViewHolder holder, int position) {
         itemsShop currentItem = mLista.get(position);
         var price = shop.getString(R.string.Item_Price) + " " + currentItem.getPrice() + "XP";
-        var name =  shop.getString(R.string.Item_Name) + " " + currentItem.getName() + "XP";
-        var life = shop.getString(R.string.HP) + " " + currentItem.getLife() + "XP";
-        var strength = shop.getString(R.string.STR) + " " + currentItem.getStr() + "XP";
-        var magic = shop.getString(R.string.Magic) + " " + currentItem.getMagic() + "XP";
-        var defence = shop.getString(R.string.Defence) + " " + currentItem.getDefense() + "XP";
-        var magicDefence = shop.getString(R.string.Magic_Defence) + " " + currentItem.getMagicDefense() + "XP";
+        var name =  shop.getString(R.string.Item_Name) + " " + currentItem.getName();
+        var life = shop.getString(R.string.HP) + " " + currentItem.getLife();
+        var strength = shop.getString(R.string.STR) + " " + currentItem.getStr();
+        var magic = shop.getString(R.string.Magic) + " " + currentItem.getMagic();
+        var defence = shop.getString(R.string.Defence) + " " + currentItem.getDefense();
+        var magicDefence = shop.getString(R.string.Magic_Defence) + " " + currentItem.getMagicDefense();
 
         holder.mImageView.setImageResource(currentItem.getImage());
         holder.price.setText(price);
