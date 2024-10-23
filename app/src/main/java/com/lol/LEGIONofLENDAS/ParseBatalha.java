@@ -76,7 +76,7 @@ public class ParseBatalha extends AppCompatActivity {
                 try {
                     jogoFinalizado = parseBatalha(LOG);
                     runOnUiThread( () -> {
-                        btn.setText("Voltar ao menu principal");
+                        btn.setText(getString(R.string.return_main_menu));
                     });
                 } catch (InterruptedException e) {
                     Log.e("ParseBatalha","Não consegui processar a batalha",e);
