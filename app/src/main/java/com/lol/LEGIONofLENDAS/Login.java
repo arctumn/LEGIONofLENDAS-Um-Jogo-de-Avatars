@@ -67,13 +67,14 @@ public class Login extends AppCompatActivity {
         util.txtMessageServer("1", "login", login);
         userinfo = util.output;
         if ((username.isEmpty()) || (password.isEmpty())) {
-            Toast.makeText(Login.this, "ERRO! USERNAME OU PASSWORD INCORRETOS", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Login.this,  R.string.ErrorLogin, Toast.LENGTH_SHORT).show();
         } else if (userinfo.equals("NENHUM ELEMENTO")) {
-            Toast.makeText(Login.this, "ERRO! USERNAME OU PASSWORD INCORRETOS", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Login.this,  R.string.ErrorLogin, Toast.LENGTH_SHORT).show();
         } else {
             userinfo = userinfo.substring(0, userinfo.length() - 1);
             args = userinfo.split(" ");
-            Toast.makeText(Login.this, "LOGIN COM SUCESSO", Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(Login.this, getResources().getString(R.string.SuccessLogin), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Login.this, MenuPrincipal.class);
             intent.putExtra("userid", args[0]);
             intent.putExtra("nome", args[1]);

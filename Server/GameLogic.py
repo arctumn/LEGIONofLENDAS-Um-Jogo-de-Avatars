@@ -24,12 +24,7 @@ def get_stats(id):  # Vai buscar os stats
 
 
 def randomuser(id1, userSTAT):
-    query = f"SELECT ID FROM status WHERE \
-    forca > {int(userSTAT[0]) - 30} AND forca < {int(userSTAT[0]) + 30} \
-    AND magia > {int(userSTAT[1]) - 30} AND magia < {int(userSTAT[1]) + 30} \
-    AND defesa > {int(userSTAT[2]) - 30} AND defesa < {int(userSTAT[2]) + 30} \
-    AND defesaMagica > {int(userSTAT[3]) - 30} AND defesaMagica < {int(userSTAT[3]) + 30} \
-    AND vida > {int(userSTAT[4]) - 30} AND vida < {int(userSTAT[4]) + 30} AND ID != {id1};"
+    query = f"SELECT ID FROM status WHERE ID != {id1};"
 
     err, elements = db.run_query(id1, query)
     print(f"Valor de err = [{err}] dentro do randomuser\n Valores de elements = [{elements}]")

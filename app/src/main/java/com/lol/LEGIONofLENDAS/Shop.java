@@ -80,8 +80,7 @@ public class Shop extends AppCompatActivity {
         rankingRecyclerView = findViewById(R.id.recyclerViewShop);
         rankingRecyclerView.setHasFixedSize(true);
         rankingLayoutManager = new LinearLayoutManager(this);
-        rankingAdapter = new itemShopAdapter(items);
-
+        rankingAdapter = new itemShopAdapter(items,this);
         rankingRecyclerView.setLayoutManager(rankingLayoutManager);
         rankingRecyclerView.setAdapter(rankingAdapter);
 

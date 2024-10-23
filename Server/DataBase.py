@@ -71,12 +71,13 @@ def create_member_user(operation_context):
         print("Query: " + new_str + new_arg)
         conn.execute(new_str + new_arg)
         # cria os status do utilizador, o id do user = id do status
-        conn.execute(f"INSERT INTO status (ID,forca,magia,defesa,defesaMagica,vida,vitorias,derrotas) VALUES ({cid},1,1,0,0,10,0,0);")
+        conn.execute(f"INSERT INTO status (ID,forca,magia,defesa,defesaMagica,vida,vitorias,derrotas) VALUES ({cid},1,1,0,0,500,0,0);")
         conn.commit()
         
         return False,str(cid)
     except Error as err:
         return err, False
+
 
 
 def loja_insert(operation_context):
