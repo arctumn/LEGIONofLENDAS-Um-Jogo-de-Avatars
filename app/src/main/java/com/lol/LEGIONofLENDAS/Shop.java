@@ -15,13 +15,15 @@ import java.util.Collections;
 
 import static com.lol.LEGIONofLENDAS.Ranking.DESCENDING_COMPARATOR;
 
+import com.lol.LEGIONofLENDAS.Client.User;
+
 public class Shop extends AppCompatActivity {
 
     private RecyclerView rankingRecyclerView;
     private RecyclerView.Adapter rankingAdapter;
     private RecyclerView.LayoutManager rankingLayoutManager;
+    protected User userData;
 
-    String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +31,7 @@ public class Shop extends AppCompatActivity {
 
         ArrayList<itemsShop> items = new ArrayList<>();
         Intent in = getIntent();
-
+        userData = User.ExtractUser(in);
         Utils util = new Utils();
 
         ArrayList<String> lista1 = new ArrayList<String>();
@@ -48,8 +50,6 @@ public class Shop extends AppCompatActivity {
             for (int i = 8; i < pre.length; i++) {
                 nome.append(" ").append(pre[i]);
             }
-            String id = pre[7];
-            System.out.println("Valor de id:" + id);
             items.add(new itemsShop(
                             getResources()
                                     .getIdentifier(pre[0], "drawable", this.getPackageName()), //icone
@@ -61,7 +61,7 @@ public class Shop extends AppCompatActivity {
                             pre[6],
                             pre[7],
                             nome.toString(),
-                            in.getStringExtra("userid")
+                            userData.userId
                     )
             );
         });
@@ -80,9 +80,8 @@ public class Shop extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         super.onBackPressed();
-        Intent out = getIntent();
         Intent intent = new Intent(this,MenuPrincipal.class);
-        intent.putExtra("userid",out.getStringExtra("userid"));
+        intent = userData.SetUserNavigationData(intent);
         startActivity(intent);
         finish();
     }

@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.os.VibratorManager;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -20,6 +22,7 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.lol.LEGIONofLENDAS.Client.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ public class QrCamera extends AppCompatActivity {
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
-
+    User user;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -57,6 +60,7 @@ public class QrCamera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_camera);
         Intent in = getIntent();
+        user = User.ExtractUser(in);
         cameraPreview = findViewById(R.id.cameraPreview);
         txtResult = findViewById(R.id.txtResult);
 
@@ -109,29 +113,30 @@ public class QrCamera extends AppCompatActivity {
                 if (qrcodes.size() != 0) {
                     txtResult.post(() -> {
                         //Create vibrate
-                        Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                        vibrator.vibrate(1000);
+                        var vibratorManager = (VibratorManager) getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+                        var vibrator = vibratorManager.getDefaultVibrator();
+                        vibrator.vibrate(VibrationEffect.createOneShot(1000,VibrationEffect.DEFAULT_AMPLITUDE));
+
                         txtResult.setText(qrcodes.valueAt(0).displayValue);
                         cameraSource.stop();
                         if (!txtResult.getText().toString().equals(getResources().getString(R.string.value_check))) {
                             Utils util = new Utils();
                             util.txtMessageServer(
-                                    in.getStringExtra("userid"),
+                                    user.userId,
                                     "fightNonRandom",
                                     new ArrayList<>(Collections.singletonList(txtResult.getText().toString()))
                             );
-                            System.out.println("Valor do qrcode: " + txtResult.getText().toString());
-                            Log.d("IDQRCAMERA", Objects.requireNonNull(in.getStringExtra("userid")));
-                            String query = "SELECT texto FROM batalhaLOG WHERE iduser = " + in.getStringExtra("userid") + " AND visto = 0";
-                            util.txtMessageServer(in.getStringExtra("id"), "TESTINGADMIN", new ArrayList<>(Collections.singletonList(query)));
-                            Log.i("SERVERFIGHT", util.output);
-                            // recebe o texto da batalha
+
+                            String query = "SELECT texto FROM batalhaLOG WHERE iduser = " + user.userId + " AND visto = 0";
+                            util.txtMessageServer(user.userId, "TESTINGADMIN", new ArrayList<>(Collections.singletonList(query)));
+
                             String batalha = util.output;
-                            // atualiza a informação do lado do server
-                            query = "UPDATE batalhaLOG SET visto = 1 WHERE iduser = " + in.getStringExtra("userid") + " AND visto = 0";
-                            util.txtMessageServer(in.getStringExtra("id"), "TESTINGADMIN", new ArrayList<>(Collections.singletonList(query)));
+                            query = "UPDATE batalhaLOG SET visto = 1 WHERE iduser = " + user.userId + " AND visto = 0";
+                            util.txtMessageServer(user.userId, "TESTINGADMIN", new ArrayList<>(Collections.singletonList(query)));
+
                             Intent out = new Intent(QrCamera.this, ParseBatalha.class);
                             out.putExtra("strluta", batalha);
+                            out = user.SetUserNavigationData(out);
                             startActivity(out);
                         }
                     });
@@ -139,8 +144,5 @@ public class QrCamera extends AppCompatActivity {
 
             }
         });
-
-
     }
-
 }

@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.lol.LEGIONofLENDAS.Client.User;
+
 import java.util.ArrayList;
 public class ParseBatalha extends AppCompatActivity {
 
@@ -39,7 +41,7 @@ public class ParseBatalha extends AppCompatActivity {
     TextView ronda;
     TextView level1;
     TextView level2;
-
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,7 @@ public class ParseBatalha extends AppCompatActivity {
 
         Intent intent = getIntent();
         final String LOG = intent.getStringExtra("strluta");
+        user = User.ExtractUser(intent);
 
         pb_left = findViewById(R.id.pb_left);
         pb_right = findViewById(R.id.pb_right);
@@ -70,19 +73,16 @@ public class ParseBatalha extends AppCompatActivity {
         btn.setOnClickListener(this::darSkip);
 
         flag = 0;
-        thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    jogoFinalizado = parseBatalha(LOG);
-                    runOnUiThread( () -> {
-                        btn.setText(getString(R.string.return_main_menu));
-                    });
-                } catch (InterruptedException e) {
-                    Log.e("ParseBatalha","Não consegui processar a batalha",e);
-                }
+        thread = new Thread(() -> {
+            try {
+                jogoFinalizado = parseBatalha(LOG);
+                runOnUiThread( () -> {
+                    btn.setText(getString(R.string.return_main_menu));
+                });
+            } catch (InterruptedException e) {
+                Log.e("ParseBatalha","Não consegui processar a batalha",e);
             }
-        };
+        });
         thread.start();
     }
 
@@ -95,7 +95,6 @@ public class ParseBatalha extends AppCompatActivity {
 
     public String getNome(int id){
         ArrayList<String> query = new ArrayList<>();
-        String nome;
         query.add("SELECT nome FROM user WHERE ID = "+id+";");
         util.txtMessageServer("4","TESTINGADMIN",query);
         return util.output.split("\n")[0];
@@ -137,10 +136,9 @@ public class ParseBatalha extends AppCompatActivity {
 
         Log.d("ParseBatalha",Mensagem);
         btn.setText(R.string.Skip_Fight);
-        int id1 = 0;
-        int id2 = 0;
-        int progresso1 = 0;
-        int progresso2 = 0;
+        int id2;
+        int progresso1;
+        int progresso2;
 
         String[] Relatorio = Mensagem.split("\n");
         for(int i = 0; i < Relatorio.length-1; i++) {
@@ -157,7 +155,7 @@ public class ParseBatalha extends AppCompatActivity {
             }
 
             if (Integer.parseInt(Ronda[3]) == 0) { // Primeira entrada
-                id1 = Integer.parseInt(Ronda[0]);
+
                 id2 = Integer.parseInt(Ronda[1]);
                 hpinitial1 = (int) Float.parseFloat(Ronda[2]);
                 hpinitial2 = (int) Float.parseFloat(Ronda[4]);
@@ -166,29 +164,25 @@ public class ParseBatalha extends AppCompatActivity {
                 pb_left.setMax((int) Float.parseFloat(Ronda[2]));
                 pb_right.setMax((int) Float.parseFloat(Ronda[4]));
 
-                int finalId1 = id1;
+
                 int finalId2 = id2;
                 runOnUiThread(() -> {
-                    ava1.setImageResource( getAvatar(finalId1));
-                    ava2.setImageResource( getAvatar(finalId2));
-                    name1.setText( getNome(finalId1));
-                    name2.setText( getNome(finalId2));
-                    level1.setText(getLevel(finalId1));
+                    ava1.setImageResource(user.image.imageId);
+                    ava2.setImageResource(getAvatar(finalId2));
+                    name1.setText(user.name);
+                    name2.setText(getNome(finalId2));
+                    level1.setText(user.level);
                     level2.setText(getLevel(finalId2));
                 });
 
             } else { // Nas outras rondas
-                runOnUiThread(() -> {
-                    ronda.setText(Ronda[3]);
-                });
+                runOnUiThread(() -> ronda.setText(Ronda[3]));
 
-                if (Integer.parseInt(Ronda[0]) == id1) {
+                if (Integer.parseInt(Ronda[0]) == Integer.parseInt(user.userId)) {
                     progresso1 = (int) Float.parseFloat(Ronda[1]);
                     if (progresso1 <= 0){
                         progresso1 = 0;
-                        runOnUiThread(() -> {
-                            ava1.setImageAlpha(125);
-                        });
+                        runOnUiThread(() ->  ava1.setImageAlpha(125));
                     }
 
                     int finalProgresso2 = progresso1;
@@ -233,8 +227,7 @@ public class ParseBatalha extends AppCompatActivity {
 
     public void Sair(View v) {
         Intent intent = new Intent(ParseBatalha.this, MenuPrincipal.class);
-        Intent out = getIntent();
-        intent.putExtra("userid",out.getStringExtra("userid"));
+        intent = user.SetUserNavigationData(intent);
         startActivity(intent);
         finish();
     }

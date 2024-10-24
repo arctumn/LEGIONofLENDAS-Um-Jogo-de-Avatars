@@ -12,11 +12,11 @@ import java.util.Arrays;
 
 import static com.lol.LEGIONofLENDAS.Ranking.DESCENDING_COMPARATOR;
 
+import com.lol.LEGIONofLENDAS.Client.User;
+
 public class Inventario extends AppCompatActivity {
 
-    private RecyclerView rankingRecyclerView;
-    private RecyclerView.Adapter rankingAdapter;
-    private RecyclerView.LayoutManager rankingLayoutManager;
+    private User userData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,53 +25,41 @@ public class Inventario extends AppCompatActivity {
 
         ArrayList<itemsRanking> items = new ArrayList<>();
         Intent in = getIntent();
-        /**
-         * numeroDEPessoasAMostrar = 15
-         * util.txtMEssageServer("1","rankingxp",""+numeroDEPessoasAMostrar);
-         *
-         * recebido = util.output
-         * "infoU1\ninfoU2\ninfoU3\n....\ninfoU15\n"
-         * lista = new ArrayList<String>(Arrays.asList(recebido.split(\n))
-         * lista ["VALUEnome VALUElvl VALUExp",...,"infoU15"]
-         */
+        userData = User.ExtractUser(in);
 
         Utils util = new Utils();
 
-        ArrayList<String> lista1 = new ArrayList<String>();
-        String query = "SELECT image,itemName,forca FROM inventario WHERE iduser = "+in.getStringExtra("userid");
-        lista1.add(query);
+        var sqlRequest = new ArrayList<String>();
+        var query = "SELECT image,itemName,forca FROM inventario WHERE iduser = "+ userData.userId;
+        sqlRequest.add(query);
 
-        util.txtMessageServer("1", "TESTINGADMIN", lista1);
+        util.txtMessageServer("1", "TESTINGADMIN", sqlRequest);
 
         String recebido = util.output;
 
-        ArrayList<String> lista2 = new ArrayList<>(Arrays.asList(recebido.split("\n")));
+        var output = new ArrayList<>(Arrays.asList(recebido.split("\n")));
 
-        System.out.println(Arrays.toString(lista2.toArray()));
-        // lista.forEach();
-        lista2.forEach( string -> {
-            System.out.println("Valor da string"+ string);
-            String[] pre = string.split(" ");
-            StringBuilder ab = new StringBuilder(pre[1]);
-            for(int i = 2; i <pre.length-1;i++){ ab.append(" ").append(pre[i]);
-                System.out.println("Valor de AB: "+ab);
+        output.forEach( item -> {
+            String[] itemData = item.split(" ");
+            StringBuilder ab = new StringBuilder(itemData[1]);
+            for(int i = 2; i <itemData.length-1;i++){
+                ab.append(" ").append(itemData[i]);
+
             }
-            System.out.println("nome: "+ab);
-            System.out.println("Valor do pre[0] = ["+pre[0]+"]");
 
             items.add(new itemsRanking(
                     getResources()
-                            .getIdentifier(pre[0], "drawable", this.getPackageName()),
+                            .getIdentifier(itemData[0], "drawable", this.getPackageName()),
                     ab.toString(),
                     0)
             );
         });
 
         items.sort(DESCENDING_COMPARATOR);
-        rankingRecyclerView = findViewById(R.id.recyclerViewInventario);
+        RecyclerView rankingRecyclerView = findViewById(R.id.recyclerViewInventario);
         rankingRecyclerView.setHasFixedSize(true);
-        rankingLayoutManager = new LinearLayoutManager(this);
-        rankingAdapter = new itemInventoryAdapter(items);
+        RecyclerView.LayoutManager rankingLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.Adapter rankingAdapter = new itemInventoryAdapter(items);
 
         rankingRecyclerView.setLayoutManager(rankingLayoutManager);
         rankingRecyclerView.setAdapter(rankingAdapter);
@@ -80,9 +68,9 @@ public class Inventario extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         super.onBackPressed();
-        Intent out = getIntent();
+
         Intent intent = new Intent(this,MenuPrincipal.class);
-        intent.putExtra("userid",out.getStringExtra("userid"));
+        intent = userData.SetUserNavigationData(intent);
         startActivity(intent);
         finish();
     }

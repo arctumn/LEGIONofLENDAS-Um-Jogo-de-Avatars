@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.lol.LEGIONofLENDAS.Client.User;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -59,9 +61,11 @@ public class Ranking extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         super.onBackPressed();
-        Intent out = getIntent();
+        Intent in = getIntent();
+        var user = User.ExtractUser(in);
         Intent intent = new Intent(this,MenuPrincipal.class);
-        intent.putExtra("userid",out.getStringExtra("userid"));
+        assert user != null;
+        intent = user.SetUserNavigationData(intent);
         startActivity(intent);
         finish();
     }
