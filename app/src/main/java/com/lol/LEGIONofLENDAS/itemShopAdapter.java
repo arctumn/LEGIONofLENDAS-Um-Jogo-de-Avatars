@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 public class itemShopAdapter  extends RecyclerView.Adapter<itemShopAdapter.itemViewHolder> {
     public ArrayList<itemsShop> mLista;
@@ -47,7 +48,8 @@ public class itemShopAdapter  extends RecyclerView.Adapter<itemShopAdapter.itemV
         mLista = listaItems;
         this.shop = shop;
         Intent in = shop.getIntent();
-        this.experience = in.getIntExtra("exp",0);
+        var _exp = Objects.requireNonNull(in.getStringExtra("exp")).trim();
+        this.experience = Integer.parseInt(_exp);
     }
 
     @NonNull
@@ -79,12 +81,13 @@ public class itemShopAdapter  extends RecyclerView.Adapter<itemShopAdapter.itemV
         holder.magicDefence.setText(magicDefence);
         holder.buy.setOnClickListener(v -> {
             int _price = Integer.parseInt(currentItem.getPrice());
-            if(this.experience - _price >= 0){
+            this.experience -= _price;
+            if(this.experience >= 0){
                 util.txtMessageServer(
                         currentItem.getUid(),"Comprar",
                         new ArrayList<>(Collections.singletonList(currentItem.getName()))
                 );
-
+                Toast.makeText(shop,R.string.Item_Bought,Toast.LENGTH_SHORT).show();
             } else{
                 Toast.makeText(shop,R.string.Item_Not_Bought,Toast.LENGTH_SHORT).show();
             }

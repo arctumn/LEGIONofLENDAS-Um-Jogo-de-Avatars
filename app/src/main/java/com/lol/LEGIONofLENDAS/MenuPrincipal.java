@@ -3,6 +3,7 @@ package com.lol.LEGIONofLENDAS;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -57,7 +58,9 @@ public class MenuPrincipal extends AppCompatActivity {
         btnluta.setOnClickListener(v -> {
             Intent intent = new Intent(MenuPrincipal.this, MenuLutaOpcoes.class);
             intent.putExtra("userid",userid);
-            intent.putExtra("ava",getResources().getIdentifier(imagem,"drawable",this.getPackageName()));
+            Log.i("Sending Data", "userId: " + userid + " Avatar: "+imagem);
+            var avatar = getResources().getIdentifier(imagem,"drawable",this.getPackageName()) + "";
+            intent.putExtra("ava",avatar);
             startActivity(intent);
         });
         btnlogout=findViewById(R.id.btn_logout);

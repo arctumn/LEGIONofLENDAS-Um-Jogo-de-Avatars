@@ -22,7 +22,7 @@ public class MenuLutaOpcoes extends AppCompatActivity {
         Intent in = getIntent();
         ava = in.getStringExtra("ava");
         id = in.getStringExtra("userid");
-        ArrayList<String> luta = new ArrayList<String>();
+        var luta = new ArrayList<String>();
         luta.add(id);
 
         btnpvp=findViewById(R.id.btn_pvp);
