@@ -62,13 +62,14 @@ public class ParseBatalha extends AppCompatActivity {
 
         jogoFinalizado = false;
         ava1 = findViewById(R.id.imgAvatar1);
-        ava2 = findViewById(R.id.imgAvatar2);
-
         name1 = findViewById(R.id.username1);
-        name2 = findViewById(R.id.username2);
-        ronda = findViewById(R.id.textRonda);
         level1 = findViewById(R.id.usernivel1);
+
+        ava2 = findViewById(R.id.imgAvatar2);
+        name2 = findViewById(R.id.username2);
         level2 = findViewById(R.id.usernivel2);
+
+        ronda = findViewById(R.id.textRonda);
         btn = findViewById(R.id.btn_menu);
         btn.setOnClickListener(this::darSkip);
 
@@ -171,7 +172,7 @@ public class ParseBatalha extends AppCompatActivity {
                     ava2.setImageResource(getAvatar(finalId2));
                     name1.setText(user.name);
                     name2.setText(getNome(finalId2));
-                    level1.setText(user.level);
+                    level1.setText("LVL " + user.level);
                     level2.setText(getLevel(finalId2));
                 });
 
