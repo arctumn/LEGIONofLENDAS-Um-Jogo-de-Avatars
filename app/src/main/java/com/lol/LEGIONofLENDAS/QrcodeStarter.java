@@ -10,12 +10,14 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 
+import com.lol.LEGIONofLENDAS.Client.User;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class QrcodeStarter extends AppCompatActivity {
-    QrcodeStarter var = this;
     Button lutar;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,9 +25,9 @@ public class QrcodeStarter extends AppCompatActivity {
         WebView qr_code = findViewById(R.id.getQRCODE);
 
         Intent in = getIntent();
-        String id = in.getStringExtra("userid");
-
-        String url1 = "https://quickchart.io/chart?cht=qr&chs=300x300&chl="+id;
+        user = User.ExtractUser(in);
+        assert user != null;
+        String url1 = "https://quickchart.io/chart?cht=qr&chs=300x300&chl="+user.userId;
         qr_code.setWebChromeClient(new WebChromeClient());
         qr_code.loadUrl(url1);
 
@@ -33,16 +35,17 @@ public class QrcodeStarter extends AppCompatActivity {
 
         lutar = findViewById(R.id.buttonFIGHT);
         lutar.setOnClickListener(v ->{
-            String query = "SELECT texto FROM batalhaLOG WHERE iduser ="+id+" AND visto = 0";
-            util.txtMessageServer(id,"TESTINGADMIN",new ArrayList<>(Collections.singletonList(query)));
+            String query = "SELECT texto FROM batalhaLOG WHERE iduser ="+user.userId+" AND visto = 0";
+            util.txtMessageServer(user.userId,"TESTINGADMIN",new ArrayList<>(Collections.singletonList(query)));
             Log.i("SERVERFIGHT",util.output);
             // recebe o texto da batalha
             String batalha = util.output;
             // atualiza a informação do lado do server
-            query = "UPDATE batalhaLOG SET visto = 1 WHERE iduser = "+id+" AND visto = 0";
-            util.txtMessageServer(id,"TESTINGADMIN",new ArrayList<>(Collections.singletonList(query)));
+            query = "UPDATE batalhaLOG SET visto = 1 WHERE iduser = "+user.userId+" AND visto = 0";
+            util.txtMessageServer(user.userId,"TESTINGADMIN",new ArrayList<>(Collections.singletonList(query)));
 
-            Intent out = new Intent(var, ParseBatalha.class);
+            Intent out = new Intent(this, ParseBatalha.class);
+            out = user.SetUserNavigationData(out);
             out.putExtra("strluta",batalha);
             startActivity(out);
         });

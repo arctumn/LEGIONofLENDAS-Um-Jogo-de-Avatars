@@ -6,30 +6,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
+import com.lol.LEGIONofLENDAS.Client.User;
+
 public class MenuAmigoOpcoes extends AppCompatActivity {
     Button btnler, btngerar;
-    String userid, ava;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_amigo_opcoes);
 
         Intent in = getIntent();
-        userid = in.getStringExtra("userid");
-        ava = in.getStringExtra("ava");
+        var user = User.ExtractUser(in);
+        assert user != null;
 
         btnler=findViewById(R.id.btn_qrcamera);
         btnler.setOnClickListener(v -> {
             Intent intent = new Intent(MenuAmigoOpcoes.this, QrCamera.class);
-            intent.putExtra("userid",userid);
-            intent.putExtra("ava", ava);
+            intent = user.SetUserNavigationData(intent);
             startActivity(intent);
         });
         btngerar=findViewById(R.id.btn_qrstart);
         btngerar.setOnClickListener(v -> {
             Intent intent = new Intent(MenuAmigoOpcoes.this, QrcodeStarter.class);
-            intent.putExtra("userid",userid);
-            intent.putExtra("ava", ava);
+            intent = user.SetUserNavigationData(intent);
             startActivity(intent);
         });
     }

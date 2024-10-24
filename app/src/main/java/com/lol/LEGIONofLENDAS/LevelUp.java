@@ -10,8 +10,11 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.lol.LEGIONofLENDAS.Client.User;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,79 +23,72 @@ public class LevelUp extends AppCompatActivity {
     Button btnlvlup,btn_upgrade_str,btn_upgrade_hp,btn_upgrade_m;
     TextView nivel_atual,pontos_xp,str,hp,magic,xpval;
     ProgressBar xp;
+    User userData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level_up);
         Utils utils = new Utils();
-        Intent in = getIntent();
+        var in = getIntent();
+        userData = User.ExtractUser(in);
+        assert userData != null;
         utils.txtMessageServer("-1",
                 "TESTINGADMIN",
-                new ArrayList<>(Collections.singleton("SELECT level from user where id = "+in.getStringExtra("userid")))
+                new ArrayList<>(Collections.singleton("SELECT level, xp from user where id = "+ userData.userId))
         );
-        int val = Integer.parseInt(utils.output.trim())+1;
+        var output = utils.output.split(" ");
+        userData.level = Integer.parseInt(output[0]);
+        userData.experience = Integer.parseInt(output[1]);
         utils.txtMessageServer("-1",
                 "TESTINGADMIN",
-                new ArrayList<>(Collections.singleton("SELECT xp from user where id = "+in.getStringExtra("userid")))
+                new ArrayList<>(Collections.singleton("SELECT xp from user where id = "+userData.userId))
         );
-        int xp_Start = Integer.parseInt(utils.output.trim());
-        Log.i("XP","["+val+"]");
 
-        int next = nextPrime(val);
-        Log.i("XP","\n\n\n\nValor de NEXT:"+next+"\n\n\n");
+        int next = nextPrime(userData.level +1);
 
-        incializer();
+        inicializer();
 
         runOnUiThread(() -> {
-            int lvl_val = val - 1;
-            nivel_atual.setText(nivel_atual.getText().toString() + lvl_val);
 
-            xpval.setText(xp_Start + " / " + next);
-            double percent = Math.floor(((double) xp_Start / next) * 100);
-            Log.i("XP", "Valor de xp em percentagem: " + percent + " valor de val = " + val + " valor de next = " + next);
+            nivel_atual.setText(nivel_atual.getText().toString() + userData.level);
+
+            xpval.setText(userData.experience + " / " + next);
+            double percent = Math.floor(((double) userData.experience / next) * 100);
             xp.setProgress((int) percent, true);
 
+            var query = "SELECT forca,magia,vida from status where id = " + userData.userId;
             utils.txtMessageServer("-1",
                     "TESTINGADMIN",
-                    new ArrayList<>(Collections.singleton("SELECT forca from status where id = " + in.getStringExtra("userid")))
+                    new ArrayList<>(Collections.singleton(query))
             );
-            var strPoints = getString(R.string.STR) + utils.output.trim();
+            var outputStatus = Arrays
+                    .stream(utils.output.split(" "))
+                    .map(String::trim)
+                    .toArray();
+            var strPoints = getString(R.string.STR) + outputStatus[0];
             str.setText(strPoints);
 
-            utils.txtMessageServer("-1",
-                    "TESTINGADMIN",
-                    new ArrayList<>(Collections.singleton("SELECT magia from status where id = " + in.getStringExtra("userid")))
-            );
-            var magicPoints = getString(R.string.Magic) + utils.output.trim();
+            var magicPoints = getString(R.string.Magic) + outputStatus[1];
             magic.setText(magicPoints);
 
-            utils.txtMessageServer("-1",
-                    "TESTINGADMIN",
-                    new ArrayList<>(Collections.singleton("SELECT vida from status where id = " + in.getStringExtra("userid")))
-            );
-            var hpPoints = getString(R.string.HP) + utils.output.trim();
+            var hpPoints = getString(R.string.HP) + outputStatus[2];
             hp.setText(hpPoints);
 
         });
 
-        if(next > Integer.parseInt(in.getStringExtra("exp").trim())){//)){
+        if(next > userData.experience){
             hide();
         }else{
             btnlvlup.setVisibility(View.VISIBLE);
             btnlvlup.setOnClickListener(v -> {
-
-
-
                 btnlvlup.setVisibility(View.INVISIBLE);
+                userData.level++;
+
                 utils.txtMessageServer("-1",
                         "TESTINGADMIN",
-                        new ArrayList<>(Collections.singleton("SELECT level from user where id = "+in.getStringExtra("userid")))
+                        new ArrayList<>(Collections.singleton("update user set xp = 0, level = "+userData.level+" where id = "+ userData.userId))
                 );
-                int nivel = Integer.parseInt(utils.output.trim())+1;
-                utils.txtMessageServer("-1",
-                        "TESTINGADMIN",
-                        new ArrayList<>(Collections.singleton("update user set xp = 0, level = "+nivel+" where id = "+in.getStringExtra("userid")))
-                );
+                userData.experience = 0;
                 pontos_xp.setText(pontos_xp.getText().toString()+" 5");
                 pontos_xp.setVisibility(View.VISIBLE);
 
@@ -106,29 +102,28 @@ public class LevelUp extends AppCompatActivity {
                         btn_upgrade_m.setVisibility(View.VISIBLE);
                         btn_upgrade_hp.setVisibility(View.VISIBLE);
                         enable();
-                        int next_new = nextPrime(nivel);
+                        int next_new = nextPrime(userData.level+1);
 
                         xpval.setText("0 / "+ next_new);
 
                         xp.setProgress(0,true);
-                        var nivelTxt = getString(R.string.main_menu_level) + nivel;
+                        var nivelTxt = getString(R.string.main_menu_level) + userData.level;
                         nivel_atual.setText(nivelTxt);
                         if(pontos.get() < 1)  hide();
                         btn_upgrade_str.setOnClickListener(vstr -> {
                             if(pontos.get() < 1)  hide();
                             else {
-
                             int str_int;
 
                             str_int = Integer.parseInt(str.getText().toString().split(":")[1]) + 1;
 
                             utils.txtMessageServer("-1",
                                     "TESTINGADMIN",
-                                    new ArrayList<>(Collections.singleton("UPDATE status set forca = " + str_int + " where id = " + in.getStringExtra("userid")))
+                                    new ArrayList<>(Collections.singleton("UPDATE status set forca = " + str_int + " where id = " + userData.userId))
                             );
                             utils.txtMessageServer("-1",
                                     "TESTINGADMIN",
-                                    new ArrayList<>(Collections.singleton("SELECT forca from status where id = " + in.getStringExtra("userid")))
+                                    new ArrayList<>(Collections.singleton("SELECT forca from status where id = " + userData.userId))
                             );
                             var strPoints = getString(R.string.STR) +  utils.output.trim();
                             str.setText(strPoints);
@@ -147,11 +142,11 @@ public class LevelUp extends AppCompatActivity {
 
                                 utils.txtMessageServer("-1",
                                         "TESTINGADMIN",
-                                        new ArrayList<>(Collections.singleton("UPDATE status set magia = " + m_int + " where id = " + in.getStringExtra("userid")))
+                                        new ArrayList<>(Collections.singleton("UPDATE status set magia = " + m_int + " where id = " + userData.userId))
                                 );
                                 utils.txtMessageServer("-1",
                                         "TESTINGADMIN",
-                                        new ArrayList<>(Collections.singleton("SELECT magia from status where id = " + in.getStringExtra("userid")))
+                                        new ArrayList<>(Collections.singleton("SELECT magia from status where id = " + userData.userId))
                                 );
 
                                 var magicPoints = getString(R.string.Magic) +  utils.output.trim();
@@ -172,11 +167,11 @@ public class LevelUp extends AppCompatActivity {
 
                                 utils.txtMessageServer("-1",
                                         "TESTINGADMIN",
-                                        new ArrayList<>(Collections.singleton("UPDATE status set vida = " + hp_int + " where id = " + in.getStringExtra("userid")))
+                                        new ArrayList<>(Collections.singleton("UPDATE status set vida = " + hp_int + " where id = " + userData.userId))
                                 );
                                 utils.txtMessageServer("-1",
                                         "TESTINGADMIN",
-                                        new ArrayList<>(Collections.singleton("SELECT vida from status where id = " + in.getStringExtra("userid")))
+                                        new ArrayList<>(Collections.singleton("SELECT vida from status where id = " + userData.userId))
                                 );
                                 hp.setText(utils.output.trim());
                                 var hpPoints = getString(R.string.HP) +  utils.output.trim();
@@ -194,9 +189,8 @@ public class LevelUp extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         super.onBackPressed();
-        Intent out = getIntent();
         Intent intent = new Intent(this,MenuPrincipal.class);
-        intent.putExtra("userid",out.getStringExtra("userid"));
+        intent = userData.SetUserNavigationData(intent);
         startActivity(intent);
         finish();
     }
@@ -216,7 +210,7 @@ public class LevelUp extends AppCompatActivity {
         pontos_xp.setEnabled(false);
     }
 
-    private void incializer() {
+    private void inicializer() {
         btnlvlup        = findViewById(R.id.btnLvlUp);
         nivel_atual     = findViewById(R.id.txt_level);
         pontos_xp       = findViewById(R.id.textView5);

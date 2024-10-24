@@ -19,7 +19,6 @@ import java.util.Objects;
 public class itemShopAdapter  extends RecyclerView.Adapter<itemShopAdapter.itemViewHolder> {
     public ArrayList<itemsShop> mLista;
     public Shop shop;
-    private int experience;
     public static class itemViewHolder extends RecyclerView.ViewHolder{
         public ImageView mImageView;
         public TextView price;
@@ -47,9 +46,7 @@ public class itemShopAdapter  extends RecyclerView.Adapter<itemShopAdapter.itemV
     public itemShopAdapter(ArrayList<itemsShop> listaItems,Shop shop){
         mLista = listaItems;
         this.shop = shop;
-        Intent in = shop.getIntent();
-        var _exp = Objects.requireNonNull(in.getStringExtra("exp")).trim();
-        this.experience = Integer.parseInt(_exp);
+
     }
 
     @NonNull
@@ -81,8 +78,8 @@ public class itemShopAdapter  extends RecyclerView.Adapter<itemShopAdapter.itemV
         holder.magicDefence.setText(magicDefence);
         holder.buy.setOnClickListener(v -> {
             int _price = Integer.parseInt(currentItem.getPrice());
-            this.experience -= _price;
-            if(this.experience >= 0){
+            this.shop.userData.experience -= _price;
+            if(this.shop.userData.experience >= 0){
                 util.txtMessageServer(
                         currentItem.getUid(),"Comprar",
                         new ArrayList<>(Collections.singletonList(currentItem.getName()))

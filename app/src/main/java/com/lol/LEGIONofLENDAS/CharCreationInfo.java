@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lol.LEGIONofLENDAS.Client.User;
+import com.lol.LEGIONofLENDAS.Client.UserImage;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +25,6 @@ public class CharCreationInfo extends AppCompatActivity {
     TextView tcontaexistente;
     Utils util = new Utils();
     String user, name, pass, verif;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,11 +74,10 @@ public class CharCreationInfo extends AppCompatActivity {
                         userinfo = userinfo.substring(0,userinfo.length()-1);
                         String[] args = userinfo.split(" ");
                         Intent intent = new Intent(CharCreationInfo.this, MenuPrincipal.class);
-                        intent.putExtra("userd",args[0]);
-                        intent.putExtra("nome", name);
-                        intent.putExtra("imagem", ""+imagem);
-                        intent.putExtra("nivel", "0");
-                        intent.putExtra("exp", "0");
+                        var _image = getResources().getResourceName(imagem);
+                        var userImage = new UserImage(_image,this.getResources(),this.getPackageName());
+                        var user = new User(args[0],name,"0","0",userImage);
+                        intent = user.SetUserNavigationData(intent);
                         startActivity(intent);
                         finish();
                     }
