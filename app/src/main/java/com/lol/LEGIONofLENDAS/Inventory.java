@@ -10,11 +10,11 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.lol.LEGIONofLENDAS.Ranking.DESCENDING_COMPARATOR;
+import static com.lol.LEGIONofLENDAS.UserItem.USER_ITEM_DESCENDING_COMPARATOR;
 
 import com.lol.LEGIONofLENDAS.Client.User;
 
-public class Inventario extends AppCompatActivity {
+public class Inventory extends AppCompatActivity {
 
     private User userData;
 
@@ -23,7 +23,7 @@ public class Inventario extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventario);
 
-        ArrayList<itemsRanking> items = new ArrayList<>();
+        ArrayList<UserItem> items = new ArrayList<>();
         Intent in = getIntent();
         userData = User.ExtractUser(in);
 
@@ -39,27 +39,26 @@ public class Inventario extends AppCompatActivity {
 
         var output = new ArrayList<>(Arrays.asList(recebido.split("\n")));
 
-        output.forEach( item -> {
+        output.forEach(item -> {
             String[] itemData = item.split(" ");
             StringBuilder ab = new StringBuilder(itemData[1]);
             for(int i = 2; i <itemData.length-1;i++){
                 ab.append(" ").append(itemData[i]);
 
             }
-
-            items.add(new itemsRanking(
-                    getResources()
-                            .getIdentifier(itemData[0], "drawable", this.getPackageName()),
-                    ab.toString(),
-                    0)
-            );
+            var itemImage = getResources()
+                            .getIdentifier(itemData[0], "drawable", this.getPackageName());
+            var itemName = ab.toString();
+            var itemForce = 0;
+            var newItem = new UserItem(itemImage,itemName,itemForce);
+            items.add(newItem);
         });
 
-        items.sort(DESCENDING_COMPARATOR);
+        items.sort(USER_ITEM_DESCENDING_COMPARATOR);
         RecyclerView rankingRecyclerView = findViewById(R.id.recyclerViewInventario);
         rankingRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager rankingLayoutManager = new LinearLayoutManager(this);
-        RecyclerView.Adapter rankingAdapter = new itemInventoryAdapter(items);
+        var rankingAdapter = new itemInventoryAdapter(items);
 
         rankingRecyclerView.setLayoutManager(rankingLayoutManager);
         rankingRecyclerView.setAdapter(rankingAdapter);

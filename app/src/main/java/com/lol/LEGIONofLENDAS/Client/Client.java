@@ -156,7 +156,10 @@ public class Client {
      * @return ver sendMessage
      */
     public String rankingByXpTopN(int quantidadeElementos){
-        return sendMESSAGE(format("1","DB","SELECT image,nome,level FROM user WHERE id != 0 AND id != 1 ORDER BY xp DESC LIMIT "+quantidadeElementos+";"));
+        var query = "select u.image, u.nome, u.level, u.xp, s.forca, s.defesa, s.magia,s.defesaMagica, s.vida, s.vitorias, s.derrotas" +
+                        " from user u inner join status s on s.ID = u.ID" +
+                        " where u.ID not in (0,1) ORDER BY xp DESC LIMIT "+quantidadeElementos+";" ;
+        return sendMESSAGE(format("-1","DB",query));
     }
     /**
      * Retorna uma string com os status da pessoa, necessario vir parsed

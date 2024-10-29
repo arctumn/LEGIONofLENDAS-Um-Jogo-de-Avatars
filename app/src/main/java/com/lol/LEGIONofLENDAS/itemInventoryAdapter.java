@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 
 public class itemInventoryAdapter extends RecyclerView.Adapter<itemInventoryAdapter.itemViewHolder> {
-    public ArrayList<itemsRanking> mLista;
+    public ArrayList<UserItem> mLista;
 
     public static class itemViewHolder extends RecyclerView.ViewHolder {
 
@@ -30,7 +30,7 @@ public class itemInventoryAdapter extends RecyclerView.Adapter<itemInventoryAdap
         }
     }
 
-    public itemInventoryAdapter(ArrayList<itemsRanking> listaItems) {
+    public itemInventoryAdapter(ArrayList<UserItem> listaItems) {
         mLista = listaItems;
     }
 
@@ -44,9 +44,9 @@ public class itemInventoryAdapter extends RecyclerView.Adapter<itemInventoryAdap
     @Override
     public void onBindViewHolder(@NonNull itemViewHolder holder, int position) {
 
-        itemsRanking currentItem = mLista.get(position);
-        holder.mImageView.setImageResource(currentItem.getmImageResource());
-        holder.mTextView1.setText(currentItem.getmText1());
+        var currentItem = mLista.get(position);
+        holder.mImageView.setImageResource(currentItem.image);
+        holder.mTextView1.setText(currentItem.name);
     }
 
     @Override
