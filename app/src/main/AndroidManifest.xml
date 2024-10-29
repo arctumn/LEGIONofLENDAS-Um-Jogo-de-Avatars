@@ -38,7 +38,7 @@
             android:name=".QrcodeStarter"
             android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
         <activity
-            android:name=".Inventario"
+            android:name=".Inventory"
             android:theme="@style/Theme.LEGIONofLENDAS.NoActionBar" />
         <activity
             android:name=".Shop"

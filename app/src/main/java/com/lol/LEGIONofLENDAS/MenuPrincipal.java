@@ -4,15 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lol.LEGIONofLENDAS.Client.User;
-import com.lol.LEGIONofLENDAS.Client.UserImage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +42,7 @@ public class MenuPrincipal extends AppCompatActivity {
         });
         btninv = findViewById(R.id.btn_inventario);
         btninv.setOnClickListener(v -> {
-            Intent intent = new Intent(MenuPrincipal.this, Inventario.class);
+            Intent intent = new Intent(MenuPrincipal.this, Inventory.class);
             intent = userData.SetUserNavigationData(intent);
             startActivity(intent);
         });

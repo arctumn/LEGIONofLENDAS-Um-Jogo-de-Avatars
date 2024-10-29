@@ -1,19 +1,15 @@
 package com.lol.LEGIONofLENDAS;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
-import static com.lol.LEGIONofLENDAS.Ranking.DESCENDING_COMPARATOR;
 
 import com.lol.LEGIONofLENDAS.Client.User;
 

@@ -68,4 +68,7 @@
     <string name="Item_Not_Bought">Not enough experience!</string>
     <string name="Skip_Fight">Skip Fight</string>
     <string name="Avaliable_Points">Available Points:</string>
+    <string name="avatar">Avatar</string>
+    <string name="won">Won:</string>
+    <string name="lost">Lost:</string>
 </resources>

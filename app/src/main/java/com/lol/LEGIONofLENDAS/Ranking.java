@@ -1,5 +1,7 @@
 package com.lol.LEGIONofLENDAS;
 
+import static com.lol.LEGIONofLENDAS.UserRanking.USER_RANKING_COMPARATOR_DESCENDING_COMPARATOR;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +22,7 @@ public class Ranking extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
 
-        ArrayList<itemsRanking> items = new ArrayList<>();
+        ArrayList<UserRanking> items = new ArrayList<>();
 
 
 
@@ -33,22 +35,18 @@ public class Ranking extends AppCompatActivity {
         util.txtMessageServer("1", "rankingxp", lista1);
 
         String recebido = util.output;
-        System.out.println("ola    "+recebido);
         ArrayList<String> lista2 = new ArrayList<>(Arrays.asList(recebido.split("\n")));
 
-         System.out.println(Arrays.toString(lista2.toArray()));
-       // lista.forEach();
-        lista2.forEach( string -> {
-            String[] pre = string.split(" ");
-            items.add(new itemsRanking(
-                    getResources()
-                            .getIdentifier(pre[0], "drawable", this.getPackageName()),
-                    pre[1],
-                    Integer.parseInt(pre[2]))
-            );
+
+
+        lista2.forEach(string -> {
+            var userRankData = string.split(" ");
+            var userRanking = new UserRanking(userRankData,getResources(),getPackageName());
+            items.add(userRanking);
+
         });
 
-        items.sort(DESCENDING_COMPARATOR);
+        items.sort(USER_RANKING_COMPARATOR_DESCENDING_COMPARATOR);
         RecyclerView rankingRecyclerView = findViewById(R.id.recyclerViewRanking);
         rankingRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager rankingLayoutManager = new LinearLayoutManager(this);
@@ -69,6 +67,6 @@ public class Ranking extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-    public static final Comparator<itemsRanking> DESCENDING_COMPARATOR =
-            Comparator.comparingInt( itemsRanking::getmText2).reversed();
+    public static final Comparator<UserRanking> USER_DESCENDING_COMPARATOR =
+            Comparator.comparingInt(UserRanking::comparator).reversed();
 }
