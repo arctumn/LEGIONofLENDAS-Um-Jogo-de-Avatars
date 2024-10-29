@@ -4,13 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.lol.LEGIONofLENDAS.Client.User;
+import com.lol.LEGIONofLENDAS.client.User;
+import com.lol.LEGIONofLENDAS.utils.Utils;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -189,7 +189,7 @@ public class LevelUp extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         super.onBackPressed();
-        Intent intent = new Intent(this,MenuPrincipal.class);
+        Intent intent = new Intent(this, MainMenu.class);
         intent = userData.SetUserNavigationData(intent);
         startActivity(intent);
         finish();

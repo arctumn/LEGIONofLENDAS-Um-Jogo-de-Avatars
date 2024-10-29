@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_columnWeight="1"
     android:background="@drawable/back_1"
-    tools:context=".ParseBatalha">
+    tools:context=".fight.ParseBatalha">
 
     <ImageView
         android:id="@+id/imagelogo"
