@@ -158,7 +158,7 @@ public class Client {
     public String rankingByXpTopN(int quantidadeElementos){
         var query = "select u.image, u.nome, u.level, u.xp, s.forca, s.defesa, s.magia,s.defesaMagica, s.vida, s.vitorias, s.derrotas" +
                         " from user u inner join status s on s.ID = u.ID" +
-                        " where u.ID not in (0,1) ORDER BY xp DESC LIMIT "+quantidadeElementos+";" ;
+                        " where u.ID not in (0,1) ORDER BY u.level DESC LIMIT "+quantidadeElementos+";" ;
         return sendMESSAGE(format("-1","DB",query));
     }
     /**
