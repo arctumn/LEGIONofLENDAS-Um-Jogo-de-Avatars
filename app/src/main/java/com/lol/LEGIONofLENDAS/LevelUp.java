@@ -24,6 +24,7 @@ public class LevelUp extends AppCompatActivity {
     TextView nivel_atual,pontos_xp,str,hp,magic,xpval;
     ProgressBar xp;
     User userData;
+    int availablePoints = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,109 +82,124 @@ public class LevelUp extends AppCompatActivity {
         }else{
             btnlvlup.setVisibility(View.VISIBLE);
             btnlvlup.setOnClickListener(v -> {
-                btnlvlup.setVisibility(View.INVISIBLE);
+                if(userData.experience - next < 0)
+                {
+                    btnlvlup.setVisibility(View.INVISIBLE);
+                    return;
+                }
+                userData.experience -= next;
                 userData.level++;
+
 
                 utils.txtMessageServer("-1",
                         "TESTINGADMIN",
-                        new ArrayList<>(Collections.singleton("update user set xp = 0, level = "+userData.level+" where id = "+ userData.userId))
+                        new ArrayList<>(Collections.singleton(
+                                        "update user set xp ="+ userData.experience +" , level = "
+                                                +userData.level +" where id = "+ userData.userId
+                        ))
                 );
-                userData.experience = 0;
-                pontos_xp.setText(pontos_xp.getText().toString()+" 5");
+                availablePoints += 20;
+                pontos_xp.setText(getString(R.string.Avaliable_Points) +" " + availablePoints);
                 pontos_xp.setVisibility(View.VISIBLE);
 
 
-                var _pontos = pontos_xp.getText().toString().split(" ");
-                AtomicInteger pontos = new AtomicInteger(Integer.parseInt(_pontos[_pontos.length - 1]));
 
                     runOnUiThread(() -> {
-                        if(pontos.get() < 1)  hide();
+                        if(availablePoints < 1)  hide();
                         btn_upgrade_str.setVisibility(View.VISIBLE);
                         btn_upgrade_m.setVisibility(View.VISIBLE);
                         btn_upgrade_hp.setVisibility(View.VISIBLE);
                         enable();
                         int next_new = nextPrime(userData.level+1);
 
-                        xpval.setText("0 / "+ next_new);
-
-                        xp.setProgress(0,true);
+                        xpval.setText(userData.experience+ " / "+ next_new);
+                        double percent = Math.floor(((double) userData.experience / next) * 100);
+                        xp.setProgress((int) percent,true);
                         var nivelTxt = getString(R.string.main_menu_level) + userData.level;
                         nivel_atual.setText(nivelTxt);
-                        if(pontos.get() < 1)  hide();
-                        btn_upgrade_str.setOnClickListener(vstr -> {
-                            if(pontos.get() < 1)  hide();
-                            else {
-                            int str_int;
-
-                            str_int = Integer.parseInt(str.getText().toString().split(":")[1]) + 1;
-
-                            utils.txtMessageServer("-1",
-                                    "TESTINGADMIN",
-                                    new ArrayList<>(Collections.singleton("UPDATE status set forca = " + str_int + " where id = " + userData.userId))
-                            );
-                            utils.txtMessageServer("-1",
-                                    "TESTINGADMIN",
-                                    new ArrayList<>(Collections.singleton("SELECT forca from status where id = " + userData.userId))
-                            );
-                            var strPoints = getString(R.string.STR) +  utils.output.trim();
-                            str.setText(strPoints);
-                            pontos.getAndDecrement();
-                            var availablePoints = getString(R.string.Avaliable_Points) +  pontos.get();
-                            pontos_xp.setText(availablePoints);
+                        if(availablePoints < 1)  {
+                            hide();
+                            disable();
                         }
-                        });
-                        if(pontos.get() < 1)  disable();
-                        btn_upgrade_m.setOnClickListener(vstr -> {
-                            if(pontos.get() < 1)  hide();
-                            else {
-                                int m_int;
-
-                                m_int = Integer.parseInt(magic.getText().toString().split(":")[1]) + 1;
-
-                                utils.txtMessageServer("-1",
-                                        "TESTINGADMIN",
-                                        new ArrayList<>(Collections.singleton("UPDATE status set magia = " + m_int + " where id = " + userData.userId))
-                                );
-                                utils.txtMessageServer("-1",
-                                        "TESTINGADMIN",
-                                        new ArrayList<>(Collections.singleton("SELECT magia from status where id = " + userData.userId))
-                                );
-
-                                var magicPoints = getString(R.string.Magic) +  utils.output.trim();
-                                magic.setText(magicPoints);
-
-                                pontos.getAndDecrement();
-                                var availablePoints = getString(R.string.Avaliable_Points) +  pontos.get();
-                                pontos_xp.setText(availablePoints);
-                            }
-                        });
-                        btn_upgrade_hp.setOnClickListener(vstr -> {
-                            if(pontos.get() < 1)  hide();
-                            else {
-                                int hp_int;
-
-                                hp_int = Integer.parseInt(hp.getText().toString().split(":")[1]) + 1;
-
-
-                                utils.txtMessageServer("-1",
-                                        "TESTINGADMIN",
-                                        new ArrayList<>(Collections.singleton("UPDATE status set vida = " + hp_int + " where id = " + userData.userId))
-                                );
-                                utils.txtMessageServer("-1",
-                                        "TESTINGADMIN",
-                                        new ArrayList<>(Collections.singleton("SELECT vida from status where id = " + userData.userId))
-                                );
-                                hp.setText(utils.output.trim());
-                                var hpPoints = getString(R.string.HP) +  utils.output.trim();
-                                hp.setText(hpPoints);
-                                pontos.getAndDecrement();
-                                var availablePoints = getString(R.string.Avaliable_Points) +  pontos.get();
-                                pontos_xp.setText(availablePoints);
-                            }
-                        });
+                        btn_upgrade_str.setOnClickListener(onclick -> updateStrength(utils));
+                        btn_upgrade_m.setOnClickListener(onclick -> updateMagic(utils));
+                        btn_upgrade_hp.setOnClickListener(onclick -> updateLife(utils));
                     });
             });
         }
+    }
+
+    private void updateLife(Utils utils) {
+        if(availablePoints < 1)  hide();
+        else {
+            int hp_int;
+
+            hp_int = Integer.parseInt(hp.getText().toString().split(":")[1]) + 1;
+
+
+            utils.txtMessageServer("-1",
+                    "TESTINGADMIN",
+                    new ArrayList<>(Collections.singleton("UPDATE status set vida = " + hp_int + " where id = " + userData.userId))
+            );
+            utils.txtMessageServer("-1",
+                    "TESTINGADMIN",
+                    new ArrayList<>(Collections.singleton("SELECT vida from status where id = " + userData.userId))
+            );
+            hp.setText(utils.output.trim());
+            var hpPoints = getString(R.string.HP) +  utils.output.trim();
+            hp.setText(hpPoints);
+            availablePoints--;
+            var pointsText = getString(R.string.Avaliable_Points) +  availablePoints;
+            pontos_xp.setText(pointsText);
+        }
+    }
+
+    private void updateMagic(Utils utils) {
+        if(availablePoints < 1)  hide();
+        else {
+            int m_int;
+
+            m_int = Integer.parseInt(magic.getText().toString().split(":")[1]) + 1;
+
+            utils.txtMessageServer("-1",
+                    "TESTINGADMIN",
+                    new ArrayList<>(Collections.singleton("UPDATE status set magia = " + m_int + " where id = " + userData.userId))
+            );
+            utils.txtMessageServer("-1",
+                    "TESTINGADMIN",
+                    new ArrayList<>(Collections.singleton("SELECT magia from status where id = " + userData.userId))
+            );
+
+            var magicPoints = getString(R.string.Magic) +  utils.output.trim();
+            magic.setText(magicPoints);
+
+            availablePoints--;
+            var pontosText = getString(R.string.Avaliable_Points) +  availablePoints;
+            pontos_xp.setText(pontosText);
+        }
+    }
+
+    private void updateStrength(Utils utils) {
+        if(availablePoints < 1)  hide();
+        else {
+        int str_int;
+
+        str_int = Integer.parseInt(str.getText().toString().split(":")[1]) + 1;
+
+        utils.txtMessageServer("-1",
+                "TESTINGADMIN",
+                new ArrayList<>(Collections.singleton("UPDATE status set forca = " + str_int + " where id = " + userData.userId))
+        );
+        utils.txtMessageServer("-1",
+                "TESTINGADMIN",
+                new ArrayList<>(Collections.singleton("SELECT forca from status where id = " + userData.userId))
+        );
+        var strPoints = getString(R.string.STR) +  utils.output.trim();
+        str.setText(strPoints);
+            availablePoints--;
+        var pontosText = getString(R.string.Avaliable_Points) +  availablePoints;
+        pontos_xp.setText(pontosText);
+    }
     }
 
     @Override
